@@ -1,0 +1,62 @@
+#Folders
+lua542
+bin
+bin/
+build
+build/
+test
+libs
+src/inc
+
+# Eclipse
+.cproject
+.autotools
+.project
+Release
+Debug
+.settings
+.clangd
+.clang-format
+
+# Visual studio
+.vs
+x64
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.aps
+*.rc
+
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app

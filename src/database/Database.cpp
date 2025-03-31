@@ -1,0 +1,65 @@
+#include "Database.h"
+
+namespace MarvusDB
+{
+Database::Database(std::string databaseFile) : Database(databaseFile, "")
+{
+}
+
+Database::Database(std::string databaseFile, std::string sqlScripts) : stmt(nullptr), sqlScripts(sqlScripts), result(0)
+{
+	// Open the SQLite database and create the table
+	sqlite3_open(databaseFile.c_str(), &db);
+}
+
+Database::~Database()
+{
+	if (db)
+		sqlite3_close(db);
+}
+
+bool Database::checkSuccessFor(std::string action, int expectedResult)
+{
+	if (result != expectedResult)
+	{
+		wxMessageBox(wxString::Format("%s", sqlite3_errmsg(db)), action, wxOK | wxICON_ERROR);
+		return true;
+	}
+	return false;
+}
+
+std::string Database::getSQL(std::string scriptName)
+{
+	auto it = sql.find(scriptName);
+	if (it == sql.end())
+	{
+		wxMessageBox("Query not found!", "Error", wxOK | wxICON_ERROR);
+		return "";
+	}
+	return it->second;  // Return the found query
+}
+
+bool Database::reconnect(std::string databaseFile)
+{
+	if (db)
+		sqlite3_close(db);
+	sqlite3_open(databaseFile.c_str(), &db);
+	return initializeDatabase();
+}
+
+bool Database::initializeDatabase()
+{
+	if (!sql.loadScripts(sqlScripts))
+		return false;
+	std::string sqlScript = getSQL(INIT_DB_SQL);
+	char* errMsg = nullptr;
+	int rc = sqlite3_exec(db, sqlScript.c_str(), nullptr, nullptr, &errMsg);
+	if (rc != SQLITE_OK)
+	{
+		wxMessageBox(wxString::Format("SQL error: %s", errMsg), "Error", wxOK | wxICON_ERROR);
+		sqlite3_free(errMsg);
+		return false;
+	}
+	return true;
+}
+}
