@@ -207,52 +207,9 @@ void MainFrame::onAddJobTitle(wxCommandEvent&)
 
 void MainFrame::onInsertTestData(wxCommandEvent&)
 {
-	int itemNum = 0;
-	for (const std::string& item : KeoDefaults::JOBS)
-		if (db.insertJobTitle(item))
-			itemNum++;
-		else
-			break;
-	wxMessageBox(wxString::Format("Added %d jobs of %d total jobs", itemNum, (int)KeoDefaults::JOBS.size()), "Jobs initialization result", wxOK | wxICON_INFORMATION, this);
-	itemNum = 0;
-	for (const std::string& item : KeoDefaults::CROPS)
-		if (db.insertCropType(item))
-			itemNum++;
-		else
-			break;
-	wxMessageBox(wxString::Format("Added %d crops of %d total crops", itemNum, (int)KeoDefaults::CROPS.size()), "Crops initialization result", wxOK | wxICON_INFORMATION, this);
-	// Insert employees
-	keo::Employee employee;
-	const int NUM_OF_ATTRIBUTES = KeoDefaults::PEOPLE_TABLE_HEADER.size();
-	std::istringstream iss;
-	int x = 0;
-	std::string token;
-	for (const auto& item : KeoDefaults::PEOPLE_CSV)
-	{
-		iss = std::istringstream(item);
-		for (x = 0; x < NUM_OF_ATTRIBUTES; x++)
-		{
-			if (std::getline(iss, token, ';'))
-			{
-				switch (x)
-				{
-					case 0: employee.name = token; break;
-					case 1: employee.middle_name = token; break;
-					case 2: employee.last_name = token; break;
-					case 3: employee.jobTitle = token; break;
-				}
-			}
-			else
-			{
-				return;
-			}
-		}
-		if (!db.insertEmployee(employee))
-			wxMessageBox(wxString::Format("Failed to add employee named %s %s %s", employee.name, employee.middle_name, employee.last_name),
-				"Error during employee initialization", wxOK | wxICON_ERROR);
-	}
-	if (!KeoDefaults::KeoInserter::insertFarmlads(db))
-		wxMessageBox("Failed to add farm lands", "Error during farm lands initialization", wxOK | wxICON_ERROR);
+	KeoDefaults::KeoInserter inserter(db);
+	inserter.fillEnums();
+	inserter.fillTables();
 }
 
 void MainFrame::onDropDatabase(wxCommandEvent&)

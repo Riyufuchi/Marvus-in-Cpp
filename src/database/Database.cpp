@@ -28,17 +28,6 @@ bool Database::checkSuccessFor(std::string action, int expectedResult)
 	return false;
 }
 
-std::string Database::getSQL(std::string scriptName)
-{
-	auto it = sql.find(scriptName);
-	if (it == sql.end())
-	{
-		wxMessageBox("Query not found!", "Error", wxOK | wxICON_ERROR);
-		return "";
-	}
-	return it->second;  // Return the found query
-}
-
 bool Database::reconnect(std::string databaseFile)
 {
 	if (db)
@@ -51,7 +40,7 @@ bool Database::initializeDatabase()
 {
 	if (!sql.loadScripts(sqlScripts))
 		return false;
-	std::string sqlScript = getSQL(INIT_DB_SQL);
+	std::string sqlScript = sql.getScript(INIT_DB_SQL);
 	char* errMsg = nullptr;
 	int rc = sqlite3_exec(db, sqlScript.c_str(), nullptr, nullptr, &errMsg);
 	if (rc != SQLITE_OK)
@@ -62,4 +51,18 @@ bool Database::initializeDatabase()
 	}
 	return true;
 }
+
+bool Database::executeSQL(const std::string& sqlScript)
+{
+	char* errMsg = nullptr;
+	int rc = sqlite3_exec(db, sqlScript.c_str(), nullptr, nullptr, &errMsg);
+	if (rc != SQLITE_OK)
+	{
+		wxMessageBox(wxString::Format("%s", errMsg), "SQL error", wxOK | wxICON_ERROR);
+		sqlite3_free(errMsg);
+		return false;
+	}
+	return true;
+}
+
 }

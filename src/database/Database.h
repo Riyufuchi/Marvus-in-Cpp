@@ -19,7 +19,6 @@ class Database
 		sqlite3_stmt* stmt;
 		std::string sqlScripts;
 		int result;
-		std::string getSQL(std::string scriptName);
 		bool checkSuccessFor(std::string action, int expectedResult = SQLITE_OK);
 	public:
 		Database(std::string databaseFile);
@@ -27,6 +26,7 @@ class Database
 		virtual ~Database();
 		bool initializeDatabase();
 		bool reconnect(std::string databaseFile);
+		bool executeSQL(const std::string& sql);
 };
 }
 #endif /* DATABASE_H */ 

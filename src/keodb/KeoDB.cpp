@@ -20,7 +20,7 @@ bool KeoDB::insertJobTitle(std::string title)
 	if (title == "")
 		return false;
 
-	std::string sqlTemplate = getSQL(INSERT_JOB_TITLE);
+	std::string sqlTemplate = sql.getScript(INSERT_JOB_TITLE);
 	if (sqlTemplate == "")
 		return false;
 
@@ -46,7 +46,7 @@ bool KeoDB::insertCropType(std::string type)
 	if (type == "")
 		return false;
 
-	std::string sqlTemplate = getSQL(INSERT_CROP_TYPE);
+	std::string sqlTemplate = sql.getScript(INSERT_CROP_TYPE);
 	if (sqlTemplate == "")
 		return false;
 
@@ -69,7 +69,7 @@ bool KeoDB::insertCropType(std::string type)
 
 bool KeoDB::insertFarmland(int farmSize, int cropID, int overseerID)
 {
-	std::string sqlTemplate = getSQL(INSERT_FARMLAND);
+	std::string sqlTemplate = sql.getScript(INSERT_FARMLAND);
 	if (sqlTemplate == "")
 		return false;
 	result = sqlite3_prepare_v2(db, sqlTemplate.c_str(), -1, &stmt, nullptr);
@@ -91,7 +91,7 @@ bool KeoDB::insertEmployee(Employee emp)
 	if (emp.name == "" || emp.jobTitle == "")
 		return false;
 
-	std::string sqlTemplate = getSQL(INSERT_EMPLOYEE);
+	std::string sqlTemplate = sql.getScript(INSERT_EMPLOYEE);
 	if (sqlTemplate == "")
 		return false;
 
@@ -143,7 +143,7 @@ std::vector<Farmland> KeoDB::getFarmlands()
 {
 	std::vector<Farmland> lands;
 
-	std::string sqlTemp = getSQL(BASIC_FARMLANDS_VIEW);
+	std::string sqlTemp = sql.getScript(BASIC_FARMLANDS_VIEW);
 	char* errMsg = nullptr;
 	if (sqlite3_exec(db, sqlTemp.c_str(), callbackFarmland, &lands, &errMsg) != SQLITE_OK)
 	{
@@ -166,7 +166,7 @@ std::vector<Employee> KeoDB::getEmployees()
 {
 	std::vector<Employee> employees;
 
-	std::string sqlTemp = getSQL(BASIC_EMP_VIEW);
+	std::string sqlTemp = sql.getScript(BASIC_EMP_VIEW);
 
 	// Use sqlite3_exec to execute the query and handle the results via callback
 	char* errMsg = nullptr;
