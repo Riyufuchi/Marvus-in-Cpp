@@ -38,14 +38,14 @@ This project is for learning how to work with wxWidgets and database, it takes i
 
    ```bash
    # wxWidgets
-   sudo apt install wx-common
+   sudo apt install libwxgtk3.2-dev
    sudo apt install libsqlite3-dev
    ```
   
   *Makefile automatically gets ConsoleLib and compiles it before program*
   
    ```bash
-   git clone --branch master --single-branch https://github.com/Riyufuchi/KEO-manager.git 
+   git clone --branch main --single-branch https://github.com/Riyufuchi/KEO-manager.git 
    cd ConsoleArt
    make
    ```
