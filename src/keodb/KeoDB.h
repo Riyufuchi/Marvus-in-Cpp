@@ -1,6 +1,8 @@
 #ifndef KEO_DB_H
 #define KEO_DB_H
 
+#include <string_view>
+
 #include "../database/Database.h"
 
 namespace keo
@@ -12,6 +14,15 @@ inline const std::string INSERT_JOB_TITLE = "insert_job_title.sql";
 inline const std::string INSERT_EMPLOYEE = "insert_employee.sql";
 inline const std::string INSERT_CROP_TYPE = "insert_crop_type.sql";
 inline const std::string INSERT_FARMLAND = "insert_farmland.sql";
+
+using tableRowStructure = std::vector<std::string>;
+using tableStructure = std::vector<tableRowStructure>;
+
+enum class Table
+{
+	PEOPLE,
+	FARMLANDS
+};
 
 struct Employee
 {
@@ -33,6 +44,9 @@ struct Farmland
 
 class KeoDB : public MarvusDB::Database
 {
+	private:
+		tableStructure tableData;
+		int rowCallback(void* data, int argc, char** argv, char** azColName); // Callback function to handle each row of the result
 	public:
 		KeoDB();
 		KeoDB(std::string database);
@@ -42,8 +56,7 @@ class KeoDB : public MarvusDB::Database
 		// Entities insert
 		bool insertEmployee(Employee emp);
 		bool insertFarmland(int farmSize, int cropID, int overseerID);
-		std::vector<Employee> getEmployees();
-		std::vector<Farmland> getFarmlands();
+		tableStructure getTableData(Table table);
 };
 }
 #endif /* EMPLOYEEDB_H */

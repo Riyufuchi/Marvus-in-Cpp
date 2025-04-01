@@ -29,10 +29,9 @@ class MainFrame : public wxFrame
 	private:
 		KeoDB db;
 		wxNotebook* notebook; // Tabbed pane
-		wxGrid* grid; // wxGrid for displaying data
+		wxGrid* empGrid; // wxGrid for displaying data
 		wxGrid* farmladGrid;
-		void loadDataToGrid();
-		void loadFarmlandsToGrid();
+		void loadDataToGrid(wxGrid& grid, keo::Table table);
 		wxMenuBar* createMenuBar();
 		// Events
 		void onExit(wxCommandEvent& event);

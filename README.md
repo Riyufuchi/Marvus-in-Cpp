@@ -39,6 +39,7 @@ This project is for learning how to work with wxWidgets and database, it takes i
    ```bash
    # wxWidgets
    sudo apt install libwxgtk3.2-dev
+   # SQLite
    sudo apt install libsqlite3-dev
    ```
   

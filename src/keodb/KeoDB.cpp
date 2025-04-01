@@ -139,44 +139,40 @@ int callbackFarmland(void* data, int /*argc*/, char** argv, char** /*azColName*/
 	return 0; // Continue processing
 }
 
-std::vector<Farmland> KeoDB::getFarmlands()
+int KeoDB::rowCallback(void* /*data*/, int argc, char** argv, char** /*azColName*/)
 {
-	std::vector<Farmland> lands;
+	tableRowStructure rowData;
+	rowData.reserve(argc); // Optimize vector allocation
 
-	std::string sqlTemp = sql.getScript(BASIC_FARMLANDS_VIEW);
-	char* errMsg = nullptr;
-	if (sqlite3_exec(db, sqlTemp.c_str(), callbackFarmland, &lands, &errMsg) != SQLITE_OK)
-	{
-		std::cerr << "SQL error: " << errMsg << std::endl;
-		sqlite3_free(errMsg);
-	}
-
-	return lands;
-}
-
-// Callback function to handle each row of the result
-int callback(void* data, int /*argc*/, char** argv, char** /*azColName*/)
-{
-	std::vector<Employee>* employees = reinterpret_cast<std::vector<Employee>*>(data);
-	employees->push_back(Employee{std::stoi(argv[0]), argv[1], argv[2], argv[3], argv[4]});
+	for (int i = 0; i < argc; i++)
+		rowData.push_back(argv[i] ? std::string(argv[i]) : "NULL"); // Avoids string allocation
+	tableData.push_back(std::move(rowData));
 	return 0; // Continue processing
 }
 
-std::vector<Employee> KeoDB::getEmployees()
+tableStructure KeoDB::getTableData(Table table)
 {
-	std::vector<Employee> employees;
+	tableData.clear();
+	std::string sqlView;
+	switch (table)
+	{
+		case Table::PEOPLE: sqlView = sql.getScript(BASIC_EMP_VIEW); break;
+		case Table::FARMLANDS: sqlView = sql.getScript(BASIC_FARMLANDS_VIEW); break;
+	}
 
-	std::string sqlTemp = sql.getScript(BASIC_EMP_VIEW);
-
-	// Use sqlite3_exec to execute the query and handle the results via callback
 	char* errMsg = nullptr;
-	if (sqlite3_exec(db, sqlTemp.c_str(), callback, &employees, &errMsg) != SQLITE_OK)
+	if (sqlite3_exec(db, sqlView.c_str(),
+		[](void* data, int argc, char** argv, char** azColName) -> int {
+			return static_cast<KeoDB*>(data)->rowCallback(data, argc, argv, azColName);
+		},
+		this, &errMsg) != SQLITE_OK)
 	{
 		std::cerr << "SQL error: " << errMsg << std::endl;
 		sqlite3_free(errMsg);
 	}
 
-	return employees;
-}
+	return tableData;
 
 }
+
+} // Namespace

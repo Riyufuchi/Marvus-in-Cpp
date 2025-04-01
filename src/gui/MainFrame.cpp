@@ -23,17 +23,17 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(NULL, wxID_ANY, title), db
 	notebook->AddPage(tab2, "Farmlands", false); // Second tab
 
 	// Create a grid and add to tab1
-	this->grid = new wxGrid(tab1, wxID_ANY, wxPoint(0, 0), wxSize(500, 300));
-	this->grid->CreateGrid(0, KeoDefaults::PEOPLE_TABLE_HEADER.size());
+	this->empGrid = new wxGrid(tab1, wxID_ANY, wxPoint(0, 0), wxSize(500, 300));
+	this->empGrid->CreateGrid(0, KeoDefaults::PEOPLE_TABLE_HEADER.size());
 	int x = 0;
 	for (const auto& heading : KeoDefaults::PEOPLE_TABLE_HEADER)
 	{
-		grid->SetColLabelValue(x, heading);
+		empGrid->SetColLabelValue(x, heading);
 		x++;
 	}
 	
 	wxBoxSizer* tab1Sizer = new wxBoxSizer(wxVERTICAL);
-	tab1Sizer->Add(grid, 1, wxEXPAND | wxALL, 0);
+	tab1Sizer->Add(empGrid, 1, wxEXPAND | wxALL, 0);
 	tab1->SetSizer(tab1Sizer);
 	
 	// Tab 2
@@ -55,8 +55,8 @@ MainFrame::MainFrame(const wxString& title) : wxFrame(NULL, wxID_ANY, title), db
 	mainSizer->Add(notebook, 1, wxEXPAND | wxALL, 0);
 	SetSizerAndFit(mainSizer);
 	// Attempt to load data
-	loadDataToGrid();
-	loadFarmlandsToGrid();
+	loadDataToGrid(*empGrid, keo::Table::PEOPLE);
+	loadDataToGrid(*farmladGrid, keo::Table::FARMLANDS);
 	SetSize(800, 600);
 }
 
@@ -97,82 +97,41 @@ wxMenuBar* MainFrame::createMenuBar()
 	return menuBar;
 }
 
-void MainFrame::loadFarmlandsToGrid()
+void MainFrame::loadDataToGrid(wxGrid& grid, keo::Table table)
 {
-	std::vector<keo::Farmland> farms;
+	keo::tableStructure tableData = db.getTableData(table);
 
-	try {
-		farms = db.getFarmlands();
-	} catch (std::exception& e) {
-		wxMessageBox(wxString::Format("%s", e.what()), "Error during data fetch", wxOK | wxICON_ERROR);
-		return;
-	}
-
-	if (farms.empty())
+	if (tableData.empty())
 	{
-		wxMessageBox("No data in the farmlands table", "Farmland view result", wxOK | wxICON_INFORMATION, this);
+		wxMessageBox("No data in the table", "Table view result", wxOK | wxICON_INFORMATION, this);
 		return;
 	}
 
-	if (farmladGrid->GetNumberRows() > 0)
-		farmladGrid->DeleteRows(0, farmladGrid->GetNumberRows()); // Remove old rows
-	farmladGrid->AppendRows(farms.size());
+	if (grid.GetNumberRows() > 0)
+		grid.DeleteRows(0, grid.GetNumberRows()); // Remove old rows
+	grid.AppendRows(tableData.size());
 
 	int row = 0;
-	for (const keo::Farmland& farm : farms)
+	int rowX = 0;
+	int dataX = 1;
+	const int ROW_SIZE = tableData[0].size();
+	for (const keo::tableRowStructure& rowData : tableData)
 	{
-		farmladGrid->SetCellValue(row, 0, std::to_string(farm.size));
-		farmladGrid->SetCellValue(row, 1, farm.crop_type);
-		farmladGrid->SetCellValue(row, 2, farm.overseer_name);
-		farmladGrid->SetCellValue(row, 3, farm.overseer_role);
+		for (dataX = 1, rowX = 0; dataX < ROW_SIZE; dataX++, rowX++)
+		{
+			grid.SetCellValue(row, rowX, rowData[dataX]);
+		}
 		row++;
 	}
-	
-	this->farmladGrid->AutoSizeColumns(); // Auto-size column headers
-	this->farmladGrid->AutoSizeRows();
-	this->farmladGrid->SetRowLabelSize(wxGRID_AUTOSIZE);
-}
-
-void MainFrame::loadDataToGrid()
-{
-	std::vector<keo::Employee> employees;
-
-	try {
-		employees = db.getEmployees(); // Get data from DB
-	} catch (std::exception& e) {
-		wxMessageBox(wxString::Format("%s", e.what()), "Error during data fetch", wxOK | wxICON_ERROR);
-		return;
-	}
-
-	if (employees.empty())
-	{
-		wxMessageBox("No data in the employee table", "Employee view result", wxOK | wxICON_INFORMATION, this);
-		return;
-	}
-
-	if (grid->GetNumberRows() > 0)
-		grid->DeleteRows(0, grid->GetNumberRows()); // Remove old rows
-	grid->AppendRows(employees.size());
-
-	int row = 0;
-	for (const keo::Employee& emp : employees)
-	{
-		grid->SetCellValue(row, 0, emp.name);
-		grid->SetCellValue(row, 1, emp.middle_name);
-		grid->SetCellValue(row, 2, emp.last_name);
-		grid->SetCellValue(row, 3, emp.jobTitle);
-		row++;
-	}
-
-	this->grid->AutoSizeColumns(); // Auto-size column headers
-	this->grid->AutoSizeRows();
-	this->grid->SetRowLabelSize(wxGRID_AUTOSIZE);
+	grid.AutoSizeColumns(); // Auto-size column headers
+	grid.AutoSizeRows();
+	grid.SetRowLabelSize(wxGRID_AUTOSIZE);
 }
 
 void MainFrame::onRefreshWindow(wxCommandEvent&)
 {
-	loadDataToGrid();
-	loadFarmlandsToGrid();
+	loadDataToGrid(*empGrid, keo::Table::PEOPLE);
+	loadDataToGrid(*farmladGrid, keo::Table::FARMLANDS);
 }
 
 void MainFrame::onNotImplemented(wxCommandEvent&)
