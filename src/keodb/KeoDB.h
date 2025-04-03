@@ -1,18 +1,19 @@
 #ifndef KEO_DB_H
 #define KEO_DB_H
 
-#include <string_view>
+#include <unordered_map>
 
 #include "../database/Database.h"
 
 namespace keo
 {
 
+// VIEWS
 inline const std::string BASIC_EMP_VIEW = "basic_emp_view.sql";
 inline const std::string BASIC_FARMLANDS_VIEW = "basic_farmlands_view.sql";
-inline const std::string INSERT_JOB_TITLE = "insert_job_title.sql";
+inline const std::string BASIC_MINES_VIEW = "basic_mine_view.sql";
+// INSERTS
 inline const std::string INSERT_EMPLOYEE = "insert_employee.sql";
-inline const std::string INSERT_CROP_TYPE = "insert_crop_type.sql";
 inline const std::string INSERT_FARMLAND = "insert_farmland.sql";
 
 using tableRowStructure = std::vector<std::string>;
@@ -21,7 +22,15 @@ using tableStructure = std::vector<tableRowStructure>;
 enum class Table
 {
 	PEOPLE,
-	FARMLANDS
+	FARMLANDS,
+	MINES
+};
+
+enum class TypeTables
+{
+	JOBS,
+	CROPS,
+	ORES
 };
 
 struct Employee
@@ -46,13 +55,13 @@ class KeoDB : public MarvusDB::Database
 {
 	private:
 		tableStructure tableData;
+		std::unordered_map<TypeTables, std::string> typeTableSQLs;
 		int rowCallback(void* data, int argc, char** argv, char** azColName); // Callback function to handle each row of the result
 	public:
 		KeoDB();
 		KeoDB(std::string database);
 		virtual ~KeoDB();
-		bool insertJobTitle(std::string title);
-		bool insertCropType(std::string type);
+		bool insertEnumValue(TypeTables typeTable, const std::string& value);
 		// Entities insert
 		bool insertEmployee(Employee emp);
 		bool insertFarmland(int farmSize, int cropID, int overseerID);

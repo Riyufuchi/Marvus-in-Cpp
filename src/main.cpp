@@ -1,12 +1,15 @@
 #include "gui/ManagerApp.h"
 
-wxIMPLEMENT_APP(keo::ManagerApp);
+//wxIMPLEMENT_APP(keo::ManagerApp);
 
-/*int main(int argc, char** argv)
+int main(int argc, char** argv)
 {
-	wxApp* app = new MarvusTwo();
-    wxEntry(argc, argv); // Initialize wxWidgets
-    app->OnRun(); // Start the application event loop
-    //delete app;
-    return 0;
-}*/
+	wxApp::SetInstance(new keo::ManagerApp(argc, argv));
+	wxEntryStart(argc, argv);
+	wxTheApp->CallOnInit();
+	wxTheApp->OnRun();
+	wxTheApp->OnExit();
+	wxEntryCleanup();
+}
+
+

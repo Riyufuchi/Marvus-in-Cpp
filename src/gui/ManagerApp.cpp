@@ -2,8 +2,9 @@
 
 namespace keo
 {
-ManagerApp::ManagerApp() : wxApp(), frame(nullptr)
+ManagerApp::ManagerApp(int argc, char** argv) : wxApp(), frame(nullptr), areArgs(false)
 {
+	this->args = ConsoleLib::ConsoleUtils::analyzeArgumentsInOrder(argc, argv, areArgs, text);
 }
 
 ManagerApp::~ManagerApp()
@@ -13,7 +14,9 @@ ManagerApp::~ManagerApp()
 
 bool ManagerApp::OnInit()
 {
-	this->frame = new MainFrame("KEO data manager");
+	if (!areArgs)
+		return false;
+	this->frame = new MainFrame("KEO data manager", args);
 	SetTopWindow(frame);
 	frame->Show(true);
 	return true;

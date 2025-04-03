@@ -3,6 +3,7 @@ DROP VIEW IF EXISTS FARMLAND_VIEW;
 CREATE VIEW FARMLAND_VIEW AS
 SELECT
 	f.farmland_id,
+	f.farmland_name,
 	f.farmland_size,
 	c.crop_name AS crop_type,
 	e.first_name || ' ' ||

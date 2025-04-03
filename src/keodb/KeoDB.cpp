@@ -9,18 +9,21 @@ KeoDB::KeoDB() : KeoDB("database.db")
 
 KeoDB::KeoDB(std::string database) : MarvusDB::Database(database, "../sql/")
 {
+	typeTableSQLs[TypeTables::JOBS] = "insert_job_title.sql";
+	typeTableSQLs[TypeTables::CROPS] = "insert_crop_type.sql";
+	typeTableSQLs[TypeTables::ORES] = "insert_ore_type.sql";
 }
 
 KeoDB::~KeoDB()
 {
 }
 
-bool KeoDB::insertJobTitle(std::string title)
+bool KeoDB::insertEnumValue(TypeTables typeTable, const std::string& value)
 {
-	if (title == "")
+	if (value == "" || !typeTableSQLs.contains(typeTable))
 		return false;
 
-	std::string sqlTemplate = sql.getScript(INSERT_JOB_TITLE);
+	std::string sqlTemplate = sql.getScript(typeTableSQLs.find(typeTable)->second);
 	if (sqlTemplate == "")
 		return false;
 
@@ -29,33 +32,7 @@ bool KeoDB::insertJobTitle(std::string title)
 		return false;
 
 	// Bind the title to the placeholder in the SQL
-	result = sqlite3_bind_text(stmt, 1, title.c_str(), -1, SQLITE_STATIC);
-	if (checkSuccessFor("SQL binding"))
-		return false;
-
-	result = sqlite3_step(stmt);
-	if (checkSuccessFor("SQL execution of job title insert", SQLITE_DONE))
-		return false;
-
-	sqlite3_finalize(stmt);
-	return true;
-}
-
-bool KeoDB::insertCropType(std::string type)
-{
-	if (type == "")
-		return false;
-
-	std::string sqlTemplate = sql.getScript(INSERT_CROP_TYPE);
-	if (sqlTemplate == "")
-		return false;
-
-	result = sqlite3_prepare_v2(db, sqlTemplate.c_str(), -1, &stmt, nullptr);
-	if (checkSuccessFor("Statement preparation"))
-		return false;
-
-	// Bind the title to the placeholder in the SQL
-	result = sqlite3_bind_text(stmt, 1, type.c_str(), -1, SQLITE_STATIC);
+	result = sqlite3_bind_text(stmt, 1, value.c_str(), -1, SQLITE_STATIC);
 	if (checkSuccessFor("SQL binding"))
 		return false;
 
@@ -64,25 +41,6 @@ bool KeoDB::insertCropType(std::string type)
 		return false;
 
 	sqlite3_finalize(stmt);
-	return true;
-}
-
-bool KeoDB::insertFarmland(int farmSize, int cropID, int overseerID)
-{
-	std::string sqlTemplate = sql.getScript(INSERT_FARMLAND);
-	if (sqlTemplate == "")
-		return false;
-	result = sqlite3_prepare_v2(db, sqlTemplate.c_str(), -1, &stmt, nullptr);
-	if (checkSuccessFor("Statement preparation"))
-		return false;
-
-	sqlite3_bind_int(stmt, 1, farmSize);
-	sqlite3_bind_int(stmt, 2, cropID);
-	sqlite3_bind_int(stmt, 3, overseerID);
-
-	result = sqlite3_step(stmt);
-	if (checkSuccessFor("SQL execution", SQLITE_DONE))
-		return false;
 	return true;
 }
 
@@ -158,6 +116,7 @@ tableStructure KeoDB::getTableData(Table table)
 	{
 		case Table::PEOPLE: sqlView = sql.getScript(BASIC_EMP_VIEW); break;
 		case Table::FARMLANDS: sqlView = sql.getScript(BASIC_FARMLANDS_VIEW); break;
+		case Table::MINES: sqlView = sql.getScript(BASIC_MINES_VIEW); break;
 	}
 
 	char* errMsg = nullptr;

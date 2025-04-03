@@ -27,6 +27,7 @@ class Database
 		bool initializeDatabase();
 		bool reconnect(std::string databaseFile);
 		bool executeSQL(const std::string& sql);
+		void setSQL_Scripts(std::string path);
 };
 }
 #endif /* DATABASE_H */ 

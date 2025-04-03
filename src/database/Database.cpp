@@ -65,4 +65,9 @@ bool Database::executeSQL(const std::string& sqlScript)
 	return true;
 }
 
+void Database::setSQL_Scripts(std::string path)
+{
+	this->sqlScripts = path;
+}
+
 }
