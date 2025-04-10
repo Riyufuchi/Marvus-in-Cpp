@@ -18,7 +18,7 @@ KeoDB::~KeoDB()
 {
 }
 
-bool KeoDB::prepareViews()
+bool KeoDB::initializeViews()
 {
 	for (const auto& [scriptFile, fileContent] : sqlScriptFiles.getScriptMap())
 		if (scriptFile.find("view") != std::string::npos)
@@ -94,18 +94,6 @@ bool KeoDB::insertEmployee(Employee emp)
 	return true;
 }
 
-int callbackFarmland(void* data, int /*argc*/, char** argv, char** /*azColName*/)
-{
-	Farmland farmland;
-	farmland.id = std::stoi(argv[0]);
-	farmland.size = std::stoi(argv[1]);
-	farmland.crop_type = argv[2];
-	farmland.overseer_name = argv[3];
-	farmland.overseer_role = argv[4];
-	reinterpret_cast<std::vector<Farmland>*>(data)->push_back(farmland);
-	return 0; // Continue processing
-}
-
 int KeoDB::rowCallback(void* /*data*/, int argc, char** argv, char** /*azColName*/)
 {
 	tableRowStructure rowData;
@@ -117,7 +105,7 @@ int KeoDB::rowCallback(void* /*data*/, int argc, char** argv, char** /*azColName
 	return 0; // Continue processing
 }
 
-tableStructure KeoDB::getTableData(Table table)
+tableStructure KeoDB::obtainTableData(Table table)
 {
 	tableData.clear();
 	std::string sqlView;

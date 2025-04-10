@@ -20,7 +20,7 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 		return;
 	}
 	
-	if (!db.prepareViews())
+	if (!db.initializeViews())
 	{
 		wxMessageBox("Views initialization failed.\nExiting program!", "Database Error", wxOK | wxICON_ERROR, this);
 		Close(true);
@@ -129,7 +129,7 @@ wxMenuBar* MainFrame::createMenuBar()
 
 void MainFrame::loadDataToGrid(keo::Table table)
 {
-	keo::tableStructure tableData = db.getTableData(table);
+	keo::tableStructure tableData = db.obtainTableData(table);
 
 	if (tableData.empty() || !grids.contains(table))
 	{
@@ -173,11 +173,11 @@ void MainFrame::loadViewToGrid(keo::Table table)
 		grid.DeleteCols(0, grid.GetNumberCols()); // Remove old cols
 	grid.AppendCols(tableData.first.size());
 
-	int x = 0;
+	int rowX = 0;
 	for (const std::string& heading : tableData.first)
 	{
-		grid.SetColLabelValue(x, heading);
-		x++;
+		grid.SetColLabelValue(rowX, heading);
+		rowX++;
 	}
 
 	if (tableData.second.empty())
@@ -191,7 +191,7 @@ void MainFrame::loadViewToGrid(keo::Table table)
 	grid.AppendRows(tableData.second.size());
 
 	int row = 0;
-	int rowX = 0;
+	rowX = 0;
 	int dataX = 1;
 	const int ROW_SIZE = tableData.second[0].size();
 	for (const keo::tableRowStructure& rowData : tableData.second)
@@ -256,7 +256,7 @@ void MainFrame::onDropDatabase(wxCommandEvent&)
 {
 	std::filesystem::remove(DATABASE_FILE);
 	db.reconnect(DATABASE_FILE);
-	db.prepareViews();
+	db.initializeViews();
 }
 
 // Event table to link menu actions with functions

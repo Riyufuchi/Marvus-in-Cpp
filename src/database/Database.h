@@ -30,7 +30,6 @@ class Database
 		bool executeSQL(const std::string& sql);
 		bool executeSQL_script(const std::string& sql);
 		void setSQL_Scripts(std::string path);
-		std::vector<std::string> obtainTableHeader(const std::string& sql);
 };
 }
 #endif /* DATABASE_H */ 

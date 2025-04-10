@@ -80,20 +80,4 @@ void Database::setSQL_Scripts(std::string path)
 	this->sqlScriptsPath = path;
 }
 
-std::vector<std::string> Database::obtainTableHeader(const std::string& sql)
-{
-	std::vector<std::string> texts;
-	int rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &c_ErrorMessage);
-	if (rc != SQLITE_OK)
-	{
-		wxMessageBox(wxString::Format("%s", c_ErrorMessage), "SQL error", wxOK | wxICON_ERROR);
-		sqlite3_free(c_ErrorMessage);
-		return texts;
-	}
-
-
-
-	return texts;
-}
-
 }
