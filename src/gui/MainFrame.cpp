@@ -3,10 +3,8 @@
 namespace keo
 {
 
-MainFrame::MainFrame(const wxString& title, ConsoleLib::argumentVector& config) : wxFrame(NULL, wxID_ANY, title), db(DATABASE_FILE)
+MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxFrame(NULL, wxID_ANY, title), db(DATABASE_FILE)
 {
-	//std::string icon_xpm = "../../assets/icon.xpm";
-	//extern const char icon_xpm[] = "../assets/icon.xpm";
 	wxIcon icon(icon_xpm);
 	SetIcon(icon);
 	//(void*)icon_gui_db2_xpm;
@@ -22,6 +20,13 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argumentVector& config) 
 		return;
 	}
 	
+	if (!db.prepareViews())
+	{
+		wxMessageBox("Views initialization failed.\nExiting program!", "Database Error", wxOK | wxICON_ERROR, this);
+		Close(true);
+		return;
+	}
+
 	SetMenuBar(createMenuBar()); // Set the menu bar for this frame
 
 	this->notebook = new wxNotebook(this, wxID_ANY);
@@ -35,34 +40,40 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argumentVector& config) 
 	notebook->AddPage(tab3, "Mines", false);
 
 	// Create a grid and add to tab1
-	this->empGrid = wxw::FactoryWxW::newGrid(tab1, wxID_ANY, KeoDefaults::PEOPLE_TABLE_HEADER);
+	tempGrid = wxw::FactoryWxW::newGrid(tab1, wxID_ANY);
 	
 	wxBoxSizer* tab1Sizer = new wxBoxSizer(wxVERTICAL);
-	tab1Sizer->Add(empGrid, 1, wxEXPAND | wxALL, 0);
+	tab1Sizer->Add(tempGrid, 1, wxEXPAND | wxALL, 0);
 	tab1->SetSizer(tab1Sizer);
 	
+	grids[keo::Table::PEOPLE] = tempGrid;
+
 	// Tab 2
-	this->farmladGrid = wxw::FactoryWxW::newGrid(tab2, wxID_ANY, KeoDefaults::FARMLANDS_TABLE_HEADER);
+	tempGrid = wxw::FactoryWxW::newGrid(tab2, wxID_ANY);
 	
 	wxBoxSizer* tab2Sizer = new wxBoxSizer(wxVERTICAL);
-	tab2Sizer->Add(farmladGrid, 1, wxEXPAND | wxALL, 0);
+	tab2Sizer->Add(tempGrid, 1, wxEXPAND | wxALL, 0);
 	tab2->SetSizer(tab2Sizer);
 	
+	grids[keo::Table::FARMLANDS] = tempGrid;
+
 	// Tab 3
-	this->minesGrid = wxw::FactoryWxW::newGrid(tab3, wxID_ANY, KeoDefaults::MINES_TABLE_HEADER);
+	tempGrid = wxw::FactoryWxW::newGrid(tab3, wxID_ANY);
 
 	wxBoxSizer* tab3Sizer = new wxBoxSizer(wxVERTICAL);
-	tab3Sizer->Add(minesGrid, 1, wxEXPAND | wxALL, 0);
+	tab3Sizer->Add(tempGrid, 1, wxEXPAND | wxALL, 0);
 	tab3->SetSizer(tab3Sizer);
+
+	grids[keo::Table::MINES] = tempGrid;
 
 	// Layout the notebook
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 	mainSizer->Add(notebook, 1, wxEXPAND | wxALL, 0);
 	SetSizerAndFit(mainSizer);
 	// Attempt to load data
-	loadDataToGrid(*empGrid, keo::Table::PEOPLE);
-	loadDataToGrid(*farmladGrid, keo::Table::FARMLANDS);
-	loadDataToGrid(*minesGrid, keo::Table::MINES);
+	loadViewToGrid(keo::Table::PEOPLE);
+	loadViewToGrid(keo::Table::FARMLANDS);
+	loadViewToGrid(keo::Table::MINES);
 	SetSize(800, 600);
 }
 
@@ -72,10 +83,10 @@ MainFrame::~MainFrame()
 	Unbind(wxEVT_MENU, &MainFrame::onAbout, this, ID_About);
 }
 
-void MainFrame::configure(std::vector<std::pair<std::string, std::vector<std::string>>>& config)
+void MainFrame::configure(ConsoleLib::argVector& config)
 {
 	auto it = argumentMethods.find("");
-	for (const std::pair<std::string, std::vector<std::string>>& argument : config)
+	for (const ConsoleLib::argVectorItem& argument : config)
 	{
 		it = argumentMethods.find(argument.first);
 		if (it != argumentMethods.end())
@@ -116,15 +127,17 @@ wxMenuBar* MainFrame::createMenuBar()
 	return menuBar;
 }
 
-void MainFrame::loadDataToGrid(wxGrid& grid, keo::Table table)
+void MainFrame::loadDataToGrid(keo::Table table)
 {
 	keo::tableStructure tableData = db.getTableData(table);
 
-	if (tableData.empty())
+	if (tableData.empty() || !grids.contains(table))
 	{
 		wxMessageBox("No data in the table", "Table view result", wxOK | wxICON_INFORMATION, this);
 		return;
 	}
+
+	wxGrid& grid = *grids.find(table)->second;
 
 	if (grid.GetNumberRows() > 0)
 		grid.DeleteRows(0, grid.GetNumberRows()); // Remove old rows
@@ -147,10 +160,58 @@ void MainFrame::loadDataToGrid(wxGrid& grid, keo::Table table)
 	grid.SetRowLabelSize(wxGRID_AUTOSIZE);
 }
 
+void MainFrame::loadViewToGrid(keo::Table table)
+{
+	keo::tableHeaderAndData tableData = db.obtainTableHeaderAndData(table);
+
+	if (!grids.contains(table))
+		return;
+
+	wxGrid& grid = *grids.find(table)->second;
+
+	if (grid.GetNumberCols() > 0)
+		grid.DeleteCols(0, grid.GetNumberCols()); // Remove old cols
+	grid.AppendCols(tableData.first.size());
+
+	int x = 0;
+	for (const std::string& heading : tableData.first)
+	{
+		grid.SetColLabelValue(x, heading);
+		x++;
+	}
+
+	if (tableData.second.empty())
+	{
+		wxMessageBox("No data in the table", "Table view result", wxOK | wxICON_INFORMATION, this);
+		return;
+	}
+
+	if (grid.GetNumberRows() > 0)
+		grid.DeleteRows(0, grid.GetNumberRows()); // Remove old rows
+	grid.AppendRows(tableData.second.size());
+
+	int row = 0;
+	int rowX = 0;
+	int dataX = 1;
+	const int ROW_SIZE = tableData.second[0].size();
+	for (const keo::tableRowStructure& rowData : tableData.second)
+	{
+		for (dataX = 1, rowX = 0; dataX < ROW_SIZE; dataX++, rowX++)
+		{
+			grid.SetCellValue(row, rowX, rowData[dataX]);
+		}
+		row++;
+	}
+	grid.AutoSizeColumns(); // Auto-size column headers
+	grid.AutoSizeRows();
+	grid.SetRowLabelSize(wxGRID_AUTOSIZE);
+}
+
 void MainFrame::onRefreshWindow(wxCommandEvent&)
 {
-	loadDataToGrid(*empGrid, keo::Table::PEOPLE);
-	loadDataToGrid(*farmladGrid, keo::Table::FARMLANDS);
+	loadViewToGrid(keo::Table::PEOPLE);
+	loadViewToGrid(keo::Table::FARMLANDS);
+	loadViewToGrid(keo::Table::MINES);
 }
 
 void MainFrame::onNotImplemented(wxCommandEvent&)
@@ -195,6 +256,7 @@ void MainFrame::onDropDatabase(wxCommandEvent&)
 {
 	std::filesystem::remove(DATABASE_FILE);
 	db.reconnect(DATABASE_FILE);
+	db.prepareViews();
 }
 
 // Event table to link menu actions with functions

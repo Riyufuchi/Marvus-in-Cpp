@@ -23,6 +23,7 @@ class FactoryWxW
 public:
 	FactoryWxW() = default;
 	virtual ~FactoryWxW() = default;
+	static wxGrid* newGrid(wxWindow* parent, wxWindowID id);
 	static wxGrid* newGrid(wxWindow* parent, wxWindowID id, const std::vector<std::string>& header);
 };
 

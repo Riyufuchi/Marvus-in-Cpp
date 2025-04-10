@@ -12,6 +12,13 @@
 namespace wxw
 {
 
+wxGrid* FactoryWxW::newGrid(wxWindow* parent, wxWindowID id)
+{
+	wxGrid* grid = new wxGrid(parent, id, wxPoint(0, 0), wxSize(400, 300));
+	grid->CreateGrid(0, 0);
+	return grid;
+}
+
 wxGrid* FactoryWxW::newGrid(wxWindow* parent, wxWindowID id, const std::vector<std::string>& header)
 {
 	wxGrid* grid = new wxGrid(parent, id, wxPoint(0, 0), wxSize(400, 300));

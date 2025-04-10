@@ -4,7 +4,7 @@ namespace keo
 {
 ManagerApp::ManagerApp(int argc, char** argv) : wxApp(), frame(nullptr), areArgs(false)
 {
-	this->args = ConsoleLib::ConsoleUtils::analyzeArgumentsInOrder(argc, argv, areArgs, text);
+	this->args = ConsoleLib::ArgumentParser::analyzeInOrder(argc, argv, areArgs, text);
 }
 
 ManagerApp::~ManagerApp()

@@ -6,7 +6,7 @@ Database::Database(std::string databaseFile) : Database(databaseFile, "")
 {
 }
 
-Database::Database(std::string databaseFile, std::string sqlScripts) : stmt(nullptr), sqlScripts(sqlScripts), result(0)
+Database::Database(std::string databaseFile, std::string sqlScriptsPath) : stmt(nullptr), sqlScriptsPath(sqlScriptsPath), result(0), c_ErrorMessage(nullptr)
 {
 	// Open the SQLite database and create the table
 	sqlite3_open(databaseFile.c_str(), &db);
@@ -38,15 +38,14 @@ bool Database::reconnect(std::string databaseFile)
 
 bool Database::initializeDatabase()
 {
-	if (!sql.loadScripts(sqlScripts))
+	if (!sqlScriptFiles.loadScripts(sqlScriptsPath))
 		return false;
-	std::string sqlScript = sql.getScript(INIT_DB_SQL);
-	char* errMsg = nullptr;
-	int rc = sqlite3_exec(db, sqlScript.c_str(), nullptr, nullptr, &errMsg);
+	std::string sqlScript = sqlScriptFiles.getScript(INIT_DB_SQL);
+	int rc = sqlite3_exec(db, sqlScript.c_str(), nullptr, nullptr, &c_ErrorMessage);
 	if (rc != SQLITE_OK)
 	{
-		wxMessageBox(wxString::Format("SQL error: %s", errMsg), "Error", wxOK | wxICON_ERROR);
-		sqlite3_free(errMsg);
+		wxMessageBox(wxString::Format("SQL error: %s", c_ErrorMessage), "Error", wxOK | wxICON_ERROR);
+		sqlite3_free(c_ErrorMessage);
 		return false;
 	}
 	return true;
@@ -54,12 +53,23 @@ bool Database::initializeDatabase()
 
 bool Database::executeSQL(const std::string& sqlScript)
 {
-	char* errMsg = nullptr;
-	int rc = sqlite3_exec(db, sqlScript.c_str(), nullptr, nullptr, &errMsg);
+	int rc = sqlite3_exec(db, sqlScript.c_str(), nullptr, nullptr, &c_ErrorMessage);
 	if (rc != SQLITE_OK)
 	{
-		wxMessageBox(wxString::Format("%s", errMsg), "SQL error", wxOK | wxICON_ERROR);
-		sqlite3_free(errMsg);
+		wxMessageBox(wxString::Format("%s", c_ErrorMessage), "SQL error", wxOK | wxICON_ERROR);
+		sqlite3_free(c_ErrorMessage);
+		return false;
+	}
+	return true;
+}
+
+bool Database::executeSQL_script(const std::string& sqlScript)
+{
+	int rc = sqlite3_prepare_v2(db, sqlScript.c_str(), -1, &stmt, nullptr);
+	if (rc != SQLITE_OK)
+	{
+		wxMessageBox(wxString::Format("%s", c_ErrorMessage), "SQL error", wxOK | wxICON_ERROR);
+		sqlite3_free(c_ErrorMessage);
 		return false;
 	}
 	return true;
@@ -67,7 +77,23 @@ bool Database::executeSQL(const std::string& sqlScript)
 
 void Database::setSQL_Scripts(std::string path)
 {
-	this->sqlScripts = path;
+	this->sqlScriptsPath = path;
+}
+
+std::vector<std::string> Database::obtainTableHeader(const std::string& sql)
+{
+	std::vector<std::string> texts;
+	int rc = sqlite3_exec(db, sql.c_str(), nullptr, nullptr, &c_ErrorMessage);
+	if (rc != SQLITE_OK)
+	{
+		wxMessageBox(wxString::Format("%s", c_ErrorMessage), "SQL error", wxOK | wxICON_ERROR);
+		sqlite3_free(c_ErrorMessage);
+		return texts;
+	}
+
+
+
+	return texts;
 }
 
 }

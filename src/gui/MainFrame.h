@@ -12,7 +12,7 @@
 #include "../keodb/KeoDB.h"
 #include "../keodb/KeoDefaultDB.hpp"
 
-#include "ConsoleUtils.h"
+#include "ArgumentParser.h"
 
 
 namespace keo
@@ -35,13 +35,13 @@ class MainFrame : public wxFrame
 {
 	private:
 		std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argumentMethods;
+		std::unordered_map<keo::Table, wxGrid*> grids;
 		KeoDB db;
 		wxNotebook* notebook; // Tabbed pane
-		wxGrid* empGrid; // wxGrid for displaying data
-		wxGrid* farmladGrid;
-		wxGrid* minesGrid;
-		void configure(ConsoleLib::argumentVector& config);
-		void loadDataToGrid(wxGrid& grid, keo::Table table);
+		wxGrid* tempGrid;
+		void configure(ConsoleLib::argVector& config);
+		void loadDataToGrid(keo::Table table);
+		void loadViewToGrid(keo::Table table);
 		wxMenuBar* createMenuBar();
 		// Events
 		void onExit(wxCommandEvent& event);
@@ -54,7 +54,7 @@ class MainFrame : public wxFrame
 		void onInsertTestData(wxCommandEvent& event);
 		wxDECLARE_EVENT_TABLE();
 	public:
-		MainFrame(const wxString& title, ConsoleLib::argumentVector& config);
+		MainFrame(const wxString& title, ConsoleLib::argVector& config);
 		virtual ~MainFrame();
 };
 }

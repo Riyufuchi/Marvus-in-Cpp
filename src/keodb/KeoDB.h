@@ -18,6 +18,7 @@ inline const std::string INSERT_FARMLAND = "insert_farmland.sql";
 
 using tableRowStructure = std::vector<std::string>;
 using tableStructure = std::vector<tableRowStructure>;
+using tableHeaderAndData = std::pair<std::vector<std::string>, tableStructure>;
 
 enum class Table
 {
@@ -61,11 +62,13 @@ class KeoDB : public MarvusDB::Database
 		KeoDB();
 		KeoDB(std::string database);
 		virtual ~KeoDB();
+		bool prepareViews();
 		bool insertEnumValue(TypeTables typeTable, const std::string& value);
 		// Entities insert
 		bool insertEmployee(Employee emp);
-		bool insertFarmland(int farmSize, int cropID, int overseerID);
+		//bool insertFarmland(int farmSize, int cropID, int overseerID);
 		tableStructure getTableData(Table table);
+		tableHeaderAndData obtainTableHeaderAndData(Table table);
 };
 }
 #endif /* EMPLOYEEDB_H */

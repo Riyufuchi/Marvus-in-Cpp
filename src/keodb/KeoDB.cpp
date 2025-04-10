@@ -18,12 +18,21 @@ KeoDB::~KeoDB()
 {
 }
 
+bool KeoDB::prepareViews()
+{
+	for (const auto& [scriptFile, fileContent] : sqlScriptFiles.getScriptMap())
+		if (scriptFile.find("view") != std::string::npos)
+			if (!executeSQL(fileContent))
+				return false;
+	return true;
+}
+
 bool KeoDB::insertEnumValue(TypeTables typeTable, const std::string& value)
 {
 	if (value == "" || !typeTableSQLs.contains(typeTable))
 		return false;
 
-	std::string sqlTemplate = sql.getScript(typeTableSQLs.find(typeTable)->second);
+	std::string sqlTemplate = sqlScriptFiles.getScript(typeTableSQLs.find(typeTable)->second);
 	if (sqlTemplate == "")
 		return false;
 
@@ -49,7 +58,7 @@ bool KeoDB::insertEmployee(Employee emp)
 	if (emp.name == "" || emp.jobTitle == "")
 		return false;
 
-	std::string sqlTemplate = sql.getScript(INSERT_EMPLOYEE);
+	std::string sqlTemplate = sqlScriptFiles.getScript(INSERT_EMPLOYEE);
 	if (sqlTemplate == "")
 		return false;
 
@@ -114,24 +123,61 @@ tableStructure KeoDB::getTableData(Table table)
 	std::string sqlView;
 	switch (table)
 	{
-		case Table::PEOPLE: sqlView = sql.getScript(BASIC_EMP_VIEW); break;
-		case Table::FARMLANDS: sqlView = sql.getScript(BASIC_FARMLANDS_VIEW); break;
-		case Table::MINES: sqlView = sql.getScript(BASIC_MINES_VIEW); break;
+		case Table::PEOPLE: sqlView = sqlScriptFiles.getScript(BASIC_EMP_VIEW); break;
+		case Table::FARMLANDS: sqlView = sqlScriptFiles.getScript(BASIC_FARMLANDS_VIEW); break;
+		case Table::MINES: sqlView = sqlScriptFiles.getScript(BASIC_MINES_VIEW); break;
 	}
 
-	char* errMsg = nullptr;
 	if (sqlite3_exec(db, sqlView.c_str(),
 		[](void* data, int argc, char** argv, char** azColName) -> int {
 			return static_cast<KeoDB*>(data)->rowCallback(data, argc, argv, azColName);
 		},
-		this, &errMsg) != SQLITE_OK)
+		this, &c_ErrorMessage) != SQLITE_OK)
 	{
-		std::cerr << "SQL error: " << errMsg << std::endl;
-		sqlite3_free(errMsg);
+		std::cerr << "SQL error: " << c_ErrorMessage << std::endl;
+		sqlite3_free(c_ErrorMessage);
 	}
 
 	return tableData;
+}
 
+tableHeaderAndData KeoDB::obtainTableHeaderAndData(Table table)
+{
+	tableRowStructure header;
+	tableData.clear();
+
+	std::string sqlView = "SELECT * FROM ";
+	switch (table)
+	{
+		case Table::PEOPLE: sqlView += "EMPLOYEE_VIEW;"; break;
+		case Table::FARMLANDS: sqlView += "FARMLAND_VIEW;"; break;
+		case Table::MINES: sqlView += "MINE_VIEW;"; break;
+	}
+
+	if (!sqlite3_prepare_v2(db, sqlView.c_str(), -1, &stmt, nullptr) == SQLITE_OK)
+	{
+		std::cerr << "SQL prepare error: " << sqlite3_errmsg(db) << std::endl;
+	}
+
+	int colCount = sqlite3_column_count(stmt);
+	int i = 0;
+	while (sqlite3_step(stmt) == SQLITE_ROW)
+	{
+		tableRowStructure rowData;
+		rowData.reserve(colCount); // Optimize vector allocation
+		for (i = 0; i < colCount; i++)
+			rowData.push_back(sqlite3_column_text(stmt, i) ? std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, i))) : "NULL"); // Avoids string allocation
+		tableData.push_back(std::move(rowData));
+	}
+
+	header.reserve(colCount - 1);
+	for (int i = 1; i < colCount; ++i) // As we don't need ID column header
+	{
+		header.push_back(sqlite3_column_name(stmt, i));
+	}
+
+	sqlite3_finalize(stmt);
+	return tableHeaderAndData(header, tableData);
 }
 
 } // Namespace

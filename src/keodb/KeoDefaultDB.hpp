@@ -9,11 +9,6 @@
 
 namespace KeoDefaults
 {
-	// Table headers
-	inline const std::vector<std::string> PEOPLE_TABLE_HEADER = { "First name", "Middle name", "Last name", "Job title" };
-	inline const std::vector<std::string> FARMLANDS_TABLE_HEADER = {"Name", "Size", "Planted crops", "Overseer", "Overseer role" };
-	inline const std::vector<std::string> MINES_TABLE_HEADER = { "Name", "Ore type", "Active" };
-
 class KeoInserter
 {
 	private:
