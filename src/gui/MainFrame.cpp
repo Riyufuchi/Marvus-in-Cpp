@@ -13,14 +13,14 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 
 	configure(config);
 
-	if (!db.initializeDatabase())
+	if (!db.initializeDatabase() || !tribedb.initializeDatabase())
 	{
 		wxMessageBox("Database initialization failed.\nExiting program!", "Database Error", wxOK | wxICON_ERROR, this);
 		Close(true);
 		return;
 	}
 	
-	if (!db.initializeViews())
+	if (!db.initializeViews() || !tribedb.initializeViews())
 	{
 		wxMessageBox("Views initialization failed.\nExiting program!", "Database Error", wxOK | wxICON_ERROR, this);
 		Close(true);
@@ -31,11 +31,17 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 
 	this->notebook = new wxNotebook(this, wxID_ANY);
 	
+	// TB
+	wxPanel* campaignResourcesTab = new wxPanel(notebook);
+
+	// keo
 	wxPanel* mainTab = new wxPanel(notebook);
 	wxPanel* farmsTab = new wxPanel(notebook);
 	wxPanel* minesTab = new wxPanel(notebook);
 	
-	notebook->AddPage(mainTab, "People", true); // First tab (selected by default)
+
+	notebook->AddPage(campaignResourcesTab, "Campaign resources", true); // First tab (selected by default)
+	notebook->AddPage(mainTab, "People"); // First tab (selected by default)
 	notebook->AddPage(farmsTab, "Farmlands"); // Second tab
 	notebook->AddPage(minesTab, "Mines");
 
@@ -54,12 +60,16 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 	minesTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
 	grids[keo::Table::MINES] = tempGrid;
 
+	gridStandAlone = wxw::FactoryWxW::newGrid(campaignResourcesTab, wxID_ANY);
+	campaignResourcesTab->SetSizer(wxw::FactoryWxW::newMaxSizer(gridStandAlone));
+
 	// Layout the notebook
 	SetSizerAndFit(wxw::FactoryWxW::newMaxSizer(notebook));
 	// Attempt to load data
 	loadViewToGrid(keo::Table::PEOPLE);
 	loadViewToGrid(keo::Table::FARMLANDS);
 	loadViewToGrid(keo::Table::MINES);
+	loadViewToGrid();
 	SetSize(800, 600);
 }
 
@@ -111,6 +121,62 @@ wxMenuBar* MainFrame::createMenuBar()
 	menuBar->Append(helpMenu, "&Help");
 	
 	return menuBar;
+}
+
+void MainFrame::loadViewToGrid()
+{
+	ConsoleLib::ScriptMap map;
+	map.loadScripts("../data/");
+
+	tribedb.executeSQL(map.getScript("tribal_default.sql"));
+	tribedb.executeSQL(map.getScript("broken_oath_log.sql"));
+
+	tableHeaderAndData tableData = tribedb.obtainTableHeaderAndData("SELECT * FROM CAMPAIGN_SUMMARY;");
+
+	if (tableData.second.empty())
+	{
+		wxMessageBox("No data in the table", "Table view result", wxOK | wxICON_INFORMATION, this);
+		return;
+	}
+
+	wxGrid& grid = *gridStandAlone;
+
+		if (grid.GetNumberCols() > 0)
+			grid.DeleteCols(0, grid.GetNumberCols()); // Remove old cols
+		grid.AppendCols(tableData.first.size());
+
+		int rowX = 0;
+		for (const std::string& heading : tableData.first)
+		{
+			grid.SetColLabelValue(rowX, heading);
+			rowX++;
+		}
+
+		if (tableData.second.empty())
+		{
+			wxMessageBox("No data in the table", "Table view result", wxOK | wxICON_INFORMATION, this);
+			return;
+		}
+
+		if (grid.GetNumberRows() > 0)
+			grid.DeleteRows(0, grid.GetNumberRows()); // Remove old rows
+		grid.AppendRows(tableData.second.size());
+
+		int row = 0;
+		rowX = 0;
+		int dataX = 1;
+		const int ROW_SIZE = tableData.second[0].size();
+		for (const keo::tableRowStructure& rowData : tableData.second)
+		{
+			for (dataX = 1, rowX = 0; dataX < ROW_SIZE; dataX++, rowX++)
+			{
+				grid.SetCellValue(row, rowX, rowData[dataX]);
+			}
+			row++;
+		}
+		grid.AutoSizeColumns(); // Auto-size column headers
+		grid.AutoSizeRows();
+		grid.SetRowLabelSize(wxGRID_AUTOSIZE);
 }
 
 void MainFrame::loadDataToGrid(keo::Table table)

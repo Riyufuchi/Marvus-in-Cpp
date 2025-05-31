@@ -11,6 +11,10 @@ namespace MarvusDB
 
 inline const std::string INIT_DB_SQL = "initialize_database.sql";
 
+using tableRowStructure = std::vector<std::string>;
+using tableStructure = std::vector<tableRowStructure>;
+using tableHeaderAndData = std::pair<std::vector<std::string>, tableStructure>;
+
 class Database
 {
 	protected:
@@ -25,11 +29,13 @@ class Database
 		Database(std::string databaseFile);
 		Database(std::string databaseFile, std::string sqlScripts);
 		virtual ~Database();
+		bool initializeViews();
 		bool initializeDatabase();
 		bool reconnect(std::string databaseFile);
 		bool executeSQL(const std::string& sql);
 		bool executeSQL_script(const std::string& sql);
 		void setSQL_Scripts(std::string path);
+		tableHeaderAndData obtainTableHeaderAndData(const std::string& viewSQL);
 };
 }
 #endif /* DATABASE_H */ 

@@ -9,9 +9,12 @@
 
 #include "../wxw/FactoryWxW.h"
 
+// KEO
 #include "../keodb/KeoDB.h"
 #include "../keodb/KeoDefaultDB.hpp"
-
+// Tribal
+#include "../tribalDB/TribeDB.h"
+// Other
 #include "ArgumentParser.h"
 
 
@@ -36,11 +39,14 @@ class MainFrame : public wxFrame
 	private:
 		std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argumentMethods;
 		std::unordered_map<keo::Table, wxGrid*> grids;
+		wxGrid* gridStandAlone;
 		KeoDB db;
+		twdb::TribeDB tribedb;
 		wxNotebook* notebook; // Tabbed pane
 		void configure(ConsoleLib::argVector& config);
 		void loadDataToGrid(keo::Table table);
 		void loadViewToGrid(keo::Table table);
+		void loadViewToGrid();
 		wxMenuBar* createMenuBar();
 		// Events
 		void onExit(wxCommandEvent& event);

@@ -18,6 +18,41 @@ Database::~Database()
 		sqlite3_close(db);
 }
 
+tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL)
+{
+	tableRowStructure header;
+	tableStructure tableData;
+
+	if (!sqlite3_prepare_v2(db, viewSQL.c_str(), -1, &stmt, nullptr) == SQLITE_OK)
+	{
+		std::cerr << "SQL prepare error: " << sqlite3_errmsg(db) << std::endl;
+	}
+
+	int colCount = sqlite3_column_count(stmt);
+	int i = 0;
+	const char* value = nullptr;
+	while (sqlite3_step(stmt) == SQLITE_ROW)
+	{
+		tableRowStructure rowData;
+		rowData.reserve(colCount); // Optimize vector allocation
+		for (i = 0; i < colCount; i++)
+		{
+			value = reinterpret_cast<const char*>(sqlite3_column_text(stmt, i));
+			rowData.push_back(value ? std::string(value) : "NULL");
+		}
+		tableData.push_back(std::move(rowData));
+	}
+
+	header.reserve(colCount - 1);
+	for (int i = 1; i < colCount; ++i) // As we don't need ID column header
+	{
+		header.push_back(sqlite3_column_name(stmt, i));
+	}
+
+	sqlite3_finalize(stmt);
+	return tableHeaderAndData(header, tableData);
+}
+
 bool Database::checkSuccessFor(std::string action, int expectedResult)
 {
 	if (result != expectedResult)
@@ -34,6 +69,15 @@ bool Database::reconnect(std::string databaseFile)
 		sqlite3_close(db);
 	sqlite3_open(databaseFile.c_str(), &db);
 	return initializeDatabase();
+}
+
+bool Database::initializeViews()
+{
+	for (const auto& [scriptFile, fileContent] : sqlScriptFiles.getScriptMap())
+		if (scriptFile.find("view") != std::string::npos)
+			if (!executeSQL(fileContent))
+				return false;
+	return true;
 }
 
 bool Database::initializeDatabase()

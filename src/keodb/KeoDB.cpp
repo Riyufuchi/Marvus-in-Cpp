@@ -7,7 +7,7 @@ KeoDB::KeoDB() : KeoDB("database.db")
 {
 }
 
-KeoDB::KeoDB(std::string database) : MarvusDB::Database(database, "../sql/")
+KeoDB::KeoDB(std::string database) : MarvusDB::Database(database, "../sql/keo/")
 {
 	typeTableSQLs[TypeTables::JOBS] = "insert_job_title.sql";
 	typeTableSQLs[TypeTables::CROPS] = "insert_crop_type.sql";
@@ -16,15 +16,6 @@ KeoDB::KeoDB(std::string database) : MarvusDB::Database(database, "../sql/")
 
 KeoDB::~KeoDB()
 {
-}
-
-bool KeoDB::initializeViews()
-{
-	for (const auto& [scriptFile, fileContent] : sqlScriptFiles.getScriptMap())
-		if (scriptFile.find("view") != std::string::npos)
-			if (!executeSQL(fileContent))
-				return false;
-	return true;
 }
 
 bool KeoDB::insertEnumValue(TypeTables typeTable, const std::string& value)

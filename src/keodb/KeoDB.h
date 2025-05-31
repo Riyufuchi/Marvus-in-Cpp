@@ -62,7 +62,6 @@ class KeoDB : public MarvusDB::Database
 		KeoDB();
 		KeoDB(std::string database);
 		virtual ~KeoDB();
-		bool initializeViews();
 		bool insertEnumValue(TypeTables typeTable, const std::string& value);
 		// Entities insert
 		bool insertEmployee(Employee emp);

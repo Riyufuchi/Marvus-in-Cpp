@@ -1,0 +1,68 @@
+-- Enum tables
+
+CREATE TABLE IF NOT EXISTS PLAYERS (
+	player_id INTEGER PRIMARY KEY,
+	player_name TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS UNIT_TYPES (
+	unit_type_id INTEGER PRIMARY KEY,
+	unit_type_name TEXT UNIQUE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS CAMPAIGNS (
+	campaign_id INTEGER PRIMARY KEY,
+	campaign_name TEXT UNIQUE NOT NULL
+);
+
+-- Entities
+
+CREATE TABLE IF NOT EXISTS UNITS (
+	unit_id INTEGER PRIMARY KEY,
+	wood_cost INTEGER NOT NULL,
+	clay_cost INTEGER NOT NULL,
+	iron_cost INTEGER NOT NULL,
+	personel_cost INTEGER NOT NULL,
+	unit_type_name_id INTEGER NOT NULL,
+	FOREIGN KEY (unit_type_name_id) REFERENCES UNIT_TYPES(unit_type_id)
+);
+
+CREATE TABLE IF NOT EXISTS VILLAGES (
+	village_id INTEGER PRIMARY KEY,
+	village_name TEXT UNIQUE NOT NULL,
+	owner_id INTEGER NOT NULL,
+	FOREIGN KEY (owner_id) REFERENCES PLAYERS(player_id)
+);
+
+CREATE TABLE IF NOT EXISTS BATTLE_UNIT_LOG (
+	battle_unit_log_id INTEGER PRIMARY KEY,
+	send_units INTEGER NOT NULL DEFAULT 0,
+	lost_units INTEGER NOT NULL DEFAULT 0,
+	unit_type_id INTEGER NOT NULL,
+	battle_id INTEGER NOT NULL,
+	UNIQUE(battle_id, unit_type_id),
+	FOREIGN KEY (unit_type_id) REFERENCES UNIT_TYPES(unit_type_id),
+	FOREIGN KEY (battle_id) REFERENCES BATTLES(battle_id)
+);
+
+CREATE TABLE IF NOT EXISTS BATTLES (
+	battle_id INTEGER PRIMARY KEY,
+	is_offense INTEGER NOT NULL CHECK (is_offense IN (0, 1)) DEFAULT 1,
+	wood_loot INTEGER NOT NULL DEFAULT 0,
+	clay_loot INTEGER NOT NULL DEFAULT 0,
+	iron_loot INTEGER NOT NULL DEFAULT 0,
+	source_village_id INTEGER NOT NULL,
+	target_village_id INTEGER NOT NULL,
+	attacker_id INTEGER NOT NULL,
+	FOREIGN KEY (source_village_id) REFERENCES VILLAGES(village_id),
+	FOREIGN KEY (target_village_id) REFERENCES VILLAGES(village_id),
+	FOREIGN KEY (attacker_id) REFERENCES PLAYERS(player_id)
+);
+
+CREATE TABLE IF NOT EXISTS CAMPAIGN_LOG (
+	campaign_log_id INTEGER PRIMARY KEY,
+	battle_id INTEGER NOT NULL,
+	campaign_id INTEGER NOT NULL,
+	FOREIGN KEY (battle_id) REFERENCES BATTLES(battle_id),
+	FOREIGN KEY (campaign_id) REFERENCES CAMPAIGNS(campaign_id)
+);
