@@ -1,0 +1,1 @@
+INSERT INTO ORE_TYPES (ore_name) VALUES (?);
