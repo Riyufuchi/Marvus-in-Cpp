@@ -4,7 +4,7 @@ CREATE VIEW FARMLAND_VIEW AS
 SELECT
 	f.farmland_id,
 	f.farmland_name AS "Name",
-	f.farmland_size AS "Field size",
+	f.farmland_size AS "Field size [m2]",
 	c.crop_name AS "Crop type",
 	e.first_name || ' ' ||
 	CASE 

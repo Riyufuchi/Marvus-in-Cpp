@@ -12,6 +12,13 @@
 namespace wxw
 {
 
+wxBoxSizer* FactoryWxW::newMaxSizer(wxWindow* component)
+{
+	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+	sizer->Add(component, 1, wxEXPAND | wxALL, 0);
+	return sizer;
+}
+
 wxGrid* FactoryWxW::newGrid(wxWindow* parent, wxWindowID id)
 {
 	wxGrid* grid = new wxGrid(parent, id, wxPoint(0, 0), wxSize(400, 300));

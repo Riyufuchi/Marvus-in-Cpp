@@ -31,45 +31,31 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 
 	this->notebook = new wxNotebook(this, wxID_ANY);
 	
-	wxPanel* tab1 = new wxPanel(notebook, wxID_ANY);
-	wxPanel* tab2 = new wxPanel(notebook, wxID_ANY);
-	wxPanel* tab3 = new wxPanel(notebook, wxID_ANY);
+	wxPanel* mainTab = new wxPanel(notebook);
+	wxPanel* farmsTab = new wxPanel(notebook);
+	wxPanel* minesTab = new wxPanel(notebook);
 	
-	notebook->AddPage(tab1, "People", true); // First tab (selected by default)
-	notebook->AddPage(tab2, "Farmlands", false); // Second tab
-	notebook->AddPage(tab3, "Mines", false);
+	notebook->AddPage(mainTab, "People", true); // First tab (selected by default)
+	notebook->AddPage(farmsTab, "Farmlands"); // Second tab
+	notebook->AddPage(minesTab, "Mines");
 
 	// Create a grid and add to tab1
-	tempGrid = wxw::FactoryWxW::newGrid(tab1, wxID_ANY);
-	
-	wxBoxSizer* tab1Sizer = new wxBoxSizer(wxVERTICAL);
-	tab1Sizer->Add(tempGrid, 1, wxEXPAND | wxALL, 0);
-	tab1->SetSizer(tab1Sizer);
-	
+	wxGrid* tempGrid = wxw::FactoryWxW::newGrid(mainTab, wxID_ANY);
+	mainTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
 	grids[keo::Table::PEOPLE] = tempGrid;
 
 	// Tab 2
-	tempGrid = wxw::FactoryWxW::newGrid(tab2, wxID_ANY);
-	
-	wxBoxSizer* tab2Sizer = new wxBoxSizer(wxVERTICAL);
-	tab2Sizer->Add(tempGrid, 1, wxEXPAND | wxALL, 0);
-	tab2->SetSizer(tab2Sizer);
-	
+	tempGrid = wxw::FactoryWxW::newGrid(farmsTab, wxID_ANY);
+	farmsTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
 	grids[keo::Table::FARMLANDS] = tempGrid;
 
 	// Tab 3
-	tempGrid = wxw::FactoryWxW::newGrid(tab3, wxID_ANY);
-
-	wxBoxSizer* tab3Sizer = new wxBoxSizer(wxVERTICAL);
-	tab3Sizer->Add(tempGrid, 1, wxEXPAND | wxALL, 0);
-	tab3->SetSizer(tab3Sizer);
-
+	tempGrid = wxw::FactoryWxW::newGrid(minesTab, wxID_ANY);
+	minesTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
 	grids[keo::Table::MINES] = tempGrid;
 
 	// Layout the notebook
-	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-	mainSizer->Add(notebook, 1, wxEXPAND | wxALL, 0);
-	SetSizerAndFit(mainSizer);
+	SetSizerAndFit(wxw::FactoryWxW::newMaxSizer(notebook));
 	// Attempt to load data
 	loadViewToGrid(keo::Table::PEOPLE);
 	loadViewToGrid(keo::Table::FARMLANDS);

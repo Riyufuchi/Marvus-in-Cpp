@@ -149,12 +149,16 @@ tableHeaderAndData KeoDB::obtainTableHeaderAndData(Table table)
 
 	int colCount = sqlite3_column_count(stmt);
 	int i = 0;
+	const char* value = nullptr;
 	while (sqlite3_step(stmt) == SQLITE_ROW)
 	{
 		tableRowStructure rowData;
 		rowData.reserve(colCount); // Optimize vector allocation
 		for (i = 0; i < colCount; i++)
-			rowData.push_back(sqlite3_column_text(stmt, i) ? std::string(reinterpret_cast<const char*>(sqlite3_column_text(stmt, i))) : "NULL"); // Avoids string allocation
+		{
+			value = reinterpret_cast<const char*>(sqlite3_column_text(stmt, i));
+			rowData.push_back(value ? std::string(value) : "NULL");
+		}
 		tableData.push_back(std::move(rowData));
 	}
 

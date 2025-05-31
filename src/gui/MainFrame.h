@@ -38,7 +38,6 @@ class MainFrame : public wxFrame
 		std::unordered_map<keo::Table, wxGrid*> grids;
 		KeoDB db;
 		wxNotebook* notebook; // Tabbed pane
-		wxGrid* tempGrid;
 		void configure(ConsoleLib::argVector& config);
 		void loadDataToGrid(keo::Table table);
 		void loadViewToGrid(keo::Table table);
