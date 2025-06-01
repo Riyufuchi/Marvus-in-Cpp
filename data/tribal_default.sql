@@ -1,10 +1,12 @@
 -- PLAYERS
 INSERT INTO PLAYERS (player_name) VALUES ('Exactylus');
 INSERT INTO PLAYERS (player_name) VALUES ('Dorgan Oathkeeper');
+INSERT INTO PLAYERS (player_name) VALUES ('?');
 
 -- VILLAGES
 INSERT INTO VILLAGES (village_name, owner_id) VALUES ('Westfold', 1);
 INSERT INTO VILLAGES (village_name, owner_id) VALUES ('Dorgan Oathkeeper village', 2);
+INSERT INTO VILLAGES (village_name, owner_id) VALUES ('?', 3);
 
 -- UNITS
 INSERT INTO UNIT_TYPES (unit_type_name) VALUES ('Spearman');
