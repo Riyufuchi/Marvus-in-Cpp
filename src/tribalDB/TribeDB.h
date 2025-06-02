@@ -20,6 +20,7 @@ class TribeDB : public marvus::Database
 public:
 	TribeDB();
 	virtual ~TribeDB();
+	bool insertNewVillage(const marvus::insertVector& data);
 };
 
 } /* namespace twdb */

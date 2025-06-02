@@ -14,6 +14,7 @@
 #include "../keodb/KeoDefaultDB.hpp"
 // Tribal
 #include "../tribalDB/TribeDB.h"
+#include "../dialogs/tw/VillageDialog.h"
 // Other
 #include "ArgumentParser.h"
 
@@ -31,7 +32,8 @@ enum
 	ID_Add_Job_Title,
 	ID_Refresh,
 	ID_DropDB,
-	ID_InserTestData
+	ID_InserTestData,
+	ID_InsertNewVillage
 };
 
 enum class Tabs
@@ -52,7 +54,6 @@ class MainFrame : public wxFrame
 		twdb::TribeDB tribedb;
 		wxNotebook* notebook; // Tabbed pane
 		void configure(ConsoleLib::argVector& config);
-		void loadDataToGrid(keo::Table table);
 		void loadViewToGrid(keo::Table table);
 		void loadViewToGrid(Tabs tab);
 		wxMenuBar* createMenuBar();
@@ -66,6 +67,7 @@ class MainFrame : public wxFrame
 		void onRefreshWindow(wxCommandEvent& event);
 		void onDropDatabase(wxCommandEvent& event);
 		void onInsertTestData(wxCommandEvent& event);
+		void onAddNewVillage(wxCommandEvent& event);
 		wxDECLARE_EVENT_TABLE();
 	public:
 		MainFrame(const wxString& title, ConsoleLib::argVector& config);

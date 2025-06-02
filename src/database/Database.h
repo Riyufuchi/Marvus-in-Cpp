@@ -34,6 +34,9 @@ class Database
 		int result;
 		char* c_ErrorMessage;
 		bool checkSuccessFor(std::string action, int expectedResult = SQLITE_OK);
+	private:
+		tableStructure tableData;
+		int rowCallback(void* data, int argc, char** argv, char** azColName); // Callback function to handle each row of the result
 	public:
 		Database(std::string databaseFile);
 		Database(std::string databaseFile, std::string sqlScripts);
@@ -46,7 +49,8 @@ class Database
 		bool reconnect(std::string databaseFile);
 		bool executeSQL(const std::string& sql);
 		bool executeSQL_script(const std::string& sql);
-		int insertNewData(insertVector& data, const std::string& insertSQL);
+		int insertNewData(const insertVector& data, const std::string& insertSQL);
+		tableStructure obtainTableData(const std::string& selectSQL);
 		tableHeaderAndData obtainTableHeaderAndData(const std::string& viewSQL);
 };
 }

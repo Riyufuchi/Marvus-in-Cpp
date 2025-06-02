@@ -20,4 +20,9 @@ TribeDB::~TribeDB()
 {
 }
 
+bool TribeDB::insertNewVillage(const marvus::insertVector& data)
+{
+	return insertNewData(data, sqlScriptFiles.getScript("insert_village.sql"));
+}
+
 } /* namespace twdb */

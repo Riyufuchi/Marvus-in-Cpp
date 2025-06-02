@@ -12,10 +12,6 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 
 	configure(config);
 
-	// This is just an temporary solution
-	std::filesystem::remove("tribalWars.db");
-	tribedb.reconnect("tribalWars.db");
-
 	if (!db.initializeDatabase() || !tribedb.initializeDatabase())
 	{
 		wxMessageBox("Database initialization failed.\nExiting program!", "Database Error", wxOK | wxICON_ERROR, this);
@@ -29,7 +25,6 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 		Close(true);
 		return;
 	}
-
 
 	initTribeDB();
 
@@ -102,11 +97,6 @@ MainFrame::~MainFrame()
 
 void MainFrame::initTribeDB()
 {
-	ConsoleLib::ScriptMap map;
-	map.loadScripts("../data/");
-	tribedb.executeSQL(map.getScript("tribal_default.sql"));
-	tribedb.executeSQL(map.getScript("broken_oath_log.sql"));
-	//tribedb.executeSQL(map.getScript("general_raids_log.sql"));
 	views[Tabs::CAMPAIGN_OVERVIEW] = "SELECT * FROM CAMPAIGN_SUMMARY;";
 	views[Tabs::BATTLES] = "SELECT * FROM CAMPAIGN_BATTLES_SUMMARY;";
 	views[Tabs::VILLAGES] = "SELECT * FROM VILLAGES_WITH_OWNERS;";
@@ -146,15 +136,15 @@ wxMenuBar* MainFrame::createMenuBar()
 	refresh->Append(ID_Refresh, "&Refresh");
 
 	wxMenu* tribe = new wxMenu();
-	tribe->Append(ID_Refresh, "&Add player");
-	tribe->Append(ID_Refresh, "&Add village");
-	tribe->Append(ID_Refresh, "&Add campaign");
-	tribe->Append(ID_Refresh, "&Add battle");
+	tribe->Append(ID_About, "&Add player");
+	tribe->Append(ID_InsertNewVillage, "&Add village");
+	tribe->Append(ID_About, "&Add campaign");
+	tribe->Append(ID_About, "&Add battle");
 
 	// Create a menu bar and add menu sections
 	wxMenuBar* menuBar = new wxMenuBar;
 	menuBar->Append(fileMenu, "&File");
-	menuBar->Append(tribe, "&Tribe");
+	menuBar->Append(tribe, "&Tribe data");
 	menuBar->Append(addEmpMenu, "&People");
 	menuBar->Append(addJobTitleMenu, "&Enums");
 	menuBar->Append(refresh, "&Window");
@@ -169,12 +159,6 @@ void MainFrame::loadViewToGrid(Tabs tab)
 		return;
 
 	tableHeaderAndData tableData = tribedb.obtainTableHeaderAndData(views.find(tab)->second);
-
-	if (tableData.second.empty())
-	{
-		wxMessageBox("No data in the table", "Table view result", wxOK | wxICON_INFORMATION, this);
-		return;
-	}
 
 	if (!grids2.contains(tab))
 		return;
@@ -207,39 +191,6 @@ void MainFrame::loadViewToGrid(Tabs tab)
 	int dataX = 1;
 	const int ROW_SIZE = tableData.second[0].size();
 	for (const keo::tableRowStructure& rowData : tableData.second)
-	{
-		for (dataX = 1, rowX = 0; dataX < ROW_SIZE; dataX++, rowX++)
-		{
-			grid.SetCellValue(row, rowX, rowData[dataX]);
-		}
-		row++;
-	}
-	grid.AutoSizeColumns(); // Auto-size column headers
-	grid.AutoSizeRows();
-	grid.SetRowLabelSize(wxGRID_AUTOSIZE);
-}
-
-void MainFrame::loadDataToGrid(keo::Table table)
-{
-	keo::tableStructure tableData = db.obtainTableData(table);
-
-	if (tableData.empty() || !grids.contains(table))
-	{
-		wxMessageBox("No data in the table", "Table view result", wxOK | wxICON_INFORMATION, this);
-		return;
-	}
-
-	wxGrid& grid = *grids.find(table)->second;
-
-	if (grid.GetNumberRows() > 0)
-		grid.DeleteRows(0, grid.GetNumberRows()); // Remove old rows
-	grid.AppendRows(tableData.size());
-
-	int row = 0;
-	int rowX = 0;
-	int dataX = 1;
-	const int ROW_SIZE = tableData[0].size();
-	for (const keo::tableRowStructure& rowData : tableData)
 	{
 		for (dataX = 1, rowX = 0; dataX < ROW_SIZE; dataX++, rowX++)
 		{
@@ -301,9 +252,28 @@ void MainFrame::loadViewToGrid(keo::Table table)
 
 void MainFrame::onRefreshWindow(wxCommandEvent&)
 {
-	loadViewToGrid(keo::Table::PEOPLE);
-	loadViewToGrid(keo::Table::FARMLANDS);
-	loadViewToGrid(keo::Table::MINES);
+	for (const auto& tab : grids)
+	{
+		loadViewToGrid(tab.first);
+	}
+
+	for (const auto& tab : grids2)
+	{
+		loadViewToGrid(tab.first);
+	}
+}
+
+void MainFrame::onAddNewVillage(wxCommandEvent&)
+{
+	twdb::VillageDialog dlg(this, tribedb.obtainTableData("SELECT * FROM PLAYERS"));
+	if (dlg.ShowModal() == wxID_OK && dlg.isConfirmed())
+	{
+		marvus::insertVector data;
+		data.emplace_back(marvus::insertPair(marvus::DataType::TEXT, dlg.getVillageName()));
+		data.emplace_back(marvus::insertPair(marvus::DataType::INTEGER, std::to_string(dlg.getOwnerID())));
+		if (tribedb.insertNewVillage(data))
+			loadViewToGrid(Tabs::VILLAGES);
+	}
 }
 
 void MainFrame::onNotImplemented(wxCommandEvent&)
@@ -341,6 +311,12 @@ void MainFrame::onInsertTestData(wxCommandEvent& event)
 	KeoDefaults::KeoInserter inserter(db);
 	inserter.fillEnums();
 	inserter.fillTables();
+
+	ConsoleLib::ScriptMap map;
+	map.loadScripts("../data/");
+	tribedb.executeSQL(map.getScript("tribal_default.sql"));
+	tribedb.executeSQL(map.getScript("broken_oath_log.sql"));
+
 	onRefreshWindow(event);
 }
 
@@ -349,6 +325,10 @@ void MainFrame::onDropDatabase(wxCommandEvent&)
 	std::filesystem::remove(DATABASE_FILE);
 	db.reconnect(DATABASE_FILE);
 	db.initializeViews();
+
+	std::filesystem::remove("tribalWars.db");
+	tribedb.reconnect("tribalWars.db");
+	tribedb.initializeViews();
 }
 
 // Event table to link menu actions with functions
@@ -360,6 +340,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_Refresh, MainFrame::onRefreshWindow)
 	EVT_MENU(ID_DropDB, MainFrame::onDropDatabase)
 	EVT_MENU(ID_InserTestData, MainFrame::onInsertTestData)
+	EVT_MENU(ID_InsertNewVillage, MainFrame::onAddNewVillage)
 wxEND_EVENT_TABLE()
 
 }

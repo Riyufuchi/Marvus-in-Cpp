@@ -18,7 +18,18 @@ Database::~Database()
 		sqlite3_close(db);
 }
 
-int Database::insertNewData(insertVector& data, const std::string& insertSQL)
+int Database::rowCallback(void* /*data*/, int argc, char** argv, char** /*azColName*/)
+{
+	tableRowStructure rowData;
+	rowData.reserve(argc); // Optimize vector allocation
+
+	for (int i = 0; i < argc; i++)
+		rowData.push_back(argv[i] ? std::string(argv[i]) : "NULL"); // Avoids string allocation
+	tableData.push_back(std::move(rowData));
+	return 0; // Continue processing
+}
+
+int Database::insertNewData(const insertVector& data, const std::string& insertSQL)
 {
 	if (insertSQL == "")
 		return 0;
@@ -51,6 +62,19 @@ int Database::insertNewData(insertVector& data, const std::string& insertSQL)
 		return 0;
 
 	return sqlite3_last_insert_rowid(db);
+}
+
+tableStructure Database::obtainTableData(const std::string& selectSQL)
+{
+	tableData.clear();
+	result = sqlite3_exec(db, selectSQL.c_str(),
+		[](void* data, int argc, char** argv, char** azColName) -> int {
+			return static_cast<Database*>(data)->rowCallback(data, argc, argv, azColName);
+		},
+		this, &c_ErrorMessage);
+	if (checkSuccessFor("SQL execution of SELECT", SQLITE_OK))
+		tableData.clear();
+	return tableData;
 }
 
 tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL)
