@@ -28,9 +28,9 @@ SELECT
 	SUM(COALESCE(bl.wood_loot, 0)) AS 'Wood looted',
 	SUM(COALESCE(bl.clay_loot, 0)) AS 'Clay looted',
 	SUM(COALESCE(bl.iron_loot, 0)) AS 'Iron looted',
-	SUM(COALESCE(lr.lost_wood, 0)) AS 'Wood needed',
-	SUM(COALESCE(lr.lost_clay, 0)) AS 'Clay needed',
-	SUM(COALESCE(lr.lost_iron, 0)) AS 'Iron needed'
+	SUM(COALESCE(lr.lost_wood, 0)) AS 'Wood lost',
+	SUM(COALESCE(lr.lost_clay, 0)) AS 'Clay lost',
+	SUM(COALESCE(lr.lost_iron, 0)) AS 'Iron lost'
 FROM CAMPAIGNS c
 JOIN CAMPAIGN_LOG cl ON c.campaign_id = cl.campaign_id
 JOIN BATTLES b ON b.battle_id = cl.battle_id

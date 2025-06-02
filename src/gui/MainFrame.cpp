@@ -12,6 +12,7 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 
 	configure(config);
 
+	// This is just an temporary solution
 	std::filesystem::remove("tribalWars.db");
 	tribedb.reconnect("tribalWars.db");
 
@@ -39,6 +40,7 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 	// TB
 	wxPanel* campaignResourcesTab = new wxPanel(notebook);
 	wxPanel* campaignBattlesTab = new wxPanel(notebook);
+	wxPanel* villageOverviewTab = new wxPanel(notebook);
 
 	// keo
 	wxPanel* mainTab = new wxPanel(notebook);
@@ -48,6 +50,7 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 
 	notebook->AddPage(campaignResourcesTab, "Campaign resources", true); // First tab (selected by default)
 	notebook->AddPage(campaignBattlesTab, "Campaign battles");
+	notebook->AddPage(villageOverviewTab, "Village overview");
 	notebook->AddPage(mainTab, "People");
 	notebook->AddPage(farmsTab, "Farmlands");
 	notebook->AddPage(minesTab, "Mines");
@@ -75,6 +78,10 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 	campaignBattlesTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
 	grids2[Tabs::BATTLES] = tempGrid;
 
+	tempGrid = wxw::FactoryWxW::newGrid(villageOverviewTab, wxID_ANY);
+	villageOverviewTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
+	grids2[Tabs::VILLAGES] = tempGrid;
+
 	// Layout the notebook
 	SetSizerAndFit(wxw::FactoryWxW::newMaxSizer(notebook));
 	// Attempt to load data
@@ -83,6 +90,7 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 	loadViewToGrid(keo::Table::MINES);
 	loadViewToGrid(Tabs::CAMPAIGN_OVERVIEW);
 	loadViewToGrid(Tabs::BATTLES);
+	loadViewToGrid(Tabs::VILLAGES);
 	SetSize(800, 600);
 }
 
@@ -98,8 +106,10 @@ void MainFrame::initTribeDB()
 	map.loadScripts("../data/");
 	tribedb.executeSQL(map.getScript("tribal_default.sql"));
 	tribedb.executeSQL(map.getScript("broken_oath_log.sql"));
+	//tribedb.executeSQL(map.getScript("general_raids_log.sql"));
 	views[Tabs::CAMPAIGN_OVERVIEW] = "SELECT * FROM CAMPAIGN_SUMMARY;";
 	views[Tabs::BATTLES] = "SELECT * FROM CAMPAIGN_BATTLES_SUMMARY;";
+	views[Tabs::VILLAGES] = "SELECT * FROM VILLAGES_WITH_OWNERS;";
 }
 
 void MainFrame::configure(ConsoleLib::argVector& config)
@@ -135,9 +145,16 @@ wxMenuBar* MainFrame::createMenuBar()
 	wxMenu* refresh = new wxMenu();
 	refresh->Append(ID_Refresh, "&Refresh");
 
+	wxMenu* tribe = new wxMenu();
+	tribe->Append(ID_Refresh, "&Add player");
+	tribe->Append(ID_Refresh, "&Add village");
+	tribe->Append(ID_Refresh, "&Add campaign");
+	tribe->Append(ID_Refresh, "&Add battle");
+
 	// Create a menu bar and add menu sections
 	wxMenuBar* menuBar = new wxMenuBar;
 	menuBar->Append(fileMenu, "&File");
+	menuBar->Append(tribe, "&Tribe");
 	menuBar->Append(addEmpMenu, "&People");
 	menuBar->Append(addJobTitleMenu, "&Enums");
 	menuBar->Append(refresh, "&Window");

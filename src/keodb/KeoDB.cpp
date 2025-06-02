@@ -7,7 +7,7 @@ KeoDB::KeoDB() : KeoDB("database.db")
 {
 }
 
-KeoDB::KeoDB(std::string database) : MarvusDB::Database(database, "../sql/keo/")
+KeoDB::KeoDB(std::string database) : marvus::Database(database, "../sql/keo/")
 {
 	typeTableSQLs[TypeTables::JOBS] = "insert_job_title.sql";
 	typeTableSQLs[TypeTables::CROPS] = "insert_crop_type.sql";

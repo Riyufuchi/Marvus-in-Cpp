@@ -2,11 +2,13 @@
 INSERT INTO PLAYERS (player_name) VALUES ('Exactylus');
 INSERT INTO PLAYERS (player_name) VALUES ('Dorgan Oathkeeper');
 INSERT INTO PLAYERS (player_name) VALUES ('?');
+INSERT INTO PLAYERS (player_name) VALUES ('Barbarians');
 
 -- VILLAGES
 INSERT INTO VILLAGES (village_name, owner_id) VALUES ('Westfold', 1);
 INSERT INTO VILLAGES (village_name, owner_id) VALUES ('Dorgan Oathkeeper village', 2);
 INSERT INTO VILLAGES (village_name, owner_id) VALUES ('?', 3);
+INSERT INTO VILLAGES (village_name, owner_id) VALUES ('Barbarian village [440|589]', 4);
 
 -- UNITS
 INSERT INTO UNIT_TYPES (unit_type_name) VALUES ('Spearman');
@@ -27,6 +29,7 @@ INSERT INTO UNIT_TYPES (unit_type_name) VALUES ('Noble');
 
 -- CAMPAIGNS
 INSERT INTO CAMPAIGNS (campaign_name) VALUES ('Broken oath');
+INSERT INTO CAMPAIGNS (campaign_name) VALUES ('General raids');
 
 -- UNITS DETAILS
 

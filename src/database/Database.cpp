@@ -1,6 +1,6 @@
 #include "Database.h"
 
-namespace MarvusDB
+namespace marvus
 {
 Database::Database(std::string databaseFile) : Database(databaseFile, "")
 {
@@ -16,6 +16,41 @@ Database::~Database()
 {
 	if (db)
 		sqlite3_close(db);
+}
+
+int Database::insertNewData(insertVector& data, const std::string& insertSQL)
+{
+	if (insertSQL == "")
+		return 0;
+
+	result = sqlite3_prepare_v2(db, insertSQL.c_str(), -1, &stmt, nullptr);
+	if (checkSuccessFor("Statement preparation"))
+		return 0;
+
+	int x = 1;
+	StatementGuard sg(stmt);
+
+	for (const insertPair& dataPair : data)
+	{
+		if (dataPair.second == "")
+			result = sqlite3_bind_null(stmt, x);
+		else
+			switch (dataPair.first)
+			{
+				case DataType::TEXT: result = sqlite3_bind_text(stmt, x, dataPair.second.c_str(), -1, SQLITE_STATIC); break;
+				case DataType::INTEGER: result = sqlite3_bind_int(stmt, x, std::stoi(dataPair.second)); break;
+			}
+
+		if (checkSuccessFor("SQL binding"))
+			return 0;
+		x++;
+	}
+
+	result = sqlite3_step(stmt);
+	if (checkSuccessFor("SQL execution of insert", SQLITE_DONE))
+		return 0;
+
+	return sqlite3_last_insert_rowid(db);
 }
 
 tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL)

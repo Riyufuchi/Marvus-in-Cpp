@@ -37,7 +37,8 @@ enum
 enum class Tabs
 {
 	CAMPAIGN_OVERVIEW,
-	BATTLES
+	BATTLES,
+	VILLAGES
 };
 
 class MainFrame : public wxFrame

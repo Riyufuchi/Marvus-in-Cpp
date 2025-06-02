@@ -12,7 +12,7 @@
 namespace twdb
 {
 
-TribeDB::TribeDB() : MarvusDB::Database("tribalWars.db", "../sql/tribal/")
+TribeDB::TribeDB() : marvus::Database("tribalWars.db", "../sql/tribal/")
 {
 }
 

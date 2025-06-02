@@ -52,7 +52,7 @@ struct Farmland
 	std::string overseer_role {""};
 };
 
-class KeoDB : public MarvusDB::Database
+class KeoDB : public marvus::Database
 {
 	private:
 		tableStructure tableData;

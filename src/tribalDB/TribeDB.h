@@ -15,7 +15,7 @@
 namespace twdb
 {
 
-class TribeDB : public MarvusDB::Database
+class TribeDB : public marvus::Database
 {
 public:
 	TribeDB();
