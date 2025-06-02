@@ -10,18 +10,14 @@
 #ifndef DIALOGS_TW_BATTLEDIALOG_H_
 #define DIALOGS_TW_BATTLEDIALOG_H_
 
-#include <wx/wx.h>
-#include <wx/spinctrl.h>
-
-#include "../../database/Database.h"
+#include "../abstract/DialogKEO.h"
 
 namespace twdb
 {
 
-class BattleDialog : public wxDialog
+class BattleDialog : public keo::DialogKEO
 {
 private:
-	bool confirmed;
 	wxComboBox* campaignBox;
 	wxComboBox* targetVillageBox;
 	wxComboBox* sourceVillageBox;
@@ -29,16 +25,11 @@ private:
 	wxSpinCtrl* woodLootCtrl;
 	wxSpinCtrl* clayLootCtrl;
 	wxSpinCtrl* ironLootCtrl;
-	void onOK(wxCommandEvent& event);
-	void onCancel(wxCommandEvent& event);
 public:
 	BattleDialog(wxWindow* parent, const marvus::tableStructure& campaigns, const marvus::tableStructure& villages);
 	virtual ~BattleDialog();
-	bool isConfirmed() const;
 	marvus::insertVector getBattleData() const;
 	int getCampaignID() const;
-private:
-	wxDECLARE_EVENT_TABLE();
 };
 
 } /* namespace twdb */

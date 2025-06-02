@@ -12,9 +12,7 @@
 namespace twdb
 {
 
-UnitDialog::UnitDialog(wxWindow* parent, int battleID, const marvus::tableStructure& unitNames)
-	: wxDialog(parent, wxID_ANY, "Add units to the battle", wxDefaultPosition, wxSize(400, 300)),
-	  confirmed(false), BATTLE_ID(battleID)
+UnitDialog::UnitDialog(wxWindow* parent, int battleID, const marvus::tableStructure& unitNames) : keo::DialogKEO(parent, "Add units to the battle"), BATTLE_ID(battleID)
 {
 	wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
 
@@ -52,22 +50,6 @@ UnitDialog::~UnitDialog()
 {
 }
 
-void UnitDialog::onOK(wxCommandEvent& event)
-{
-	confirmed = true;
-	EndModal(wxID_OK);
-}
-
-void UnitDialog::onCancel(wxCommandEvent& event)
-{
-	EndModal(wxID_CANCEL);
-}
-
-bool UnitDialog::isConfirmed() const
-{
-	return confirmed;
-}
-
 std::vector<marvus::insertVector> UnitDialog::getUnitsData()
 {
 	std::vector<marvus::insertVector> data;
@@ -87,10 +69,5 @@ std::vector<marvus::insertVector> UnitDialog::getUnitsData()
 	}
 	return data;
 }
-
-wxBEGIN_EVENT_TABLE(UnitDialog, wxDialog)
-	EVT_BUTTON(wxID_OK, UnitDialog::onOK)
-	EVT_BUTTON(wxID_CANCEL, UnitDialog::onCancel)
-wxEND_EVENT_TABLE()
 
 } /* namespace twdb */

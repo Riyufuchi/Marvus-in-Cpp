@@ -12,7 +12,7 @@
 namespace twdb
 {
 
-VillageDialog::VillageDialog(wxWindow* parent, const std::vector<std::vector<std::string>>& players) : wxDialog(parent, wxID_ANY, "Add new village", wxDefaultPosition, wxSize(300, 300)), confirmed(false)
+VillageDialog::VillageDialog(wxWindow* parent, const std::vector<std::vector<std::string>>& players) : keo::DialogKEO(parent, "Add new village")
 {
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
@@ -46,27 +46,9 @@ VillageDialog::~VillageDialog()
 {
 }
 
-
-void VillageDialog::onOK(wxCommandEvent&)
-{
-	confirmed = true;
-	EndModal(wxID_OK);
-}
-
-void VillageDialog::onCancel(wxCommandEvent&)
-{
-	EndModal(wxID_CANCEL);
-}
-
-bool VillageDialog::isConfirmed() const
-{
-	return confirmed;
-}
-
 std::string VillageDialog::getVillageName() const
 {
 	return std::string(villageNameCtrl->GetValue().mb_str(wxConvUTF8));
-
 }
 
 // DB IDs starts at number 1, while combobox indexes from 0
@@ -74,10 +56,5 @@ int VillageDialog::getOwnerID() const
 {
 	return ownerComboBox->GetCurrentSelection() + 1;
 }
-
-wxBEGIN_EVENT_TABLE(VillageDialog, wxDialog)
-	EVT_BUTTON(wxID_OK, VillageDialog::onOK)
-	EVT_BUTTON(wxID_CANCEL, VillageDialog::onCancel)
-wxEND_EVENT_TABLE()
 
 } /* namespace */

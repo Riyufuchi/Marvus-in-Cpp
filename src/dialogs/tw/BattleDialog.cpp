@@ -12,7 +12,7 @@
 namespace twdb
 {
 
-BattleDialog::BattleDialog(wxWindow* parent, const marvus::tableStructure& campaigns, const marvus::tableStructure& villages) : wxDialog(parent, wxID_ANY, "Add new battle", wxDefaultPosition, wxSize(300, 300)), confirmed(false)
+BattleDialog::BattleDialog(wxWindow* parent, const marvus::tableStructure& campaigns, const marvus::tableStructure& villages) : keo::DialogKEO(parent, "Add new battle")
 {
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
@@ -74,22 +74,6 @@ BattleDialog::~BattleDialog()
 {
 }
 
-void BattleDialog::onOK(wxCommandEvent& event)
-{
-	confirmed = true;
-	EndModal(wxID_OK);
-}
-
-void BattleDialog::onCancel(wxCommandEvent& event)
-{
-	EndModal(wxID_CANCEL);
-}
-
-bool BattleDialog::isConfirmed() const
-{
-	return confirmed;
-}
-
 int BattleDialog::getCampaignID() const
 {
 	return campaignBox->GetCurrentSelection() + 1;
@@ -106,10 +90,5 @@ marvus::insertVector BattleDialog::getBattleData() const
 	data.emplace_back(marvus::insertPair(marvus::DataType::INTEGER, std::to_string(targetVillageBox->GetCurrentSelection() + 1)));
 	return data;
 }
-
-wxBEGIN_EVENT_TABLE(BattleDialog, wxDialog)
-	EVT_BUTTON(wxID_OK, BattleDialog::onOK)
-	EVT_BUTTON(wxID_CANCEL, BattleDialog::onCancel)
-wxEND_EVENT_TABLE()
 
 } /* namespace twdb */

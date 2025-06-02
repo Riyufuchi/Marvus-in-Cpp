@@ -10,27 +10,21 @@
 #ifndef VILLAGEDIALOG_H_
 #define VILLAGEDIALOG_H_
 
-#include <wx/wx.h>
+#include "../abstract/DialogKEO.h"
 
 namespace twdb
 {
 
-class VillageDialog : public wxDialog
+class VillageDialog : public keo::DialogKEO
 {
 private:
-	bool confirmed;
 	wxTextCtrl* villageNameCtrl;
 	wxComboBox* ownerComboBox;
-	void onOK(wxCommandEvent& event);
-	void onCancel(wxCommandEvent& event);
 public:
 	VillageDialog(wxWindow* parent, const std::vector<std::vector<std::string>>& players);
 	virtual ~VillageDialog();
 	std::string getVillageName() const;
 	int getOwnerID() const;
-	bool isConfirmed() const;
-private:
-	wxDECLARE_EVENT_TABLE();
 };
 
 } /* namespace twdb */

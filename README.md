@@ -9,7 +9,7 @@
 
 ## About
 
-This project is for learning how to work with wxWidgets and database, it takes inspiration from Far Cry 4's KEO company with some liberties to give it some theme and test data.
+This project is for learning how to work with wxWidgets and database. It originally took inspiration from Far Cry 4's KEO company with some liberties to give it some theme and test data, however it was reworked to log and calculate personal statistics from online game Tribal Wars.
 
 ## Used libraries
 
