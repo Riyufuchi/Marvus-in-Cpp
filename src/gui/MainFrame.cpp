@@ -139,7 +139,7 @@ wxMenuBar* MainFrame::createMenuBar()
 	tribe->Append(ID_About, "&Add player");
 	tribe->Append(ID_InsertNewVillage, "&Add village");
 	tribe->Append(ID_About, "&Add campaign");
-	tribe->Append(ID_About, "&Add battle");
+	tribe->Append(ID_InsertNewBattle, "&Add battle");
 
 	// Create a menu bar and add menu sections
 	wxMenuBar* menuBar = new wxMenuBar;
@@ -276,6 +276,31 @@ void MainFrame::onAddNewVillage(wxCommandEvent&)
 	}
 }
 
+void MainFrame::onAddNewBattle(wxCommandEvent&)
+{
+	twdb::BattleDialog dlg(this, tribedb.obtainTableData("SELECT * FROM CAMPAIGNS"), tribedb.obtainTableData("SELECT * FROM VILLAGES"));
+	if (dlg.ShowModal() == wxID_OK && dlg.isConfirmed())
+	{
+		const int BATTLE_ID = tribedb.insertNewBattle(dlg.getBattleData(), dlg.getCampaignID());
+		if (BATTLE_ID)
+		{
+			twdb::UnitDialog unitDlg(this, BATTLE_ID, tribedb.obtainTableData("SELECT * FROM UNIT_TYPES"));
+			if (unitDlg.ShowModal() == wxID_OK && unitDlg.isConfirmed())
+			{
+				for (const marvus::insertVector& unitData : unitDlg.getUnitsData())
+				{
+					if (!tribedb.insertNewUnit(unitData))
+						return;
+				}
+			}
+			loadViewToGrid(Tabs::CAMPAIGN_OVERVIEW);
+			loadViewToGrid(Tabs::BATTLES);
+		}
+		else
+			wxMessageBox("No data in the table", "Table view result", wxOK | wxICON_INFORMATION, this);
+	}
+}
+
 void MainFrame::onNotImplemented(wxCommandEvent&)
 {
 	wxMessageBox("This function have not been implemented yet!.", "Implmentatation info", wxOK | wxICON_INFORMATION, this);
@@ -341,6 +366,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_DropDB, MainFrame::onDropDatabase)
 	EVT_MENU(ID_InserTestData, MainFrame::onInsertTestData)
 	EVT_MENU(ID_InsertNewVillage, MainFrame::onAddNewVillage)
+	EVT_MENU(ID_InsertNewBattle, MainFrame::onAddNewBattle)
 wxEND_EVENT_TABLE()
 
 }

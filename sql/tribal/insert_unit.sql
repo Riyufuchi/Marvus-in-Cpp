@@ -1,0 +1,1 @@
+INSERT INTO BATTLE_UNIT_LOG (send_units, lost_units, unit_type_id, battle_id) VALUES (?, ?, ?, ?);

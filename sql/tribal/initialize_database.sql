@@ -53,10 +53,8 @@ CREATE TABLE IF NOT EXISTS BATTLES (
 	iron_loot INTEGER NOT NULL DEFAULT 0,
 	source_village_id INTEGER NOT NULL,
 	target_village_id INTEGER NOT NULL,
-	attacker_id INTEGER NOT NULL,
 	FOREIGN KEY (source_village_id) REFERENCES VILLAGES(village_id),
-	FOREIGN KEY (target_village_id) REFERENCES VILLAGES(village_id),
-	FOREIGN KEY (attacker_id) REFERENCES PLAYERS(player_id)
+	FOREIGN KEY (target_village_id) REFERENCES VILLAGES(village_id)
 );
 
 CREATE TABLE IF NOT EXISTS CAMPAIGN_LOG (

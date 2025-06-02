@@ -15,6 +15,8 @@
 // Tribal
 #include "../tribalDB/TribeDB.h"
 #include "../dialogs/tw/VillageDialog.h"
+#include "../dialogs/tw/BattleDialog.h"
+#include "../dialogs/tw/UnitDialog.h"
 // Other
 #include "ArgumentParser.h"
 
@@ -33,7 +35,8 @@ enum
 	ID_Refresh,
 	ID_DropDB,
 	ID_InserTestData,
-	ID_InsertNewVillage
+	ID_InsertNewVillage,
+	ID_InsertNewBattle
 };
 
 enum class Tabs
@@ -68,6 +71,7 @@ class MainFrame : public wxFrame
 		void onDropDatabase(wxCommandEvent& event);
 		void onInsertTestData(wxCommandEvent& event);
 		void onAddNewVillage(wxCommandEvent& event);
+		void onAddNewBattle(wxCommandEvent& event);
 		wxDECLARE_EVENT_TABLE();
 	public:
 		MainFrame(const wxString& title, ConsoleLib::argVector& config);

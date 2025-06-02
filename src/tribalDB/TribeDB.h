@@ -21,6 +21,8 @@ public:
 	TribeDB();
 	virtual ~TribeDB();
 	bool insertNewVillage(const marvus::insertVector& data);
+	int insertNewBattle(const marvus::insertVector& battleData, int campaignID);
+	int insertNewUnit(const marvus::insertVector& unitData);
 };
 
 } /* namespace twdb */

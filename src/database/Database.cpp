@@ -32,7 +32,10 @@ int Database::rowCallback(void* /*data*/, int argc, char** argv, char** /*azColN
 int Database::insertNewData(const insertVector& data, const std::string& insertSQL)
 {
 	if (insertSQL == "")
+	{
+		wxMessageBox(wxString::Format("%s", "Invalid or missing SQL statement."), "SQL script error", wxOK | wxICON_ERROR);
 		return 0;
+	}
 
 	result = sqlite3_prepare_v2(db, insertSQL.c_str(), -1, &stmt, nullptr);
 	if (checkSuccessFor("Statement preparation"))

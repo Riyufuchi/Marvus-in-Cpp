@@ -1,0 +1,1 @@
+INSERT INTO BATTLES (is_offense, wood_loot, clay_loot, iron_loot, source_village_id, target_village_id) VALUES (?, ?, ?, ?, ?, ?);

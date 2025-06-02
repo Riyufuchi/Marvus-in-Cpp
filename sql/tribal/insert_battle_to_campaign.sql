@@ -1,0 +1,1 @@
+INSERT INTO CAMPAIGN_LOG (battle_id, campaign_id) VALUES (?, ?);
