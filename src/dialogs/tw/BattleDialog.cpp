@@ -2,7 +2,7 @@
 // File       : BattleDialog.cpp
 // Author     : riyufuchi
 // Created on : Jun 2, 2025
-// Last edit  : Jun 2, 2025
+// Last edit  : Jun 4, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: KEO-manager
 //==============================================================================
@@ -15,8 +15,9 @@ namespace twdb
 BattleDialog::BattleDialog(wxWindow* parent, const marvus::tableStructure& campaigns, const marvus::tableStructure& villages) : keo::DialogKEO(parent, "Add new battle")
 {
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
+	wxFlexGridSizer* gridSizer = new wxFlexGridSizer(2, 5, 5);
 
-	sizer->Add(new wxStaticText(this, wxID_ANY, "Campaign:"), 0, wxALL, 5);
+	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Campaign:"), 0, wxALL, 5);
 
 	wxArrayString wxCampaigns;
 	for (const std::vector<std::string>& row : campaigns)
@@ -28,7 +29,7 @@ BattleDialog::BattleDialog(wxWindow* parent, const marvus::tableStructure& campa
 	if (!wxCampaigns.empty())
 		campaignBox->SetSelection(0);
 
-	sizer->Add(campaignBox, 0, wxEXPAND | wxALL, 5);
+	gridSizer->Add(campaignBox, 0, wxEXPAND | wxALL, 5);
 
 	wxArrayString wxVillages;
 	for (const std::vector<std::string>& row : villages)
@@ -44,28 +45,31 @@ BattleDialog::BattleDialog(wxWindow* parent, const marvus::tableStructure& campa
 		targetVillageBox->SetSelection(1);
 	}
 
-	sizer->Add(new wxStaticText(this, wxID_ANY, "Source village:"), 0, wxALL, 5);
-	sizer->Add(sourceVillageBox, 0, wxEXPAND | wxALL, 5);
-	sizer->Add(new wxStaticText(this, wxID_ANY, "Target village:"), 0, wxALL, 5);
-	sizer->Add(targetVillageBox, 0, wxEXPAND | wxALL, 5);
+	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Source village:"), 0, wxALL, 5);
+	gridSizer->Add(sourceVillageBox, 0, wxEXPAND | wxALL, 5);
+	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Target village:"), 0, wxALL, 5);
+	gridSizer->Add(targetVillageBox, 0, wxEXPAND | wxALL, 5);
 
-	sizer->Add(new wxStaticText(this, wxID_ANY, "Is offense:"), 0, wxALL, 5);
+	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Is offense:"), 0, wxALL, 5);
 	checkBox = new wxCheckBox(this, wxID_ANY, "");
 	checkBox->SetValue(true);
-	sizer->Add(checkBox, 0, wxALL, 5);
-	sizer->Add(new wxStaticText(this, wxID_ANY, "Wood looted:"), 0, wxALL, 5);
+	gridSizer->Add(checkBox, 0, wxALL, 5);
+	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Wood looted:"), 0, wxALL, 5);
 	woodLootCtrl = new wxSpinCtrl(this, wxID_ANY);
-	sizer->Add(woodLootCtrl, 0, wxALL | wxEXPAND, 5);
+	gridSizer->Add(woodLootCtrl, 0, wxALL | wxEXPAND, 5);
 	woodLootCtrl->SetRange(0, 9999999);
-	sizer->Add(new wxStaticText(this, wxID_ANY, "Clay looted:"), 0, wxALL, 5);
+	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Clay looted:"), 0, wxALL, 5);
 	clayLootCtrl = new wxSpinCtrl(this, wxID_ANY);
 	clayLootCtrl->SetRange(0, 9999999);
-	sizer->Add(clayLootCtrl, 0, wxALL | wxEXPAND, 5);
-	sizer->Add(new wxStaticText(this, wxID_ANY, "Iron looted:"), 0, wxALL, 5);
+	gridSizer->Add(clayLootCtrl, 0, wxALL | wxEXPAND, 5);
+	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Iron looted:"), 0, wxALL, 5);
 	ironLootCtrl = new wxSpinCtrl(this, wxID_ANY);
 	ironLootCtrl->SetRange(0, 9999999);
-	sizer->Add(ironLootCtrl, 0, wxALL | wxEXPAND, 5);
+	gridSizer->Add(ironLootCtrl, 0, wxALL | wxEXPAND, 5);
 
+	gridSizer->AddGrowableCol(1); // Allow "Lost" to expand
+
+	sizer->Add(gridSizer, 1, wxALL | wxEXPAND, 10);
 	sizer->Add(CreateSeparatedButtonSizer(wxOK | wxCANCEL), 0, wxALL | wxEXPAND, 10);
 	SetSizerAndFit(sizer);
 }
