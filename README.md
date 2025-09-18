@@ -13,7 +13,7 @@
 
 ## About
 
-This repository is a skill showcase where I am rewriting Marvus — originally a Java Swing application — into C++ using wxWidgets and PostgreSQL-. The project includes LaTeX documentation, and everything can be built easily with a provided Makefile.
+This repository is a skill showcase where I am rewriting Marvus — originally a Java Swing application — into C++ using wxWidgets and PostgreSQL. The project includes LaTeX documentation, and everything can be built easily with a provided Makefile.
 
 ## Used libraries
 
@@ -85,7 +85,13 @@ This repository is a skill showcase where I am rewriting Marvus — originally a
    
 ### Windows
 
-I don't use Windows so I don't really know, but best way is to download .exe installers from the project/libraries websites to install them.
+Windows is not the primary development environment for this project.  
+The recommended approach is to download official `.exe` installers from the libraries' websites (e.g., wxWidgets, PostgreSQL).  
+
+⚠️ The provided Makefile is designed for Linux/macOS. On Windows, additional setup is required. ⚠️
+
+If you want to stick closer to the Linux workflow, you can use [MSYS2](https://www.msys2.org/) which provides a Linux-like environment, `make`, and package management on Windows.
+
    
 ### Git and Make
   
