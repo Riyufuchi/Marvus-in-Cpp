@@ -4,12 +4,16 @@
 - [Used libraries](#used-libraries)
 - [PostgreDB setup](#db-server-config)
 - [Testing](#testing)
-- [Compilation](#compilation)
+- [Compilation and libraries](#compilation-and-libraries)
+	- [Linux](#linux)
+	- [MaxOS](#macos)
+	- [Windows](#windows)
+	- [Git and Make](#git-and-make)
 - [Donate](#donate)
 
 ## About
 
-This repository is a skill showcase where I am rewriting Marvus — originally a Java Swing application — into C++ using wxWidgets and SQLite. The project includes LaTeX documentation, and everything can be built easily with a provided Makefile.
+This repository is a skill showcase where I am rewriting Marvus — originally a Java Swing application — into C++ using wxWidgets and PostgreSQL-. The project includes LaTeX documentation, and everything can be built easily with a provided Makefile.
 
 ## Used libraries
 
@@ -18,7 +22,7 @@ This repository is a skill showcase where I am rewriting Marvus — originally a
 | Name | Used for | Included in this repository |
 | :------: | :----------: | :---: |
 | [wxWidgets](https://www.wxwidgets.org/) | GUI | 🔴 |
-| [PostgreDB](https://www.postgresql.org/) | Database | 🔴 |
+| [PostgreSQL](https://www.postgresql.org/) | Database | 🔴 |
 | [ConsoleLib](https://github.com/Riyufuchi/ConsoleLib) | Console & utils stuff | 🟠 |
 
 ## Testing
@@ -52,9 +56,9 @@ This repository is a skill showcase where I am rewriting Marvus — originally a
    exit
    ```
 
-## Compilation
+## Compilation and libraries
 
-  ### Linux
+### Linux
 
    *For debian based systems*
 
@@ -62,9 +66,28 @@ This repository is a skill showcase where I am rewriting Marvus — originally a
    # wxWidgets
    sudo apt install libwxgtk3.2-dev
    
-   # postgredb
+   # PostgreSQL
    sudo apt install postgresql postgresql-contrib libpq-dev
    ```
+
+
+### MacOS
+
+   *Using Homebrew*
+   
+   ```bash
+   # wxWidgets
+   brew install wxwidgets
+
+   # PostgreSQL
+   brew install postgresql
+   ```
+   
+### Windows
+
+I don't use Windows so I don't really know, but best way is to download .exe installers from the project/libraries websites to install them.
+   
+### Git and Make
   
   *Makefile automatically gets ConsoleLib and compiles it before program*
   
