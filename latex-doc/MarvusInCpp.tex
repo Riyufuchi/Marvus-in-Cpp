@@ -122,6 +122,10 @@
 \input{texModules/command-fontSize.tex}
 \input{texModules/command-figure.tex}
 
+\usepackage{xspace}
+% My commands
+\newcommand{\postsql}{PostgreSQL\xspace}
+
 \begin{document}
 	
 	%\maketitle
@@ -137,22 +141,26 @@
 		{\large\textbf{ \today}} \hfill {\large \textbf{Riyufuchi}}
 	\end{titlepage}
 	
-
-	
 	\pagenumbering{gobble}
 	\tableofcontents
 	\newpage
 	\pagenumbering{arabic}
 	
-	\chapter{Introduction}
-	This project uses \gls{wxwidgets} for the \gls{gui}.
+	\clearpage
+	\printglossary[type=main, title=Glossary]
+	\printglossary[type=\acronymtype, style=mystyle]
+	\clearpage
+	\lstlistoflistings
+
 	
-		\clearpage
-\printglossary[type=main, title=Glossary]
-\printglossary[type=\acronymtype, style=mystyle]
+	\chapter{Introduction}
+	\input{chapters/introduction/introduction.tex}
 	
 	\chapter{Database}
+	\input{chapters/database/database.tex}
+	
 	\chapter{C++ front end}
+	
 	\chapter*{Summary}
 
 \end{document}

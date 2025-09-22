@@ -32,6 +32,8 @@ Debug
 *.toc
 *.xmpi
 *.ist
+*.synctex.gz
+*.lol
 
 # Visual studio
 .vs

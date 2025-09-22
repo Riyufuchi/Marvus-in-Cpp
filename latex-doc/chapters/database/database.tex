@@ -1,0 +1,43 @@
+%!TeX root =  ../../MarvusInCpp.tex
+
+\section{\postsql}
+\subsection{Foreword}
+This section about \postsql is covering only bare basics needed to run the application. For how to properly manage \postsql server see official \postsql documentation.
+
+\subsection{Running the server}
+
+\subsection{Setting up the server}
+
+\subsubsection{Superuser}
+\postsql superuser works like \colorbox{lightgray}{\strut sudo} in Linux, it grants administrative privileges.
+
+\begin{lstlisting}[language=bash, caption={Setting password for PostgreSQL superuser},  label={lst:postgres-superuser}]
+sudo -u postgres psql
+\password postgres
+# then enter password for postgress
+exit
+\end{lstlisting}
+
+\subsubsection{Creating a database}
+
+Create the database with name \textit{marvus} as that is how is my database named in the project.
+
+\begin{lstlisting}[language=sql, caption={Creating PostgreSQL database},  label={lst:postgres-db}]
+CREATE DATABASE marvus;
+\end{lstlisting}
+
+\subsubsection{Accessing a database}
+
+\begin{lstlisting}[language=sql, numbers=none]
+
+# Create user account
+CREATE USER theadministrator WITH PASSWORD 'secret';
+
+# Connect to the database and grant privileges for your user
+\c marvus
+GRANT ALL PRIVILEGES ON SCHEMA public TO theadministrator;
+ALTER DEFAULT PRIVILEGES IN SCHEMA public 
+GRANT ALL PRIVILEGES ON TABLES TO theadministrator;
+\end{lstlisting}
+
+

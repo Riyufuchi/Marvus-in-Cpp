@@ -3,13 +3,12 @@
 - [About](#about)
 - [Used libraries](#used-libraries)
 - [Testing](#testing)
-- [Documentation](#documentaion)
+- [Documentation](#documentation)
 - [Compilation and libraries](#compilation-and-libraries)
 	- [Linux](#linux)
 	- [MaxOS](#macos)
 	- [Windows](#windows)
 	- [Git and Make](#git-and-make)
-- [PostgreDB setup](#db-server-config)
 - [Donate](#donate)
 
 ## About
@@ -54,6 +53,7 @@ In this repository I am rewriting Marvus — originally a Java Swing application
     # (Makefile runs LaTeX twice so Table of Contents and references are correct)
     make docs
    ```
+
 
 ## Compilation and libraries
 
@@ -100,28 +100,6 @@ If you want to stick closer to the Linux workflow, you can use [MSYS2](https://w
    git clone --branch main --single-branch https://github.com/Riyufuchi/Marvus-in-Cpp.git 
    cd Marvus-in-Cpp
    make
-   ```
-
-## DB Server Config
-
-   ```bash
-   # Setup postgres superuser
-   sudo -u postgres psql
-   \password postgres
-   # then enter password for postgress
-   exit
-   
-   # Create user account
-   CREATE USER theadministrator WITH PASSWORD 'secret';
-   
-   # Create the database
-   CREATE DATABASE marvus;
-   
-   # Connect to the database and grant privileges for your user
-   \c marvus
-   GRANT ALL PRIVILEGES ON SCHEMA public TO theadministrator;
-   ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO theadministrator;
-   exit
    ```
 
 ## Donate
