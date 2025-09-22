@@ -18,6 +18,21 @@ Debug
 .clangd
 .clang-format
 
+# LaTeX
+*.pdf
+*.acn
+*.acr
+*.alg
+*.aux
+*.glg
+*.glo
+*.gls
+*.inst
+*.log
+*.toc
+*.xmpi
+*.ist
+
 # Visual studio
 .vs
 x64

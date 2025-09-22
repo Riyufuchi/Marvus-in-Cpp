@@ -2,18 +2,19 @@
 
 - [About](#about)
 - [Used libraries](#used-libraries)
-- [PostgreDB setup](#db-server-config)
 - [Testing](#testing)
+- [Documentation](#documentaion)
 - [Compilation and libraries](#compilation-and-libraries)
 	- [Linux](#linux)
 	- [MaxOS](#macos)
 	- [Windows](#windows)
 	- [Git and Make](#git-and-make)
+- [PostgreDB setup](#db-server-config)
 - [Donate](#donate)
 
 ## About
 
-This repository is a skill showcase where I am rewriting Marvus — originally a Java Swing application — into C++ using wxWidgets and PostgreSQL. The project includes LaTeX documentation, and everything can be built easily with a provided Makefile.
+In this repository I am rewriting Marvus — originally a Java Swing application — into C++ using wxWidgets and PostgreSQL. The project includes LaTeX documentation, and everything can be built easily with a provided Makefile.
 
 ## Used libraries
 
@@ -34,26 +35,24 @@ This repository is a skill showcase where I am rewriting Marvus — originally a
 | Ubuntu | g++ 14.2.0 |
 | <s>Windows 10</s> | <s>MSVC v143</s> |
 
-## DB Server Config
+## Documentation
 
-   ```bash
-   # Setup postgres superuser
-   sudo -u postgres psql
-   \password postgres
-   # then enter password for postgress
-   exit
-   
-   # Create user account
-   CREATE USER theadministrator WITH PASSWORD 'secret';
-   
-   # Create the database
-   CREATE DATABASE marvus;
-   
-   # Connect to the database and grant privileges for your user
-   \c marvus
-   GRANT ALL PRIVILEGES ON SCHEMA public TO theadministrator;
-   ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO theadministrator;
-   exit
+ ```bash
+    # Make sure you have LaTeX installed
+
+    # On Debian/Ubuntu
+    sudo apt install texlive-full
+
+    # On macOS
+    brew install --cask mactex
+
+    # On Windows
+    # Get the installer from https://www.tug.org/texlive/windows.html
+
+    # Get the repository - how to is in section Git and Make
+    # Build the PDF documentation
+    # (Makefile runs LaTeX twice so Table of Contents and references are correct)
+    make docs
    ```
 
 ## Compilation and libraries
@@ -101,6 +100,28 @@ If you want to stick closer to the Linux workflow, you can use [MSYS2](https://w
    git clone --branch main --single-branch https://github.com/Riyufuchi/Marvus-in-Cpp.git 
    cd Marvus-in-Cpp
    make
+   ```
+
+## DB Server Config
+
+   ```bash
+   # Setup postgres superuser
+   sudo -u postgres psql
+   \password postgres
+   # then enter password for postgress
+   exit
+   
+   # Create user account
+   CREATE USER theadministrator WITH PASSWORD 'secret';
+   
+   # Create the database
+   CREATE DATABASE marvus;
+   
+   # Connect to the database and grant privileges for your user
+   \c marvus
+   GRANT ALL PRIVILEGES ON SCHEMA public TO theadministrator;
+   ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO theadministrator;
+   exit
    ```
 
 ## Donate

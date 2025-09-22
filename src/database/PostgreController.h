@@ -37,9 +37,9 @@ public:
 	PostgreController(const std::string& conninfo);
 	virtual ~PostgreController();
 	void printError();
+	void setSQL_Scripts(std::string path);
 	bool initializeDatabase();
 	bool initializeViews();
-	bool checkForSuccess(int expectedResult);
 	bool isConnected() const;
 	bool executeSQL(const std::string& sql);
 	tableHeaderAndData obtainTableHeaderAndData(const std::string& viewSQL);

@@ -12,7 +12,7 @@
 namespace riyufuchi
 {
 
-PostgreController::PostgreController(const std::string& conninfo) : result(0), sqlScriptsPath("sql")
+PostgreController::PostgreController(const std::string& conninfo) : result(0), sqlScriptsPath("../sql")
 {
 	conn = PQconnectdb(conninfo.c_str());
 	if (PQstatus(conn) != CONNECTION_OK)
@@ -47,19 +47,9 @@ bool PostgreController::executeSQL(const std::string& sql)
 	return true;
 }
 
-bool PostgreController::checkForSuccess(int expectedResult)
-{
-	if (result != expectedResult)
-	{
-		wxMessageBox(wxString::Format("%s",  PQerrorMessage(conn)), "PostgreDB output", wxOK | wxICON_ERROR);
-		return true;
-	}
-	return false;
-}
-
 void PostgreController::printError()
 {
-	wxMessageBox(wxString::Format("%s",  PQerrorMessage(conn)), "PostgreDB output", wxOK | wxICON_ERROR);
+	wxMessageBox(wxString::Format("%s",  PQerrorMessage(conn)), "PostgreSQL output", wxOK | wxICON_ERROR);
 }
 
 bool PostgreController::initializeDatabase()
@@ -98,7 +88,7 @@ tableHeaderAndData PostgreController::obtainTableHeaderAndData(const std::string
 	int nRows = PQntuples(res);
 
 	// Print column names
-	for (int i = 1; i < nCols; ++i)
+	for (int i = 1; i < nCols; i++)
 	{
 		header.emplace_back(PQfname(res, i));
 	}
@@ -113,9 +103,15 @@ tableHeaderAndData PostgreController::obtainTableHeaderAndData(const std::string
 		}
 		tableData.emplace_back(rowData);
 		rowData.clear();
+		rowData.reserve(nCols); // Optimize vector allocation
 	}
 	PQclear(res);
 	return tableHeaderAndData(header, tableData);
+}
+
+void PostgreController::setSQL_Scripts(std::string path)
+{
+	this->sqlScriptsPath = path;
 }
 
 } /* namespace sdl */

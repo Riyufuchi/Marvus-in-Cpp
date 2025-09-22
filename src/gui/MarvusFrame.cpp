@@ -8,7 +8,7 @@ MarvusFrame::MarvusFrame(const wxString& title, ConsoleLib::argVector& config) :
 	/*wxIcon icon(icon_xpm);
 	SetIcon(icon);*/
 
-	//this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; db.setSQL_Scripts(vector[0]); };
+	this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; db.setSQL_Scripts(vector[0]); };
 
 	configure(config);
 
@@ -101,56 +101,6 @@ wxMenuBar* MarvusFrame::createMenuBar()
 	menuBar->Append(helpMenu, "&Help");
 	
 	return menuBar;
-}
-
-void MarvusFrame::loadViewToGrid(Tabs tab)
-{
-	/*if (!views.contains(tab))
-		return;
-
-	tableHeaderAndData tableData = tribedb.obtainTableHeaderAndData(views.find(tab)->second);
-
-	if (!grids2.contains(tab))
-		return;
-
-	wxGrid& grid = *grids2.find(tab)->second;
-
-	if (grid.GetNumberCols() > 0)
-		grid.DeleteCols(0, grid.GetNumberCols()); // Remove old cols
-	grid.AppendCols(tableData.first.size());
-
-	int rowX = 0;
-	for (const std::string& heading : tableData.first)
-	{
-		grid.SetColLabelValue(rowX, heading);
-		rowX++;
-	}
-
-	if (tableData.second.empty())
-	{
-		wxMessageBox("No data in the table", "Table view result", wxOK | wxICON_INFORMATION, this);
-		return;
-	}
-
-	if (grid.GetNumberRows() > 0)
-		grid.DeleteRows(0, grid.GetNumberRows()); // Remove old rows
-	grid.AppendRows(tableData.second.size());
-
-	int row = 0;
-	rowX = 0;
-	int dataX = 1;
-	const int ROW_SIZE = tableData.second[0].size();
-	for (const keo::tableRowStructure& rowData : tableData.second)
-	{
-		for (dataX = 1, rowX = 0; dataX < ROW_SIZE; dataX++, rowX++)
-		{
-			grid.SetCellValue(row, rowX, rowData[dataX]);
-		}
-		row++;
-	}
-	grid.AutoSizeColumns(); // Auto-size column headers
-	grid.AutoSizeRows();
-	grid.SetRowLabelSize(wxGRID_AUTOSIZE);*/
 }
 
 void MarvusFrame::loadViewToGrid(Table table)

@@ -56,7 +56,15 @@ $(BUILD_DIR):
 
 # Clean target
 clean:
-	rm -rf $(BUILD_DIR) $(APP_TARGET) $(LIB_PATH)
+	rm -rf $(BUILD_DIR) $(APP_TARGET) $(LIB_PATH) docs
+	
+# Documentation
+docs:
+	cd latex-doc && \
+	lualatex MarvusInCpp.tex && \
+	makeglossaries MarvusInCpp && \
+	lualatex MarvusInCpp.tex && \
+	lualatex MarvusInCpp.tex
 
-.PHONY: all clean
+.PHONY: all clean docs
 
