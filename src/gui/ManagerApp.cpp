@@ -16,7 +16,7 @@ bool ManagerApp::OnInit()
 {
 	if (!areArgs)
 		return false;
-	this->frame = new MainFrame("KEO data manager", args);
+	this->frame = new MainFrame("Marvus in C++", args);
 	SetTopWindow(frame);
 	frame->Show(true);
 	return true;

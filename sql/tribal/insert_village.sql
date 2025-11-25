@@ -1,1 +1,0 @@
-INSERT INTO VILLAGES (village_name, owner_id) VALUES (?, ?);

@@ -5,8 +5,7 @@ bin/
 build
 build/
 test
-libs
-src/inc
+libs-git
 
 # Eclipse
 .cproject
@@ -17,6 +16,25 @@ Debug
 .settings
 .clangd
 .clang-format
+
+# LaTeX
+#*.pdf
+*.acn
+*.acr
+*.alg
+*.aux
+*.glg
+*.glo
+*.gls
+*.inst
+*.log
+*.toc
+*.xmpi
+*.ist
+*.synctex.gz
+*.lol
+*.lof
+*.lot
 
 # Visual studio
 .vs
@@ -53,7 +71,7 @@ x64
 # Compiled Static libraries
 *.lai
 *.la
-*.a
+#*.a
 *.lib
 
 # Executables

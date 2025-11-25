@@ -1,15 +1,14 @@
-# KEO-manager
+# Marvus in C++
 
 - [About](#about)
 - [Used libraries](#used-libraries)
-- [Testing](#testing)
 - [Compilation](#compilation)
 - [Project guide](#project-guide)
 - [Donate](#donate)
 
 ## About
 
-This project is for learning how to work with wxWidgets and database. It originally took inspiration from Far Cry 4's KEO company with some liberties to give it some theme and test data, however it was reworked to log and calculate personal statistics from online game Tribal Wars.
+This project is for learning how to work with wxWidgets and database. It is an uplift for my Java Swing flat file application.
 
 ## Used libraries
 
@@ -17,11 +16,11 @@ This project is for learning how to work with wxWidgets and database. It origina
 
 | Name | Used for | Included in this repository |
 | :------: | :----------: | :---: |
-| [wxWidgets](https://www.wxwidgets.org/) | GUI | 🔴 |
-| [SQLite](https://www.sqlite.org/) | Database | 🔴 |
-| [ConsoleLib](https://github.com/Riyufuchi/ConsoleLib) | Console & utils stuff | 🟠 |
+| [wxWidgets](https://www.wxwidgets.org/) | GUI | ❌ |
+| [SQLite](https://www.sqlite.org/) | Database | ❌ |
+| [ConsoleLib](https://github.com/Riyufuchi/ConsoleLib) | Console & utils stuff | ✅ |
 
-## Testing
+## Compilation
 
 ### Compiled & Tested on
 
@@ -30,9 +29,7 @@ This project is for learning how to work with wxWidgets and database. It origina
 | Ubuntu | g++ 14.2.0 |
 | <s>Windows 10</s> | <s>MSVC v143</s> |
 
-## Compilation
-
-  ### Linux
+### Linux
 
    *For debian based systems*
 
@@ -43,12 +40,17 @@ This project is for learning how to work with wxWidgets and database. It origina
    sudo apt install libsqlite3-dev
    ```
   
-  *Makefile automatically gets ConsoleLib and compiles it before program*
+### CMake
   
    ```bash
-   git clone --branch main --single-branch https://github.com/Riyufuchi/KEO-manager.git 
+   git clone https://github.com/Riyufuchi/ConsoleArt.git
    cd ConsoleArt
-   make
+   
+   # On Windows
+   #Fill in paths to SQLite and WxWidgets into the CMake
+
+   cmake -B build -S .
+   cmake --build build
    ```
 
 ## Project guide
@@ -56,7 +58,5 @@ This project is for learning how to work with wxWidgets and database. It origina
 - .hpp is used for single file code, that don't have coresponfing .cpp file
 
 ## Donate
-
-I'm a 🇨🇿 student, so a few dollars will be enough. If you are planning to use this library in a commercial application, then it would be fair if you would send more, possibly a small share of 5-10% of monthly profits.
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/P5P11WTFL)

@@ -20,7 +20,6 @@
 // Other
 #include "ArgumentParser.h"
 
-
 namespace keo
 {
 
@@ -40,28 +39,16 @@ enum
 	ID_NotImplementedYet
 };
 
-enum class Tabs
-{
-	CAMPAIGN_OVERVIEW,
-	BATTLES,
-	VILLAGES
-};
-
 class MainFrame : public wxFrame
 {
 	private:
 		std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argumentMethods;
 		std::unordered_map<Table, wxGrid*> grids;
-		std::unordered_map<Tabs, wxGrid*> grids2;
-		std::unordered_map<Tabs, std::string> views;
 		KeoDB db;
-		twdb::TribeDB tribedb;
 		wxNotebook* notebook; // Tabbed pane
 		void configure(ConsoleLib::argVector& config);
 		void loadViewToGrid(keo::Table table);
-		void loadViewToGrid(Tabs tab);
 		wxMenuBar* createMenuBar();
-		void initTribeDB();
 		// Events
 		void onExit(wxCommandEvent& event);
 		void onAbout(wxCommandEvent& event);
@@ -71,8 +58,6 @@ class MainFrame : public wxFrame
 		void onRefreshWindow(wxCommandEvent& event);
 		void onDropDatabase(wxCommandEvent& event);
 		void onInsertTestData(wxCommandEvent& event);
-		void onAddNewVillage(wxCommandEvent& event);
-		void onAddNewBattle(wxCommandEvent& event);
 		wxDECLARE_EVENT_TABLE();
 	public:
 		MainFrame(const wxString& title, ConsoleLib::argVector& config);
