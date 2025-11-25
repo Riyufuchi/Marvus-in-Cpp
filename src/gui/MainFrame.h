@@ -1,3 +1,12 @@
+//==============================================================================
+// File       : MainFrame.h
+// Author     : riyufuchi
+// Created on : Mar 31, 2025
+// Last edit  : Nov 25, 2025
+// Copyright  : Copyright (c) 2025, riyufuchi
+// Description: Marvus-in-Cpp
+//==============================================================================
+
 #ifndef MAINFRAME_H
 #define MAINFRAME_H
 
@@ -8,16 +17,8 @@
 #include <wx/notebook.h>
 
 #include "../wxw/FactoryWxW.h"
-
-// KEO
-#include "../keodb/KeoDB.h"
-#include "../keodb/KeoDefaultDB.hpp"
-// Tribal
-#include "../tribalDB/TribeDB.h"
-#include "../dialogs/tw/VillageDialog.h"
-#include "../dialogs/tw/BattleDialog.h"
-#include "../dialogs/tw/UnitDialog.h"
-// Other
+#include "../marvus/MarvusDB.h"
+// ConsoleLib
 #include "ArgumentParser.h"
 
 namespace keo
@@ -39,15 +40,31 @@ enum
 	ID_NotImplementedYet
 };
 
+enum class Table
+{
+	PAYMENTS,
+	ESTABLISHMENTS,
+	CATEGORIES
+};
+
+enum class TableViews
+{
+	PAYMENTS_VIEW,
+	ESTABLISHMENTS_VIEW,
+	CATEGORIES_VIEW
+};
+
 class MainFrame : public wxFrame
 {
 	private:
 		std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argumentMethods;
 		std::unordered_map<Table, wxGrid*> grids;
-		KeoDB db;
+		std::unordered_map<TableViews, std::string> views;
+		std::unordered_map<Table, TableViews> selectedViews;
+		marvus::MarvusDB marvusDB;
 		wxNotebook* notebook; // Tabbed pane
 		void configure(ConsoleLib::argVector& config);
-		void loadViewToGrid(keo::Table table);
+		void loadViewToGrid(Table table, TableViews view);
 		wxMenuBar* createMenuBar();
 		// Events
 		void onExit(wxCommandEvent& event);

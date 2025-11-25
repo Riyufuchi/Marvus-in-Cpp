@@ -1,25 +1,34 @@
+//==============================================================================
+// File       : MainFrame.cpp
+// Author     : riyufuchi
+// Created on : Mar 31, 2025
+// Last edit  : Nov 25, 2025
+// Copyright  : Copyright (c) 2025, riyufuchi
+// Description: Marvus-in-Cpp
+//==============================================================================
+
 #include "MainFrame.h"
 
 namespace keo
 {
 
-MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxFrame(NULL, wxID_ANY, title), db(DATABASE_FILE)
+MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxFrame(NULL, wxID_ANY, title), marvusDB(DATABASE_FILE)
 {
 	wxIcon icon(icon_xpm);
 	SetIcon(icon);
 
-	this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; db.setSQL_Scripts(vector[0]); };
+	this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; marvusDB.setSQL_Scripts(vector[0]); };
 
 	configure(config);
 
-	if (!db.initializeDatabase())
+	if (!marvusDB.initializeDatabase())
 	{
 		wxMessageBox("Database initialization failed.\nExiting program!", "Database Error", wxOK | wxICON_ERROR, this);
 		Close(true);
 		return;
 	}
 	
-	if (!db.initializeViews())
+	if (!marvusDB.initializeViews())
 	{
 		wxMessageBox("Views initialization failed.\nExiting program!", "Database Error", wxOK | wxICON_ERROR, this);
 		Close(true);
@@ -30,37 +39,40 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 
 	this->notebook = new wxNotebook(this, wxID_ANY);
 
-	// keo
-	wxPanel* mainTab = new wxPanel(notebook);
-	wxPanel* farmsTab = new wxPanel(notebook);
-	wxPanel* minesTab = new wxPanel(notebook);
+	wxPanel* establishmentsTab = new wxPanel(notebook);
+	wxPanel* paymentsTab = new wxPanel(notebook);
+	wxPanel* categoriesTab = new wxPanel(notebook);
 	
-
-	notebook->AddPage(mainTab, "People");
-	notebook->AddPage(farmsTab, "Farmlands", true);
-	notebook->AddPage(minesTab, "Mines");
+	notebook->AddPage(establishmentsTab, "Establishments");
+	notebook->AddPage(paymentsTab, "Payments", true);
+	notebook->AddPage(categoriesTab, "Categories");
 
 	// Create a grid and add to tab1
-	wxGrid* tempGrid = wxw::FactoryWxW::newGrid(mainTab, wxID_ANY);
-	mainTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
-	grids[keo::Table::PEOPLE] = tempGrid;
+	wxGrid* tempGrid = wxw::FactoryWxW::newGrid(establishmentsTab, wxID_ANY);
+	establishmentsTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
+	grids[Table::ESTABLISHMENTS] = tempGrid;
 
 	// Tab 2
-	tempGrid = wxw::FactoryWxW::newGrid(farmsTab, wxID_ANY);
-	farmsTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
-	grids[keo::Table::FARMLANDS] = tempGrid;
+	tempGrid = wxw::FactoryWxW::newGrid(paymentsTab, wxID_ANY);
+	paymentsTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
+	grids[keo::Table::PAYMENTS] = tempGrid;
 
 	// Tab 3
-	tempGrid = wxw::FactoryWxW::newGrid(minesTab, wxID_ANY);
-	minesTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
-	grids[keo::Table::MINES] = tempGrid;
+	tempGrid = wxw::FactoryWxW::newGrid(categoriesTab, wxID_ANY);
+	categoriesTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
+	grids[keo::Table::CATEGORIES] = tempGrid;
+
+	// Views
+
+	views[TableViews::ESTABLISHMENTS_VIEW] = "SELECT * FROM ESTABLISHMENT_VIEW;";
+	views[TableViews::CATEGORIES_VIEW] = "SELECT * FROM CATEGORY_VIEW";
 
 	// Layout the notebook
 	SetSizerAndFit(wxw::FactoryWxW::newMaxSizer(notebook));
 	// Attempt to load data
-	loadViewToGrid(keo::Table::PEOPLE);
-	loadViewToGrid(keo::Table::FARMLANDS);
-	loadViewToGrid(keo::Table::MINES);
+	loadViewToGrid(Table::ESTABLISHMENTS, TableViews::ESTABLISHMENTS_VIEW);
+	loadViewToGrid(Table::CATEGORIES, TableViews::CATEGORIES_VIEW);
+	loadViewToGrid(keo::Table::PAYMENTS, TableViews::PAYMENTS_VIEW);
 	SetSize(800, 600);
 }
 
@@ -78,8 +90,6 @@ void MainFrame::configure(ConsoleLib::argVector& config)
 		it = argumentMethods.find(argument.first);
 		if (it != argumentMethods.end())
 			it->second(argument.second);
-		//else
-			//messenger->messageUser(AbstractNotifier::MessageType::ERROR, "Invalid argument [" + argument.first + "]\n");
 	}
 }
 
@@ -97,22 +107,28 @@ wxMenuBar* MainFrame::createMenuBar()
 	wxMenu* refresh = new wxMenu();
 	refresh->Append(ID_Refresh, "&Refresh");
 
-	wxMenu* campaigns = new wxMenu();
-	campaigns->Append(ID_NotImplementedYet, "&Add campaign");
-	campaigns->Append(ID_InsertNewBattle, "&Add battle");
+	wxMenu* marvus = new wxMenu();
+	marvus->Append(ID_NotImplementedYet, "&Add Establishment");
+	marvus->Append(ID_NotImplementedYet, "&Add Category");
+	marvus->Append(ID_NotImplementedYet, "&Add Payment");
 
 	// Create a menu bar and add menu sections
 	wxMenuBar* menuBar = new wxMenuBar;
 	menuBar->Append(fileMenu, "&File");
+	menuBar->Append(marvus, "&Marvus");
 	menuBar->Append(refresh, "&Window");
 	menuBar->Append(helpMenu, "&Help");
 	
 	return menuBar;
 }
 
-void MainFrame::loadViewToGrid(keo::Table table)
+void MainFrame::loadViewToGrid(Table table, TableViews view)
 {
-	keo::tableHeaderAndData tableData = db.obtainTableHeaderAndData(table);
+	selectedViews[table] = view;
+	auto viewPair = views.find(view);
+	if (viewPair == views.end())
+		return;
+	marvus::tableHeaderAndData tableData = marvusDB.obtainTableHeaderAndData(viewPair->second);
 
 	if (!grids.contains(table))
 		return;
@@ -130,6 +146,8 @@ void MainFrame::loadViewToGrid(keo::Table table)
 		rowX++;
 	}
 
+	grid.AutoSizeColumns(); // Auto-size column headers
+
 	if (tableData.second.empty())
 	{
 		wxMessageBox("No data in the table", "Table view result", wxOK | wxICON_INFORMATION, this);
@@ -144,7 +162,7 @@ void MainFrame::loadViewToGrid(keo::Table table)
 	rowX = 0;
 	int dataX = 1;
 	const int ROW_SIZE = tableData.second[0].size();
-	for (const keo::tableRowStructure& rowData : tableData.second)
+	for (const marvus::tableRowStructure& rowData : tableData.second)
 	{
 		for (dataX = 1, rowX = 0; dataX < ROW_SIZE; dataX++, rowX++)
 		{
@@ -152,16 +170,15 @@ void MainFrame::loadViewToGrid(keo::Table table)
 		}
 		row++;
 	}
-	grid.AutoSizeColumns(); // Auto-size column headers
 	grid.AutoSizeRows();
 	grid.SetRowLabelSize(wxGRID_AUTOSIZE);
 }
 
 void MainFrame::onRefreshWindow(wxCommandEvent&)
 {
-	for (const auto& tab : grids)
+	for (const auto& view : selectedViews)
 	{
-		loadViewToGrid(tab.first);
+		loadViewToGrid(view.first, view.second);
 	}
 }
 
@@ -182,12 +199,7 @@ void MainFrame::onAbout(wxCommandEvent&)
 
 void MainFrame::onAddEmployee(wxCommandEvent&)
 {
-	keo::Employee emp;
-	emp.name = "Jeff";
-	emp.middle_name = "John";
-	emp.last_name = "Berkley";
-	emp.jobTitle = "2";
-	db.insertEmployee(emp);
+
 }
 
 void MainFrame::onAddJobTitle(wxCommandEvent&)
@@ -197,10 +209,6 @@ void MainFrame::onAddJobTitle(wxCommandEvent&)
 
 void MainFrame::onInsertTestData(wxCommandEvent& event)
 {
-	KeoDefaults::KeoInserter inserter(db);
-	inserter.fillEnums();
-	inserter.fillTables();
-
 	ConsoleLib::ScriptMap map;
 	map.loadScripts("../data/");
 
@@ -210,8 +218,8 @@ void MainFrame::onInsertTestData(wxCommandEvent& event)
 void MainFrame::onDropDatabase(wxCommandEvent&)
 {
 	std::filesystem::remove(DATABASE_FILE);
-	db.reconnect(DATABASE_FILE);
-	db.initializeViews();
+	marvusDB.reconnect(DATABASE_FILE);
+	marvusDB.initializeViews();
 }
 
 // Event table to link menu actions with functions

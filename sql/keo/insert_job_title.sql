@@ -1,1 +1,0 @@
-INSERT INTO JOB_TITLES (job_title) VALUES (?);

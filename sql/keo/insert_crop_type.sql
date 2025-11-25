@@ -1,1 +1,0 @@
-INSERT INTO CROP_TYPES (crop_name) VALUES (?);
