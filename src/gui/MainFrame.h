@@ -36,7 +36,8 @@ enum
 	ID_DropDB,
 	ID_InserTestData,
 	ID_InsertNewVillage,
-	ID_InsertNewBattle
+	ID_InsertNewBattle,
+	ID_NotImplementedYet
 };
 
 enum class Tabs

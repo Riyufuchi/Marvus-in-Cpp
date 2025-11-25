@@ -126,27 +126,25 @@ wxMenuBar* MainFrame::createMenuBar()
 	wxMenu* helpMenu = new wxMenu;
 	helpMenu->Append(ID_About, "&About");
 
-	wxMenu* addEmpMenu = new wxMenu();
-	addEmpMenu->Append(ID_Add_Emp, "&Add");
+	wxMenu* addVillage = new wxMenu();
+	addVillage->Append(ID_InsertNewVillage, "&Add village");
 
-	wxMenu* addJobTitleMenu = new wxMenu();
-	addJobTitleMenu->Append(ID_Add_Job_Title, "&Add Job Title");
+	wxMenu* addPlayers = new wxMenu();
+	addPlayers->Append(ID_NotImplementedYet, "&Add player");
 
 	wxMenu* refresh = new wxMenu();
 	refresh->Append(ID_Refresh, "&Refresh");
 
-	wxMenu* tribe = new wxMenu();
-	tribe->Append(ID_About, "&Add player");
-	tribe->Append(ID_InsertNewVillage, "&Add village");
-	tribe->Append(ID_About, "&Add campaign");
-	tribe->Append(ID_InsertNewBattle, "&Add battle");
+	wxMenu* campaigns = new wxMenu();
+	campaigns->Append(ID_NotImplementedYet, "&Add campaign");
+	campaigns->Append(ID_InsertNewBattle, "&Add battle");
 
 	// Create a menu bar and add menu sections
 	wxMenuBar* menuBar = new wxMenuBar;
 	menuBar->Append(fileMenu, "&File");
-	menuBar->Append(tribe, "&Tribe data");
-	menuBar->Append(addEmpMenu, "&People");
-	menuBar->Append(addJobTitleMenu, "&Enums");
+	menuBar->Append(campaigns, "&Campaigns");
+	menuBar->Append(addVillage, "&Villages");
+	menuBar->Append(addPlayers, "&Players");
 	menuBar->Append(refresh, "&Window");
 	menuBar->Append(helpMenu, "&Help");
 	
@@ -367,6 +365,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_InserTestData, MainFrame::onInsertTestData)
 	EVT_MENU(ID_InsertNewVillage, MainFrame::onAddNewVillage)
 	EVT_MENU(ID_InsertNewBattle, MainFrame::onAddNewBattle)
+	EVT_MENU(ID_NotImplementedYet, MainFrame::onNotImplemented)
 wxEND_EVENT_TABLE()
 
 }

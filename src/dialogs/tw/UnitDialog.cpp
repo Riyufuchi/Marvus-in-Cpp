@@ -37,6 +37,10 @@ UnitDialog::UnitDialog(wxWindow* parent, int battleID, const marvus::tableStruct
 		unitSpinCtrls.emplace_back(std::make_pair(spinnerSend, spinnerLost));
 	}
 
+	unitSpinCtrls[4].first->SetValue(5);
+	unitSpinCtrls[5].first->SetValue(60);
+	unitSpinCtrls[6].first->SetValue(6);
+
 	gridSizer->AddGrowableCol(1); // Allow "Sent" to expand
 	gridSizer->AddGrowableCol(2); // Allow "Lost" to expand
 
