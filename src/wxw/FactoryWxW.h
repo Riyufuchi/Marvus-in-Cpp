@@ -18,6 +18,9 @@
 
 namespace wxw
 {
+
+using enumVector = std::vector<std::vector<std::string>>;
+
 class FactoryWxW
 {
 public:
@@ -26,6 +29,7 @@ public:
 	static wxBoxSizer* newMaxSizer(wxWindow* component);
 	static wxGrid* newGrid(wxWindow* parent, wxWindowID id);
 	static wxGrid* newGrid(wxWindow* parent, wxWindowID id, const std::vector<std::string>& header);
+	static wxComboBox* newComboBox(wxWindow* parent, const enumVector& data);
 };
 
 } /* namespace wxw */

@@ -18,6 +18,7 @@
 
 #include "../wxw/FactoryWxW.h"
 #include "../marvus/MarvusDB.h"
+#include "../dialogs/marvus/PaymentDialog.h"
 // ConsoleLib
 #include "ArgumentParser.h"
 
@@ -30,14 +31,11 @@ enum
 {
 	ID_Exit = 1,
 	ID_About,
-	ID_Add_Emp,
-	ID_Add_Job_Title,
 	ID_Refresh,
 	ID_DropDB,
 	ID_InserTestData,
-	ID_InsertNewVillage,
-	ID_InsertNewBattle,
-	ID_NotImplementedYet
+	ID_NotImplementedYet,
+	ID_INSERT_PAYMENT
 };
 
 enum class Table
@@ -70,8 +68,7 @@ class MainFrame : public wxFrame
 		void onExit(wxCommandEvent& event);
 		void onAbout(wxCommandEvent& event);
 		void onNotImplemented(wxCommandEvent& event);
-		void onAddJobTitle(wxCommandEvent& event);
-		void onAddEmployee(wxCommandEvent& event);
+		void onInsertPayment(wxCommandEvent& event);
 		void onRefreshWindow(wxCommandEvent& event);
 		void onDropDatabase(wxCommandEvent& event);
 		void onInsertTestData(wxCommandEvent& event);

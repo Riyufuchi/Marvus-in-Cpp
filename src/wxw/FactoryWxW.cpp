@@ -39,4 +39,18 @@ wxGrid* FactoryWxW::newGrid(wxWindow* parent, wxWindowID id, const std::vector<s
 	return grid;
 }
 
+wxComboBox* FactoryWxW::newComboBox(wxWindow* parent, const enumVector& data)
+{
+	wxArrayString wxPlayerNames;
+	for (const std::vector<std::string>& row : data)
+	{
+		wxPlayerNames.Add(row[1]);
+	}
+	// Create the combo box (parent, id, default, pos, size, choices, style)
+	wxComboBox* cb = new wxComboBox(parent, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxPlayerNames, wxCB_READONLY);
+	if (!data.empty())
+		cb->SetSelection(0);
+	return cb;
+}
+
 } /* namespace wxw */

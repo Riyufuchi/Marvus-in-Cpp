@@ -104,19 +104,23 @@ wxMenuBar* MainFrame::createMenuBar()
 	wxMenu* helpMenu = new wxMenu;
 	helpMenu->Append(ID_About, "&About");
 
-	wxMenu* refresh = new wxMenu();
-	refresh->Append(ID_Refresh, "&Refresh");
+	wxMenu* window = new wxMenu();
+	window->Append(ID_Refresh, "&Refresh");
 
-	wxMenu* marvus = new wxMenu();
-	marvus->Append(ID_NotImplementedYet, "&Add Establishment");
-	marvus->Append(ID_NotImplementedYet, "&Add Category");
-	marvus->Append(ID_NotImplementedYet, "&Add Payment");
+	wxMenu* payment = new wxMenu();
+	payment->Append(ID_INSERT_PAYMENT, "&Add Payment");
+
+	wxMenu* overviews = new wxMenu();
+
+	wxMenu* tools = new wxMenu();
 
 	// Create a menu bar and add menu sections
 	wxMenuBar* menuBar = new wxMenuBar;
 	menuBar->Append(fileMenu, "&File");
-	menuBar->Append(marvus, "&Marvus");
-	menuBar->Append(refresh, "&Window");
+	menuBar->Append(payment, "&Payment");
+	menuBar->Append(overviews, "&Overview mode");
+	menuBar->Append(tools, "&Tools");
+	menuBar->Append(window, "&Window");
 	menuBar->Append(helpMenu, "&Help");
 	
 	return menuBar;
@@ -197,14 +201,18 @@ void MainFrame::onAbout(wxCommandEvent&)
 	wxMessageBox("This is a wxWidgets application.", "About", wxOK | wxICON_INFORMATION, this);
 }
 
-void MainFrame::onAddEmployee(wxCommandEvent&)
+void MainFrame::onInsertPayment(wxCommandEvent&)
 {
+	marvus::PaymentDialog::InputData data;
 
-}
+	data.establishments = {{"1", "McDonnald's"}};
+	data.categories = {{"1", "Food"}};
 
-void MainFrame::onAddJobTitle(wxCommandEvent&)
-{
+	marvus::PaymentDialog dialog(this, data);
+	if (dialog.ShowModal() == wxID_OK && dialog.isConfirmed())
+	{
 
+	}
 }
 
 void MainFrame::onInsertTestData(wxCommandEvent& event)
@@ -226,8 +234,7 @@ void MainFrame::onDropDatabase(wxCommandEvent&)
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_Exit, MainFrame::onExit)
 	EVT_MENU(ID_About, MainFrame::onAbout)
-	EVT_MENU(ID_Add_Emp, MainFrame::onAddEmployee)
-	EVT_MENU(ID_Add_Job_Title, MainFrame::onAddJobTitle)
+	EVT_MENU(ID_INSERT_PAYMENT, MainFrame::onInsertPayment)
 	EVT_MENU(ID_Refresh, MainFrame::onRefreshWindow)
 	EVT_MENU(ID_DropDB, MainFrame::onDropDatabase)
 	EVT_MENU(ID_InserTestData, MainFrame::onInsertTestData)
