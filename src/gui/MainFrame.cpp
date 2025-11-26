@@ -12,25 +12,18 @@
 namespace keo
 {
 
-MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxFrame(NULL, wxID_ANY, title), marvusDB(DATABASE_FILE)
+MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxFrame(NULL, wxID_ANY, title)
 {
 	wxIcon icon(icon_xpm);
 	SetIcon(icon);
 
-	this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; marvusDB.setSQL_Scripts(vector[0]); };
+	controller.configure(config);
 
-	configure(config);
+	std::string message;
 
-	if (!marvusDB.initializeDatabase())
+	if (controller.initDB(message))
 	{
-		wxMessageBox("Database initialization failed.\nExiting program!", "Database Error", wxOK | wxICON_ERROR, this);
-		Close(true);
-		return;
-	}
-	
-	if (!marvusDB.initializeViews())
-	{
-		wxMessageBox("Views initialization failed.\nExiting program!", "Database Error", wxOK | wxICON_ERROR, this);
+		wxMessageBox(message, "Database Error", wxOK | wxICON_ERROR, this);
 		Close(true);
 		return;
 	}
@@ -65,7 +58,8 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 	// Views
 
 	views[TableViews::ESTABLISHMENTS_VIEW] = "SELECT * FROM ESTABLISHMENT_VIEW;";
-	views[TableViews::CATEGORIES_VIEW] = "SELECT * FROM CATEGORY_VIEW";
+	views[TableViews::CATEGORIES_VIEW] = "SELECT * FROM CATEGORY_VIEW;";
+	views[TableViews::PAYMENTS_VIEW] = "SELECT * FROM PAYMENT_VIEW;";
 
 	// Layout the notebook
 	SetSizerAndFit(wxw::FactoryWxW::newMaxSizer(notebook));
@@ -80,17 +74,6 @@ MainFrame::~MainFrame()
 {
 	Unbind(wxEVT_MENU, &MainFrame::onExit, this, ID_Exit);
 	Unbind(wxEVT_MENU, &MainFrame::onAbout, this, ID_About);
-}
-
-void MainFrame::configure(ConsoleLib::argVector& config)
-{
-	auto it = argumentMethods.find("");
-	for (const ConsoleLib::argVectorItem& argument : config)
-	{
-		it = argumentMethods.find(argument.first);
-		if (it != argumentMethods.end())
-			it->second(argument.second);
-	}
 }
 
 wxMenuBar* MainFrame::createMenuBar()
@@ -132,7 +115,7 @@ void MainFrame::loadViewToGrid(Table table, TableViews view)
 	auto viewPair = views.find(view);
 	if (viewPair == views.end())
 		return;
-	marvus::tableHeaderAndData tableData = marvusDB.obtainTableHeaderAndData(viewPair->second);
+	marvus::tableHeaderAndData tableData = controller.getDB().obtainTableHeaderAndData(viewPair->second);
 
 	if (!grids.contains(table))
 		return;
@@ -225,9 +208,7 @@ void MainFrame::onInsertTestData(wxCommandEvent& event)
 
 void MainFrame::onDropDatabase(wxCommandEvent&)
 {
-	std::filesystem::remove(DATABASE_FILE);
-	marvusDB.reconnect(DATABASE_FILE);
-	marvusDB.initializeViews();
+
 }
 
 // Event table to link menu actions with functions

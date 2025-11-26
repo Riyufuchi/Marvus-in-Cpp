@@ -17,15 +17,11 @@
 #include <wx/notebook.h>
 
 #include "../wxw/FactoryWxW.h"
-#include "../marvus/MarvusDB.h"
-#include "../dialogs/marvus/PaymentDialog.h"
-// ConsoleLib
-#include "ArgumentParser.h"
+
+#include "../marvus/Controller.h"
 
 namespace keo
 {
-
-inline const std::string DATABASE_FILE = "keo-main.db";
 
 enum
 {
@@ -55,13 +51,11 @@ enum class TableViews
 class MainFrame : public wxFrame
 {
 	private:
-		std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argumentMethods;
 		std::unordered_map<Table, wxGrid*> grids;
 		std::unordered_map<TableViews, std::string> views;
 		std::unordered_map<Table, TableViews> selectedViews;
-		marvus::MarvusDB marvusDB;
 		wxNotebook* notebook; // Tabbed pane
-		void configure(ConsoleLib::argVector& config);
+		marvus::Controller controller;
 		void loadViewToGrid(Table table, TableViews view);
 		wxMenuBar* createMenuBar();
 		// Events

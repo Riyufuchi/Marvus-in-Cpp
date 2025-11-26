@@ -13,7 +13,7 @@
 #include <wx/datectrl.h>
 #include <wx/dateevt.h>
 
-#include "../abstract/DialogKEO.h"
+#include "../../gui/base/DialogKEO.h"
 #include "../../wxw/FactoryWxW.h"
 
 namespace marvus

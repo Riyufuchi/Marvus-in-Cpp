@@ -10,7 +10,7 @@
 #ifndef MARVUS_MARVUSDB_H_
 #define MARVUS_MARVUSDB_H_
 
-#include "../database/Database.h"
+#include "Database.h"
 
 namespace marvus
 {

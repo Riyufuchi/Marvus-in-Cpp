@@ -13,8 +13,6 @@
 #include <wx/wx.h>
 #include <wx/spinctrl.h>
 
-#include "../../database/Database.h"
-
 namespace keo
 {
 
