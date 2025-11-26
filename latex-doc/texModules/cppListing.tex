@@ -1,0 +1,42 @@
+% Přidá custom zvýraznění v listings
+
+\usepackage{listings}
+\usepackage{xcolor}
+
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\definecolor{indigo-keywords}{RGB}{111, 0, 255}
+
+\lstdefinestyle{riyuCpp}
+{
+language=C++,
+morekeywords={override, inline}, % Add 'override' as a keyword
+backgroundcolor=\color{backcolour},   
+commentstyle=\color{codegreen},
+keywordstyle=\color{indigo-keywords},
+numberstyle=\tiny\color{codegray},
+stringstyle=\color{codepurple},
+basicstyle=\footnotesize\linespread{0.5},     
+breaklines=true,
+breakatwhitespace=false, % Break lines at whitespace           
+captionpos=b,                    
+keepspaces=true,                 
+numbers=left,                    
+numbersep=5pt,                  
+showspaces=false,                
+showstringspaces=false,
+showtabs=false,          
+tabsize=2
+%title=\lstname
+%linewidth=15cm
+%escapeinside=@
+}
+
+\lstset
+{
+columns=fullflexible,
+style=riyuCpp
+}

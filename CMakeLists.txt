@@ -71,7 +71,7 @@ file(MAKE_DIRECTORY build)
 
 file(GLOB_RECURSE APP_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.c
-    ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
+	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
 add_executable(Marvus ${APP_SOURCES})
@@ -95,3 +95,19 @@ endif()
 # Copy assets folder into build directory
 #file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 
+
+# Documentation
+
+# Path to LaTeX source folder
+set(LATEX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/latex-doc)
+set(MAIN_TEX Marvus-in-Cpp.tex)
+set(OUTPUT_PDF ${CMAKE_CURRENT_BINARY_DIR}/Marvus-in-Cpp.pdf)
+
+# Custom target to build docs
+add_custom_target(docs
+	COMMAND ${CMAKE_COMMAND} -E chdir ${LATEX_DIR} lualatex ${MAIN_TEX}
+	COMMAND ${CMAKE_COMMAND} -E chdir ${LATEX_DIR} makeglossaries Marvus-in-Cpp
+	COMMAND ${CMAKE_COMMAND} -E chdir ${LATEX_DIR} lualatex ${MAIN_TEX}
+	COMMAND ${CMAKE_COMMAND} -E chdir ${LATEX_DIR} lualatex ${MAIN_TEX}
+	COMMENT "Building PDF documentation with lualatex and makeglossaries"
+)

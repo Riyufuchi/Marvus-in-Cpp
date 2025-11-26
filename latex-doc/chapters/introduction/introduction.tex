@@ -1,0 +1,51 @@
+%!TeX root =  ../../Marvus-in-Cpp.tex
+
+This application originally began as a purely CLI-based project (which is also the reason for its name, \textit{ConsoleArt}). As the project evolved, a \gls{gui} was later added. Development started at a time when C++17 was the newest standard, so the use of modern features such as smart pointers was adopted gradually throughout the project.
+
+\section{Technologies Used}
+
+\subsection{wxWidgets}
+This project is written mainly in C++ and utilize \gls{wxwidgets} for the \gls{gui}.  \gls{wxwidgets} is cross-platform and utilize naive GUI libraries for each supported platform.
+
+\subsection{SQLite}
+
+\subsection{ConsoleLib}
+\texttt{ConsoleLib} is my custom library developed to simplify the creation of CLI applications. 
+It provides an abstract \texttt{IConsole} interface and several platform-specific implementations:
+
+\begin{itemize}
+    \item \textbf{DefaultConsole} – A basic implementation using standard output (\texttt{std::cout}) without any additional formatting features.
+    \item \textbf{UnixConsole} – Adds support for text coloring and formatting through ANSI escape codes commonly available on Unix-like systems.
+    \item \textbf{WindowsConsole} – Inherits from \texttt{UnixConsole} and enables UTF-8 output on Windows while ensuring compatibility with ANSI escape codes.
+\end{itemize}
+
+The library also includes additional utility modules such as an argument parser and other helpers commonly required in CLI tools, making it reusable across multiple projects.
+
+\section{Commiting a git commit}
+\begin{table} [H]
+	\centering
+	\catcode`\-=12
+	\begin{tabular}[c]{|| c | c ||}
+	\hline
+		\multicolumn{2}{||c||}{ \textbf{Commit type cheat table}} \\
+	\hline
+ 		 \textbf{Type} & \textbf{Repository change} \\
+	\hline
+		\textcolor{purple}{Feat:} & A new feature is added \\
+	\hline
+		\textcolor{blue}{Fixed:} & A bug is fixed \\
+	\hline
+		\textcolor{orange}{Docs:} & A documentation is updated \\
+	\hline
+		\textcolor{black}{Refactor:} & A code change that is not affecting functionality \\
+	\hline
+		\textcolor{brown}{Test:} & A code change in unit tests \\
+	\hline
+		\textcolor{gray}{Chore:} & A repository maintenance action \\
+	\hline
+		\textcolor{magenta}{Version x.y} & When new version is released for clearer commit history \\
+	\hline
+	\end{tabular}
+	\caption{Types of commit headers}
+	\label{table:cmtHeaders}
+\end{table}

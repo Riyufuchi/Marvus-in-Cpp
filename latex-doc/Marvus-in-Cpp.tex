@@ -1,0 +1,182 @@
+\documentclass[12pt,a4paper,titlepage]{scrreprt}
+
+% Language is defined in package module
+
+%\usepackage{fontspec}
+\usepackage{pdfpages} % For inclusion of PDFs
+
+\usepackage{tabulary}
+\usepackage{emoji}
+
+%pro formátování čísel
+\usepackage{numprint}
+\npthousandsep{\,}\npthousandthpartsep{}\npdecimalsign{.}
+
+\usepackage{xcolor}
+\usepackage{soul}
+\definecolor{lightgray}{gray}{0.9}
+\sethlcolor{lightgray}
+
+%Uprava (odstraneni modifikaci generovaneneho texttu tridou scratcl)
+%\setkomafont{disposition}{\mdseries\rmfamily}
+
+\title{\vspace{6cm}Marvus in C++}
+\subtitle{Documentation}
+\author{Riyufuchi}
+\date{\today}
+
+\usepackage[a-1b]{pdfx} % PDF/A-1b compliance
+% Ensure metadata is copied correctly
+%\immediate\write18{cp pdfa.xmpdata \jobname.xmpdata}
+
+\usepackage{hyperref}
+
+\usepackage{datatool}
+
+\hypersetup{
+  %pdfauthor={},
+  %pdftitle={Navrh zařízení pro testování nabíjecích kabelů},
+  %pdfkeywords={arduino, internet of things, microcontroller, electric energy},
+  %pdfsubject={Bakalářská práce},
+  %pdfproducer={LaTeX},%
+	%pdfcreator={LuaLaTeX}
+  colorlinks=true,        % false: boxed links; true: colored links
+  linkcolor=black,        % color of internal links
+  citecolor=black,        % color of links to bibliography
+  filecolor=black,        % color of file links
+  urlcolor=black          % color of external links
+}
+
+%font
+%\usepackage[T1]{fontenc}   % better character encoding
+%\usepackage{luainputenc} 
+%\usepackage[utf8]{inputenc}
+\usepackage{lmodern}       % Latin Modern font
+%\setmainfont{Times_New_Roman}
+%\usepackage{lmodern}       % Latin Modern font
+
+
+
+%Rozestup řádku (1.5)
+\linespread{1.35}
+
+%\usepackage{setspace}
+%\onehalfspacing
+
+\usepackage{tcolorbox}
+\tcbset{
+    highlight style/.style={
+        colframe=white,
+        colback=lightgray,
+        boxrule=0pt,
+        arc=0pt,
+        boxsep=0pt,
+        left=0pt,
+        right=0pt,
+        top=0pt,
+        bottom=0pt,
+        box align=base
+    }
+}
+
+%Nastaveni okraje
+%\usepackage[a4paper, left=3.50cm, right=1.50cm, top=2.50cm, bottom=2.50cm]{geometry}
+\usepackage[a4paper, margin=1in]{geometry}
+
+\RedeclareSectionCommand[
+  beforeskip=.1cm,
+  afterskip= .1cm %1.0ex plus .2ex
+]{chapter}
+
+%\setkomafont{chapter}{\fontsize{18}{18*1.2}\selectfont}
+\setkomafont{chapter}{\fontsize{16}{19.2}\selectfont}   
+\setkomafont{section}{\fontsize{14}{16.8}\selectfont}
+\setkomafont{subsection}{\fontsize{13}{15.6}\selectfont}
+\setkomafont{subsubsection}{\fontsize{13}{15.6}\selectfont}
+
+% WIP modules
+\usepackage[acronym]{glossaries}
+\newglossaryentry{wxwidgets}{name={wxWidgets}, description={A cross-platform GUI toolkit for C++}}
+\newacronym{gui}{GUI}{Graphical User Interface}
+\makeglossaries
+
+% Customize the glossary style to remove page numbers
+\newglossarystyle{mystyle}{%
+  \renewenvironment{theglossary}%
+    {\begin{description}}{\end{description}}%
+  \renewcommand*{\glossentry}[2]{%
+    \item[\glsentryitem{##1}\glstarget{##1}{\glossentryname{##1}}] %
+    \glossentrydesc{##1}\glspostdescription\space}%
+}
+
+%\renewcommand{\glossaryname}{}
+%\renewcommand{\glossarysection}[2][]{}
+
+\glsaddall
+% My modules
+%\input{texModules/czech.tex}
+\input{texModules/paragraph.tex}
+\input{texModules/cppListing.tex}
+\input{texModules/table.tex}
+\input{texModules/justify.tex}
+\input{texModules/command-fontSize.tex}
+\input{texModules/command-figure.tex}
+
+\usepackage{xspace}
+% My commands
+\newcommand{\wxw}{wxWidgets\xspace}
+
+\begin{document}
+	
+	%\maketitle
+	
+	\begin{titlepage}
+		\begin{center}
+			{\Large \textbf{My GitHub Project}} \\
+			{\Large C++ \& wxWidgets} \\
+			\vfill
+			{\Huge \textbf{Marvus in C++}}
+			\vfill
+		\end{center}
+		{\large\textbf{ \today}} \hfill {\large \textbf{Riyufuchi}}
+	\end{titlepage}
+	
+	\pagenumbering{gobble}
+	\tableofcontents
+	\newpage
+	\pagenumbering{arabic}
+	
+	\clearpage
+	\addcontentsline{toc}{section}{Glossary}
+	\printglossary[type=main, title=Glossary]
+	
+	\clearpage
+	\addcontentsline{toc}{section}{Acronyms}
+	\printglossary[type=\acronymtype, style=mystyle]
+	
+	\chapter{Introduction}
+	\input{chapters/introduction/introduction.tex}
+	
+	\chapter{Core}
+	\input{chapters/core/core.tex}
+	
+	\chapter{GUI}
+	\input{chapters/wx/wx.tex}
+	
+	\chapter{Database}
+	\input{chapters/db/db.tex}
+	
+	\chapter*{Summary}
+	
+	\newpage
+	\begin{minipage}{\textwidth}
+		\addcontentsline{toc}{chapter}{Lists}
+		\addcontentsline{toc}{section}{Listings}
+		\lstlistoflistings
+		\addcontentsline{toc}{section}{Figures}
+		\listoffigures
+	 	\addcontentsline{toc}{section}{List of tables}
+	 	\listoftables
+ 	\end{minipage}
+
+\end{document}

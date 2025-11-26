@@ -1,0 +1,20 @@
+\usepackage{tikz}
+\usepackage{eso-pic} % Add this line to include eso-pic package
+
+% Define the dimensions of the text area and the border
+\newlength{\borderwidth}
+\setlength{\borderwidth}{1mm} % Adjust the border width as needed
+
+% Define the coordinates of the corners of the border rectangle
+\newcommand{\borderrect}{
+  (current page.north west) + (\borderwidth,-\borderwidth) rectangle %
+  (current page.south east) + (-\borderwidth,\borderwidth)
+}
+
+% Draw the border
+\AddToShipoutPictureBG{
+  \begin{tikzpicture}[overlay,remember picture]
+    \draw[line width=\borderwidth,black]
+      \borderrect;
+  \end{tikzpicture}%
+}

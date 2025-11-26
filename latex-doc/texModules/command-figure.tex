@@ -1,0 +1,13 @@
+\usepackage{float} % For H option
+
+% \fig takes three arguments: path, caption, and fig name
+% \fig{picture.png}{Caption}{id}
+\newcommand{\fig}[3]
+{
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.9\linewidth]{#1} % Path to the image
+	\caption{#2} % Caption text
+	\label{fig:#3} % Figure label
+	\end{figure}
+}

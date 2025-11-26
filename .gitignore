@@ -1,4 +1,4 @@
-#Folders
+# Folders
 lua542
 bin
 bin/
@@ -6,6 +6,16 @@ build
 build/
 test
 libs-git
+
+# Utils
+*.drawio
+
+# CMake
+*.cmake
+Makefile
+CMakeCache.txt
+CMakeFiles
+CMakeFiles/
 
 # Eclipse
 .cproject
