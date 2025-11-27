@@ -2,7 +2,7 @@
 // File       : PaymentDialog.cpp
 // Author     : riyufuchi
 // Created on : Nov 25, 2025
-// Last edit  : Nov 26, 2025
+// Last edit  : Nov 27, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: KEO-manager
 //==============================================================================
@@ -33,17 +33,16 @@ PaymentDialog::PaymentDialog(wxWindow* parent, const InputData& inputData) : keo
 
 	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Date:"), 0, wxTOP | wxLEFT, 5);
 	// Current date
-	wxDateTime today = wxDateTime::Today();
-	wxString dateStr = today.Format("%d.%m.%Y");
+	wxDateTime current;
+	current.ParseDate(inputData.date);
 
-	// Button that shows the date
-	dateButton = new wxButton(this, wxID_ANY, dateStr, wxPoint(20, 20));
-
-	// Bind button click
-	dateButton->Bind(wxEVT_BUTTON, &PaymentDialog::onDateButtonClick, this);
-	gridSizer->Add(dateButton, 0, wxTOP | wxLEFT, 5);
+	picker = new wxDatePickerCtrl(this, wxID_ANY, current.IsValid() ? current : wxDateTime::Today(),
+		wxDefaultPosition, wxDefaultSize, wxDP_DROPDOWN);
+	gridSizer->Add(picker, 0, wxALL | wxEXPAND, 5);
 
 	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Note:"), 0, wxTOP | wxLEFT, 5);
+	note_txtbox = new wxTextCtrl(this, wxID_ANY);
+	gridSizer->Add(note_txtbox, 0, wxALL | wxEXPAND, 5);
 
 	sizer->Add(gridSizer, 1, wxALL | wxEXPAND, 10);
 	// OK / Cancel buttons
@@ -58,7 +57,7 @@ PaymentDialog::PaymentDialog(wxWindow* parent, const InputData& inputData) : keo
 PaymentDialog::~PaymentDialog()
 {
 }
-
+/*
 void PaymentDialog::onDateButtonClick(wxCommandEvent&)
 {
 	wxDateTime current;
@@ -67,9 +66,7 @@ void PaymentDialog::onDateButtonClick(wxCommandEvent&)
 	wxDialog dlg(this, wxID_ANY, "Choose Date");
 
 	// Popup date picker dialog
-	wxDatePickerCtrl* picker = new wxDatePickerCtrl(&dlg, wxID_ANY,
-			current.IsValid() ? current : wxDateTime::Today(),
-			wxDefaultPosition, wxDefaultSize, wxDP_DROPDOWN);
+
 
 	// Show it modally through a simple dialog
 
@@ -88,6 +85,6 @@ void PaymentDialog::onDateButtonClick(wxCommandEvent&)
 		wxString newDate = selected.Format("%d.%m.%Y");
 		dateButton->SetLabel(newDate);
 	}
-}
+}*/
 
 } /* namespace */

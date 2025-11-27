@@ -26,14 +26,14 @@ public:
 	{
 		wxw::enumVector establishments;
 		wxw::enumVector categories;
+		std::string date;
 	};
 private:
 	wxComboBox* establishmentComboBox;
 	wxComboBox* categoryComboBox;
 	wxSpinCtrl* valueCtrl;
-	wxButton* dateButton;
-
-	void onDateButtonClick(wxCommandEvent& event);
+	wxDatePickerCtrl* picker;
+	wxTextCtrl* note_txtbox;
 public:
 	PaymentDialog(wxWindow* parent, const InputData& inputData);
 	virtual ~PaymentDialog();

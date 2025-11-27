@@ -1,8 +1,8 @@
 //==============================================================================
 // File       : FactoryWxW.cpp
 // Author     : riyufuchi
-// Created on : Apr 1, 2025
-// Last edit  : Apr 1, 2025
+// Created on : Apr 01, 2025
+// Last edit  : Nov 27, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: KEO-manager
 //==============================================================================
@@ -42,14 +42,16 @@ wxGrid* FactoryWxW::newGrid(wxWindow* parent, wxWindowID id, const std::vector<s
 wxComboBox* FactoryWxW::newComboBox(wxWindow* parent, const enumVector& data)
 {
 	wxArrayString wxPlayerNames;
-	for (const std::vector<std::string>& row : data)
-	{
-		wxPlayerNames.Add(row[1]);
-	}
+	if (data.empty()) // This insures that empty CB will not crash the application
+		wxPlayerNames.Add("NULL");
+	else
+		for (const std::vector<std::string>& row : data)
+		{
+			wxPlayerNames.Add(row[1]);
+		}
 	// Create the combo box (parent, id, default, pos, size, choices, style)
 	wxComboBox* cb = new wxComboBox(parent, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxPlayerNames, wxCB_READONLY);
-	if (!data.empty())
-		cb->SetSelection(0);
+	cb->SetSelection(0);
 	return cb;
 }
 
