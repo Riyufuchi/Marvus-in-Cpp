@@ -13,7 +13,6 @@
 #include <wx/wx.h>
 
 #include "database/MarvusDB.h"
-#include "dialogs/PaymentDialog.h"
 #include "InlineSQL.h"
 // ConsoleLib
 #include "ArgumentParser.h"

@@ -125,7 +125,7 @@ bool Database::checkSuccessFor(std::string action, int expectedResult)
 	return false;
 }
 
-bool Database::reconnect(std::string databaseFile)
+bool Database::reconnect(const std::string& databaseFile)
 {
 	if (db)
 		sqlite3_close(db);

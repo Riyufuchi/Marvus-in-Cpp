@@ -7,7 +7,7 @@
 // Description: KEO-manager
 //==============================================================================
 
-#include "PaymentDialog.h"
+#include "../wxw/PaymentDialog.h"
 
 namespace marvus
 {

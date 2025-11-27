@@ -46,7 +46,7 @@ class Database
 		// Functions
 		bool initializeViews();
 		bool initializeDatabase();
-		bool reconnect(std::string databaseFile);
+		bool reconnect(const std::string& databaseFile);
 		bool executeSQL(const std::string& sql);
 		bool executeSQL_script(const std::string& sql);
 		int insertNewData(const insertVector& data, const std::string& insertSQL);
