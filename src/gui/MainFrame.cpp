@@ -2,7 +2,7 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Nov 25, 2025
+// Last edit  : Nov 27, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -43,30 +43,24 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 	// Create a grid and add to tab1
 	wxGrid* tempGrid = wxw::FactoryWxW::newGrid(establishmentsTab, wxID_ANY);
 	establishmentsTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
-	grids[Table::ESTABLISHMENTS] = tempGrid;
+	grids[marvus::Table::ESTABLISHMENTS] = tempGrid;
 
 	// Tab 2
 	tempGrid = wxw::FactoryWxW::newGrid(paymentsTab, wxID_ANY);
 	paymentsTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
-	grids[keo::Table::PAYMENTS] = tempGrid;
+	grids[marvus::Table::PAYMENTS] = tempGrid;
 
 	// Tab 3
 	tempGrid = wxw::FactoryWxW::newGrid(categoriesTab, wxID_ANY);
 	categoriesTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
-	grids[keo::Table::CATEGORIES] = tempGrid;
-
-	// Views
-
-	views[TableViews::ESTABLISHMENTS_VIEW] = "SELECT * FROM ESTABLISHMENT_VIEW;";
-	views[TableViews::CATEGORIES_VIEW] = "SELECT * FROM CATEGORY_VIEW;";
-	views[TableViews::PAYMENTS_VIEW] = "SELECT * FROM PAYMENT_VIEW;";
+	grids[marvus::Table::CATEGORIES] = tempGrid;
 
 	// Layout the notebook
 	SetSizerAndFit(wxw::FactoryWxW::newMaxSizer(notebook));
 	// Attempt to load data
-	loadViewToGrid(Table::ESTABLISHMENTS, TableViews::ESTABLISHMENTS_VIEW);
-	loadViewToGrid(Table::CATEGORIES, TableViews::CATEGORIES_VIEW);
-	loadViewToGrid(keo::Table::PAYMENTS, TableViews::PAYMENTS_VIEW);
+	loadViewToGrid(marvus::Table::ESTABLISHMENTS, marvus::TableViews::ESTABLISHMENTS_VIEW);
+	loadViewToGrid(marvus::Table::CATEGORIES, marvus::TableViews::CATEGORIES_VIEW);
+	loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableViews::PAYMENTS_VIEW);
 	SetSize(800, 600);
 }
 
@@ -79,8 +73,10 @@ MainFrame::~MainFrame()
 wxMenuBar* MainFrame::createMenuBar()
 {
 	wxMenu* fileMenu = new wxMenu;
-	fileMenu->Append(ID_DropDB, "&Reset database");
-	fileMenu->Append(ID_InserTestData, "&Insert test data");
+	fileMenu->Append(ID_NotImplementedYet, "&New");
+	fileMenu->Append(ID_NotImplementedYet, "&Open");
+	fileMenu->Append(ID_NotImplementedYet, "&Import");
+	fileMenu->Append(ID_NotImplementedYet, "&Export");
 	fileMenu->AppendSeparator();
 	fileMenu->Append(ID_Exit, "&Exit");
 
@@ -97,6 +93,10 @@ wxMenuBar* MainFrame::createMenuBar()
 
 	wxMenu* tools = new wxMenu();
 
+	wxMenu* debug = new wxMenu();
+	debug->Append(ID_DropDB, "&Reset database");
+	debug->Append(ID_InserTestData, "&Insert test data");
+
 	// Create a menu bar and add menu sections
 	wxMenuBar* menuBar = new wxMenuBar;
 	menuBar->Append(fileMenu, "&File");
@@ -105,17 +105,14 @@ wxMenuBar* MainFrame::createMenuBar()
 	menuBar->Append(tools, "&Tools");
 	menuBar->Append(window, "&Window");
 	menuBar->Append(helpMenu, "&Help");
+	menuBar->Append(debug, "&Debug");
 	
 	return menuBar;
 }
 
-void MainFrame::loadViewToGrid(Table table, TableViews view)
+void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableViews view)
 {
-	selectedViews[table] = view;
-	auto viewPair = views.find(view);
-	if (viewPair == views.end())
-		return;
-	marvus::tableHeaderAndData tableData = controller.getDB().obtainTableHeaderAndData(viewPair->second);
+	marvus::tableHeaderAndData tableData = controller.obtainDataFromView(table, view);
 
 	if (!grids.contains(table))
 		return;

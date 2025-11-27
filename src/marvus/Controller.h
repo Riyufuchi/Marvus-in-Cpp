@@ -2,7 +2,7 @@
 // File       : Controller.h
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Nov 26, 2025
+// Last edit  : Nov 27, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -12,18 +12,36 @@
 
 #include <wx/wx.h>
 
-#include "../marvus/database/MarvusDB.h"
-#include "../marvus/dialogs/PaymentDialog.h"
+#include "database/MarvusDB.h"
+#include "dialogs/PaymentDialog.h"
+#include "InlineSQL.h"
 // ConsoleLib
 #include "ArgumentParser.h"
 
 namespace marvus
 {
 inline const std::string DATABASE_FILE = "marvus.db";
+
+enum class Table
+{
+	PAYMENTS,
+	ESTABLISHMENTS,
+	CATEGORIES
+};
+
+enum class TableViews
+{
+	PAYMENTS_VIEW,
+	ESTABLISHMENTS_VIEW,
+	CATEGORIES_VIEW
+};
+
 class Controller
 {
 private:
 	std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argumentMethods;
+	std::unordered_map<marvus::TableViews, std::string> views;
+	std::unordered_map<marvus::Table, marvus::TableViews> selectedViews;
 	MarvusDB marvusDB;
 public:
 	Controller();
@@ -31,7 +49,7 @@ public:
 	void configure(ConsoleLib::argVector& config);
 	bool initDB(std::string& errorMsg);
 	void dropDB();
-	MarvusDB& getDB();
+	tableHeaderAndData obtainDataFromView(Table table, TableViews view);
 };
 
 } /* namespace marvus */

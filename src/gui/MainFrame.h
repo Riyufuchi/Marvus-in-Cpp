@@ -2,7 +2,7 @@
 // File       : MainFrame.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Nov 25, 2025
+// Last edit  : Nov 27, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -34,29 +34,13 @@ enum
 	ID_INSERT_PAYMENT
 };
 
-enum class Table
-{
-	PAYMENTS,
-	ESTABLISHMENTS,
-	CATEGORIES
-};
-
-enum class TableViews
-{
-	PAYMENTS_VIEW,
-	ESTABLISHMENTS_VIEW,
-	CATEGORIES_VIEW
-};
-
 class MainFrame : public wxFrame
 {
 	private:
-		std::unordered_map<Table, wxGrid*> grids;
-		std::unordered_map<TableViews, std::string> views;
-		std::unordered_map<Table, TableViews> selectedViews;
+		std::unordered_map<marvus::Table, wxGrid*> grids;
 		wxNotebook* notebook; // Tabbed pane
 		marvus::Controller controller;
-		void loadViewToGrid(Table table, TableViews view);
+		void loadViewToGrid(marvus::Table table, marvus::TableViews view);
 		wxMenuBar* createMenuBar();
 		// Events
 		void onExit(wxCommandEvent& event);
