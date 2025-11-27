@@ -15,8 +15,19 @@ MarvusDB::MarvusDB() : MarvusDB("database.db")
 {
 }
 
-MarvusDB::MarvusDB(std::string database) : Database(database, "../sql/")
+MarvusDB::MarvusDB(std::string database) : Database(database, "sql/")
 {
+}
+
+bool MarvusDB::insertEstablishment(const Establishment& establishment)
+{
+	return insertNewData({ insertPair(DataType::TEXT, establishment.name) }, InlineSQL::INSERT_ESTABLISHMENT);
+
+}
+
+bool MarvusDB::insertCategory(const Category& category)
+{
+	return insertNewData({ insertPair(DataType::TEXT, category.name) }, InlineSQL::INSERT_CATEGORY);
 }
 
 } /* namespace marvus */

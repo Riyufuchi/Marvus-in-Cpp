@@ -48,6 +48,8 @@ public:
 	void configure(ConsoleLib::argVector& config);
 	bool initDB(std::string& errorMsg);
 	void dropDB();
+	bool insertEntity(const Establishment& e);
+	bool insertCategory(const Category& c);
 	tableHeaderAndData obtainDataFromView(Table table, TableViews view);
 };
 

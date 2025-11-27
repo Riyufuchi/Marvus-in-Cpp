@@ -20,6 +20,9 @@ public:
 	static inline const std::string ESTABLISHMENTS_VIEW = "SELECT * FROM ESTABLISHMENT_VIEW;";
 	static inline const std::string CATEGORIES_VIEW = "SELECT * FROM CATEGORY_VIEW;";
 	static inline const std::string PAYMENTS_VIEW = "SELECT * FROM PAYMENT_VIEW;";
+	// Inserts
+	static inline const std::string INSERT_ESTABLISHMENT = "INSERT INTO ESTABLISHMENTS (establishment_name) VALUES (?);";
+	static inline const std::string INSERT_CATEGORY = "INSERT INTO CATEGORIES (category_name) VALUES (?);";
 	InlineSQL() = default;
 	virtual ~InlineSQL() = default;
 };

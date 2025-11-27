@@ -15,10 +15,12 @@
 #include <wx/wx.h>
 #include <wx/grid.h>
 #include <wx/notebook.h>
+#include <wx/textfile.h>
 
 #include "../wxw/FactoryWxW.h"
 
 #include "../marvus/Controller.h"
+#include "../marvus/wxw/PaymentDialog.h"
 
 namespace keo
 {
@@ -31,7 +33,8 @@ enum
 	ID_DropDB,
 	ID_InserTestData,
 	ID_NotImplementedYet,
-	ID_INSERT_PAYMENT
+	ID_INSERT_PAYMENT,
+	ID_Import
 };
 
 class MainFrame : public wxFrame
@@ -50,6 +53,7 @@ class MainFrame : public wxFrame
 		void onRefreshWindow(wxCommandEvent& event);
 		void onDropDatabase(wxCommandEvent& event);
 		void onInsertTestData(wxCommandEvent& event);
+		void onImport(wxCommandEvent& event);
 		wxDECLARE_EVENT_TABLE();
 	public:
 		MainFrame(const wxString& title, ConsoleLib::argVector& config);

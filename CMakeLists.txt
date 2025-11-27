@@ -93,7 +93,7 @@ else()
 endif()
 
 # Copy assets folder into build directory
-#file(COPY ${CMAKE_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
+file(COPY ${CMAKE_SOURCE_DIR}/sql DESTINATION ${CMAKE_BINARY_DIR})
 
 
 # Documentation

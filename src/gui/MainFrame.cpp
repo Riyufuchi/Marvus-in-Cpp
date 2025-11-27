@@ -75,7 +75,7 @@ wxMenuBar* MainFrame::createMenuBar()
 	wxMenu* fileMenu = new wxMenu;
 	fileMenu->Append(ID_NotImplementedYet, "&New");
 	fileMenu->Append(ID_NotImplementedYet, "&Open");
-	fileMenu->Append(ID_NotImplementedYet, "&Import");
+	fileMenu->Append(ID_Import, "&Import");
 	fileMenu->Append(ID_NotImplementedYet, "&Export");
 	fileMenu->AppendSeparator();
 	fileMenu->Append(ID_Exit, "&Exit");
@@ -150,7 +150,7 @@ void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableViews view)
 	{
 		for (dataX = 1, rowX = 0; dataX < ROW_SIZE; dataX++, rowX++)
 		{
-			grid.SetCellValue(row, rowX, rowData[dataX]);
+			grid.SetCellValue(row, rowX, wxString::FromUTF8(rowData[dataX]));
 		}
 		row++;
 	}
@@ -160,10 +160,10 @@ void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableViews view)
 
 void MainFrame::onRefreshWindow(wxCommandEvent&)
 {
-	for (const auto& view : selectedViews)
+	/*for (const auto& view : selectedViews)
 	{
 		loadViewToGrid(view.first, view.second);
-	}
+	}*/
 }
 
 void MainFrame::onNotImplemented(wxCommandEvent&)
@@ -205,7 +205,34 @@ void MainFrame::onInsertTestData(wxCommandEvent& event)
 
 void MainFrame::onDropDatabase(wxCommandEvent&)
 {
+	controller.dropDB();
+}
 
+void MainFrame::onImport(wxCommandEvent&)
+{
+	wxFileDialog openFileDialog(this, "Select a text file",
+		"", "", "Text files (*.txt)|*.txt|All files (*.*)|*.*", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+	if (openFileDialog.ShowModal() == wxID_CANCEL)
+		return; // user pressed "Cancel"
+
+	wxString path = openFileDialog.GetPath();
+
+	// Read the file into a vector<string>
+	wxTextFile file(path);
+	if (!file.Open())
+	{
+		wxMessageBox("Cannot open the selected file.", "Error", wxICON_ERROR);
+		return;
+	}
+
+	for (wxString str = file.GetFirstLine(); !file.Eof(); str = file.GetNextLine() )
+	{
+		if (!controller.insertCategory(marvus::Category{ .name = std::string(str.ToUTF8().data())}))  // convert each line to UTF-8
+			break;
+	}
+
+	loadViewToGrid(marvus::Table::CATEGORIES, marvus::TableViews::CATEGORIES_VIEW);
 }
 
 // Event table to link menu actions with functions
@@ -217,6 +244,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_DropDB, MainFrame::onDropDatabase)
 	EVT_MENU(ID_InserTestData, MainFrame::onInsertTestData)
 	EVT_MENU(ID_NotImplementedYet, MainFrame::onNotImplemented)
+	EVT_MENU(ID_Import, MainFrame::onImport)
 wxEND_EVENT_TABLE()
 
 }

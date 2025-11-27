@@ -63,4 +63,14 @@ tableHeaderAndData Controller::obtainDataFromView(Table table, TableViews view)
 	return marvusDB.obtainTableHeaderAndData(viewPair->second);
 }
 
+bool Controller::insertEntity(const Establishment& e)
+{
+	return marvusDB.insertEstablishment(e);
+}
+
+bool Controller::insertCategory(const Category& c)
+{
+	return marvusDB.insertCategory(c);
+}
+
 } /* namespace marvus */

@@ -12,8 +12,22 @@
 
 #include "Database.h"
 
+#include "../InlineSQL.h"
+
 namespace marvus
 {
+
+struct Establishment
+{
+	int id { 0 };
+	std::string name { "NULL" };
+};
+
+struct Category
+{
+	int id { 0 };
+	std::string name { "NULL" };
+};
 
 class MarvusDB : public Database
 {
@@ -21,6 +35,8 @@ public:
 	MarvusDB();
 	MarvusDB(std::string database);
 	virtual ~MarvusDB() = default;
+	bool insertEstablishment(const Establishment& establishment);
+	bool insertCategory(const Category& category);
 };
 
 } /* namespace marvus */
