@@ -44,17 +44,38 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 	int x = 1;
 	StatementGuard sg(stmt);
 
-	for (const insertData& dataPair : data)
+	for (const insertData& dataToInsert : data)
 	{
-		if (dataPair.data == "" && dataPair.catchNull)
+		// Handle NULL early
+		if (std::holds_alternative<std::monostate>(dataToInsert.value))
+		{
 			result = sqlite3_bind_null(stmt, x);
+		}
 		else
-			switch (dataPair.dataType)
+		{
+			// Use std::visit for correct bind
+			result = std::visit([&](auto&& val) -> int
 			{
-				case DataType::TEXT: result = sqlite3_bind_text(stmt, x, dataPair.data.c_str(), -1, SQLITE_STATIC); break;
-				case DataType::INTEGER: result = sqlite3_bind_int(stmt, x, std::stoi(dataPair.data)); break;
-				case DataType::REAL: result = sqlite3_bind_double(stmt, x, std::stod(dataPair.data)); break;
-			}
+				using T = std::decay_t<decltype(val)>;
+
+				if constexpr (std::is_same_v<T, std::string>)
+				{
+					return sqlite3_bind_text(stmt, x, val.c_str(), -1, SQLITE_TRANSIENT);
+				}
+				else if constexpr (std::is_same_v<T, int>)
+				{
+					return sqlite3_bind_int(stmt, x, val);
+				}
+				else if constexpr (std::is_same_v<T, double>)
+				{
+					return sqlite3_bind_double(stmt, x, val);
+				}
+				else
+				{
+					return SQLITE_MISUSE;
+				}
+			}, dataToInsert.value);
+		}
 
 		if (checkSuccessFor("SQL binding"))
 			return 0;

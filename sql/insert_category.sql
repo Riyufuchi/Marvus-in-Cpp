@@ -1,0 +1,1 @@
+INSERT INTO CATEGORIES (category_name) VALUES (?);

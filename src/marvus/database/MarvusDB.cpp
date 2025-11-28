@@ -11,6 +11,7 @@
 
 namespace marvus
 {
+
 MarvusDB::MarvusDB() : MarvusDB("database.db")
 {
 }
@@ -21,26 +22,27 @@ MarvusDB::MarvusDB(std::string database) : Database(database, "sql/")
 
 bool MarvusDB::insertEstablishment(const Establishment& establishment)
 {
-	return insertNewData({ insertData {DataType::TEXT, true, establishment.name} }, InlineSQL::INSERT_ESTABLISHMENT);
+	return insertNewData({ insertData {true, establishment.name} }, InlineSQL::INSERT_ESTABLISHMENT);
 
 }
 
 bool MarvusDB::insertCategory(const Category& category)
 {
-	return insertNewData({ insertData{DataType::TEXT, true, category.name} }, InlineSQL::INSERT_CATEGORY);
+	static const std::string SQL_INSERT = MarvusDB::sqlScriptFiles.getScript(InlineSQL::INSERT_CATEGORY);
+	return insertNewData({ insertData{true, category.name} }, SQL_INSERT);
 }
 
 bool MarvusDB::insertPayment(const Payment& payment)
 {
-	static const std::string SQL = sqlScriptFiles.getScript(InlineSQL::INSERT_PAYMENT);
+	static const std::string SQL_INSERT_PAYMENT = MarvusDB::sqlScriptFiles.getScript(InlineSQL::INSERT_PAYMENT);
 	insertVector data;
-	data.emplace_back(insertData{DataType::INTEGER, true, std::to_string(payment.ent_key)});
-	data.emplace_back(insertData{DataType::INTEGER, true, std::to_string(payment.category_key)});
-	data.emplace_back(insertData{DataType::TEXT, true, payment.value});
-	data.emplace_back(insertData{DataType::TEXT, true, payment.date});
-	data.emplace_back(insertData{DataType::TEXT, false, payment.note});
+	data.emplace_back(insertData{true, payment.ent_key});
+	data.emplace_back(insertData{true, payment.category_key});
+	data.emplace_back(insertData{true, payment.value});
+	data.emplace_back(insertData{true, payment.date});
+	data.emplace_back(insertData{false, payment.note});
 
-	return insertNewData(data, SQL);
+	return insertNewData(data, SQL_INSERT_PAYMENT);
 }
 
 } /* namespace marvus */

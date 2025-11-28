@@ -23,7 +23,7 @@ public:
 	static inline const std::string PAYMENTS_VIEW_CURR_MONTH = "SELECT * FROM PAYMENT_VIEW WHERE substr(Date, 4, 2) = strftime('%m', 'now');";
 	// Inserts
 	static inline const std::string INSERT_ESTABLISHMENT = "INSERT INTO ESTABLISHMENTS (establishment_name) VALUES (?);";
-	static inline const std::string INSERT_CATEGORY = "INSERT INTO CATEGORIES (category_name) VALUES (?);";
+	static inline const std::string INSERT_CATEGORY = "insert_category.sql";
 	static inline const std::string INSERT_PAYMENT = "insert_payment.sql";
 	InlineSQL() = default;
 	virtual ~InlineSQL() = default;

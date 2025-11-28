@@ -1,6 +1,8 @@
 #ifndef DATABASE_H
 #define DATABASE_H
 
+#include <variant>
+
 #include <wx/wx.h>
 #include <sqlite3.h>
 
@@ -12,18 +14,12 @@ namespace marvus
 
 inline const std::string INIT_DB_SQL = "initialize_database.sql";
 
-enum class DataType
-{
-	TEXT,
-	INTEGER,
-	REAL
-};
+using valueForDB = std::variant<std::monostate, int, double, std::string>;
 
 struct InsertData
 {
-	DataType dataType { DataType::TEXT };
 	bool catchNull { true };
-	std::string data;
+	valueForDB value;
 };
 
 using insertData = InsertData;
