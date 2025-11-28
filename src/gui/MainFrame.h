@@ -10,6 +10,8 @@
 #ifndef MAINFRAME_H
 #define MAINFRAME_H
 
+#include <iostream>
+
 #include "../../assets/icon.xpm"
 
 #include <wx/wx.h>
@@ -54,6 +56,10 @@ class MainFrame : public wxFrame
 		void onDropDatabase(wxCommandEvent& event);
 		void onInsertTestData(wxCommandEvent& event);
 		void onImport(wxCommandEvent& event);
+		//
+		void importCategories(wxTextFile& sourceFile);
+		void importEnties(wxTextFile& sourceFile);
+		void importPayments(wxTextFile& sourceFile);
 		wxDECLARE_EVENT_TABLE();
 	public:
 		MainFrame(const wxString& title, ConsoleLib::argVector& config);

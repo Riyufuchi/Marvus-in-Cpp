@@ -29,6 +29,16 @@ struct Category
 	std::string name { "NULL" };
 };
 
+struct Payment
+{
+	int id { 0 };
+	int ent_key { 0 };
+	int category_key { 0 };
+	std::string value { "0" };
+	std::string date {"1.1.2000"};
+	std::string note { "" };
+};
+
 class MarvusDB : public Database
 {
 public:
@@ -37,6 +47,7 @@ public:
 	virtual ~MarvusDB() = default;
 	bool insertEstablishment(const Establishment& establishment);
 	bool insertCategory(const Category& category);
+	bool insertPayment(const Payment& payment);
 };
 
 } /* namespace marvus */

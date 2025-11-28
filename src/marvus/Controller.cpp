@@ -18,7 +18,7 @@ Controller::Controller() : marvusDB(DATABASE_FILE)
 
 	views[TableViews::ESTABLISHMENTS_VIEW] = InlineSQL::ESTABLISHMENTS_VIEW;
 	views[TableViews::CATEGORIES_VIEW] = InlineSQL::CATEGORIES_VIEW;
-	views[TableViews::PAYMENTS_VIEW] = InlineSQL::PAYMENTS_VIEW;
+	views[TableViews::PAYMENTS_VIEW] = InlineSQL::PAYMENTS_VIEW_CURR_MONTH;
 }
 
 void Controller::configure(ConsoleLib::argVector& config)
@@ -71,6 +71,11 @@ bool Controller::insertEntity(const Establishment& e)
 bool Controller::insertCategory(const Category& c)
 {
 	return marvusDB.insertCategory(c);
+}
+
+bool Controller::insertPayment(const Payment& p)
+{
+	return marvusDB.insertPayment(p);
 }
 
 } /* namespace marvus */

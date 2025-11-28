@@ -20,7 +20,7 @@ Database::~Database()
 
 int Database::rowCallback(void* /*data*/, int argc, char** argv, char** /*azColName*/)
 {
-	tableRowStructure rowData;
+	tableRow rowData;
 	rowData.reserve(argc); // Optimize vector allocation
 
 	for (int i = 0; i < argc; i++)
@@ -33,7 +33,7 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 {
 	if (insertSQL == "")
 	{
-		wxMessageBox(wxString::Format("%s", "Invalid or missing SQL statement."), "SQL script error", wxOK | wxICON_ERROR);
+		std::cerr << "Invalid or missing SQL statement.\n";
 		return 0;
 	}
 
@@ -46,13 +46,14 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 
 	for (const insertPair& dataPair : data)
 	{
-		if (dataPair.second == "")
+		if (dataPair.data == "" && dataPair.catchNull)
 			result = sqlite3_bind_null(stmt, x);
 		else
-			switch (dataPair.first)
+			switch (dataPair.dataType)
 			{
-				case DataType::TEXT: result = sqlite3_bind_text(stmt, x, dataPair.second.c_str(), -1, SQLITE_STATIC); break;
-				case DataType::INTEGER: result = sqlite3_bind_int(stmt, x, std::stoi(dataPair.second)); break;
+				case DataType::TEXT: result = sqlite3_bind_text(stmt, x, dataPair.data.c_str(), -1, SQLITE_STATIC); break;
+				case DataType::INTEGER: result = sqlite3_bind_int(stmt, x, std::stoi(dataPair.data)); break;
+				case DataType::REAL: result = sqlite3_bind_double(stmt, x, std::stod(dataPair.data)); break;
 			}
 
 		if (checkSuccessFor("SQL binding"))
@@ -67,7 +68,7 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 	return sqlite3_last_insert_rowid(db);
 }
 
-tableStructure Database::obtainTableData(const std::string& selectSQL)
+tableRowVector Database::obtainTableData(const std::string& selectSQL)
 {
 	tableData.clear();
 	result = sqlite3_exec(db, selectSQL.c_str(),
@@ -82,8 +83,8 @@ tableStructure Database::obtainTableData(const std::string& selectSQL)
 
 tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL)
 {
-	tableRowStructure header;
-	tableStructure tableData;
+	tableRow header;
+	tableRowVector tableData;
 
 	if (!sqlite3_prepare_v2(db, viewSQL.c_str(), -1, &stmt, nullptr) == SQLITE_OK)
 	{
@@ -95,7 +96,7 @@ tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL
 	const char* value = nullptr;
 	while (sqlite3_step(stmt) == SQLITE_ROW)
 	{
-		tableRowStructure rowData;
+		tableRow rowData;
 		rowData.reserve(colCount); // Optimize vector allocation
 		for (i = 0; i < colCount; i++)
 		{
@@ -115,11 +116,11 @@ tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL
 	return tableHeaderAndData(header, tableData);
 }
 
-bool Database::checkSuccessFor(std::string action, int expectedResult)
+bool Database::checkSuccessFor(const std::string& action, int expectedResult)
 {
 	if (result != expectedResult)
 	{
-		wxMessageBox(wxString::Format("%s", sqlite3_errmsg(db)), action, wxOK | wxICON_ERROR);
+		std::cerr << action << ": " << sqlite3_errmsg(db) << "\n";
 		return true;
 	}
 	return false;

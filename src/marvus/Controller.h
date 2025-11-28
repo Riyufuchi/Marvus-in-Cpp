@@ -50,6 +50,7 @@ public:
 	void dropDB();
 	bool insertEntity(const Establishment& e);
 	bool insertCategory(const Category& c);
+	bool insertPayment(const Payment& p);
 	tableHeaderAndData obtainDataFromView(Table table, TableViews view);
 };
 

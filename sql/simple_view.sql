@@ -29,7 +29,7 @@ SELECT
 	e.establishment_name AS 'Entity',
 	c.category_name AS 'Category',
 	p.payment_value AS 'Value',
-	p.payment_date AS 'Date',
+	strftime('%d.%m.%Y', p.payment_date) AS 'Date',
 	p.payment_note AS 'Note'
 FROM PAYMENTS p
 JOIN ESTABLISHMENTS e ON p.establishment_id_key = e.establishment_id
