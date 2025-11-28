@@ -14,15 +14,9 @@ namespace marvus
 
 inline const std::string INIT_DB_SQL = "initialize_database.sql";
 
-using valueForDB = std::variant<std::monostate, int, double, std::string>;
+using valueForDB = std::variant<std::monostate, int, long long, double, std::string>;
 
-struct InsertData
-{
-	bool catchNull { true };
-	valueForDB value;
-};
-
-using insertData = InsertData;
+using insertData = valueForDB;
 using insertVector = std::vector<insertData>;
 using tableRow = std::vector<std::string>;
 using tableRowVector = std::vector<tableRow>;

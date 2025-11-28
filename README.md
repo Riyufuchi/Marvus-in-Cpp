@@ -20,6 +20,7 @@ This project is for learning how to work with wxWidgets and database. It is an u
 | [wxWidgets](https://www.wxwidgets.org/) | GUI | ❌ |
 | [SQLite](https://www.sqlite.org/) | Database | ❌ |
 | [ConsoleLib](https://github.com/Riyufuchi/ConsoleLib) | Console & utils stuff | ✅ |
+| [Miniz](https://github.com/richgel999/miniz) | Zip file | ✅ |
 
 ## Documentation
 

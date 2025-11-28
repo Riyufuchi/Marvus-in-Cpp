@@ -22,25 +22,25 @@ MarvusDB::MarvusDB(std::string database) : Database(database, "sql/")
 
 bool MarvusDB::insertEstablishment(const Establishment& establishment)
 {
-	return insertNewData({ insertData {true, establishment.name} }, InlineSQL::INSERT_ESTABLISHMENT);
+	return insertNewData({ establishment.name }, InlineSQL::INSERT_ESTABLISHMENT);
 
 }
 
 bool MarvusDB::insertCategory(const Category& category)
 {
 	static const std::string SQL_INSERT = MarvusDB::sqlScriptFiles.getScript(InlineSQL::INSERT_CATEGORY);
-	return insertNewData({ insertData{true, category.name} }, SQL_INSERT);
+	return insertNewData({ category.name }, SQL_INSERT);
 }
 
 bool MarvusDB::insertPayment(const Payment& payment)
 {
 	static const std::string SQL_INSERT_PAYMENT = MarvusDB::sqlScriptFiles.getScript(InlineSQL::INSERT_PAYMENT);
 	insertVector data;
-	data.emplace_back(insertData{true, payment.ent_key});
-	data.emplace_back(insertData{true, payment.category_key});
-	data.emplace_back(insertData{true, payment.value});
-	data.emplace_back(insertData{true, payment.date});
-	data.emplace_back(insertData{false, payment.note});
+	data.emplace_back(payment.ent_key);
+	data.emplace_back(payment.category_key);
+	data.emplace_back(payment.value);
+	data.emplace_back(payment.date);
+	data.emplace_back(payment.note);
 
 	return insertNewData(data, SQL_INSERT_PAYMENT);
 }

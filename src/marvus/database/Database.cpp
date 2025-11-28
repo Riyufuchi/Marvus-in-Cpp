@@ -47,7 +47,7 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 	for (const insertData& dataToInsert : data)
 	{
 		// Handle NULL early
-		if (std::holds_alternative<std::monostate>(dataToInsert.value))
+		if (std::holds_alternative<std::monostate>(dataToInsert))
 		{
 			result = sqlite3_bind_null(stmt, x);
 		}
@@ -66,6 +66,10 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 				{
 					return sqlite3_bind_int(stmt, x, val);
 				}
+				else if constexpr (std::is_same_v<T, long long>)
+				{
+					return sqlite3_bind_int64(stmt, x, val);
+				}
 				else if constexpr (std::is_same_v<T, double>)
 				{
 					return sqlite3_bind_double(stmt, x, val);
@@ -74,7 +78,7 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 				{
 					return SQLITE_MISUSE;
 				}
-			}, dataToInsert.value);
+			}, dataToInsert);
 		}
 
 		if (checkSuccessFor("SQL binding"))
