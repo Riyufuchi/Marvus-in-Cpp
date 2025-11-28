@@ -2,7 +2,7 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Nov 27, 2025
+// Last edit  : Nov 28, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -209,139 +209,26 @@ void MainFrame::onDropDatabase(wxCommandEvent&)
 	controller.dropDB();
 }
 
-void MainFrame::importCategories(wxTextFile& sourceFile)
-{
-	marvus::Category cat;
-
-	for (wxString str = sourceFile.GetFirstLine(); !sourceFile.Eof(); str = sourceFile.GetNextLine() )
-	{
-		cat.name = std::string(str.ToUTF8().data());
-		if (!controller.insertCategory(cat))  // convert each line to UTF-8
-			break;
-	}
-	loadViewToGrid(marvus::Table::CATEGORIES, marvus::TableViews::CATEGORIES_VIEW);
-}
-
-void MainFrame::importEnties(wxTextFile& sourceFile)
-{
-	marvus::Establishment est;
-
-	for (wxString str = sourceFile.GetFirstLine(); !sourceFile.Eof(); str = sourceFile.GetNextLine() )
-	{
-		est.name = std::string(str.ToUTF8().data());
-		if (!controller.insertEntity(est))  // convert each line to UTF-8
-			break;
-	}
-	loadViewToGrid(marvus::Table::ESTABLISHMENTS, marvus::TableViews::ESTABLISHMENTS_VIEW);
-}
-
-static std::vector<std::string> splitCSVFixed(const std::string& line, char delimeter, size_t expectedCount)
-{
-	std::vector<std::string> result;
-	result.reserve(expectedCount);
-
-	std::string current;
-	for (size_t i = 0; i < line.length(); ++i)
-	{
-		if (line[i] == delimeter)
-		{
-			result.push_back(current);
-			current.clear();
-		}
-		else
-		{
-			current += line[i];
-		}
-	}
-
-	// Add the last field
-	result.push_back(current);
-
-	// Pad with empty strings if fewer than expected
-	while (result.size() < expectedCount)
-		result.push_back("");
-
-	return result;
-}
-
-void MainFrame::importPayments(wxTextFile& sourceFile)
-{
-	const marvus::tableHeaderAndData ents = controller.obtainDataFromView(marvus::Table::ESTABLISHMENTS, marvus::TableViews::ESTABLISHMENTS_VIEW);
-	const marvus::tableHeaderAndData cats = controller.obtainDataFromView(marvus::Table::CATEGORIES, marvus::TableViews::CATEGORIES_VIEW);
-
-	std::unordered_map<std::string, int> entMap;
-	std::unordered_map<std::string, int> catMap;
-
-	for (const marvus::tableRow& row : ents.second)
-	{
-		entMap[row[1]] = std::stoi(row[0]);
-	}
-
-	for (const marvus::tableRow& row : cats.second)
-		{
-			catMap[row[1]] = std::stoi(row[0]);
-		}
-
-	marvus::Payment payment;
-
-	std::vector<std::string> parsedCSV;
-	auto findData = entMap.find("0");
-	std::vector<std::string> parsedDate;
-
-	/*
-	 * CSV is flat file without ID's so little mapping is needed
-	 */
-	for (wxString str = sourceFile.GetFirstLine(); !sourceFile.Eof(); str = sourceFile.GetNextLine() )
-	{
-		parsedCSV = splitCSVFixed(std::string(str.ToUTF8().data()), ';', 6);
-		findData = entMap.find(parsedCSV[0]);
-		if (findData != entMap.end())
-			payment.ent_key = findData->second;
-		else
-			continue;
-		findData = catMap.find(parsedCSV[1]);
-		if (findData != catMap.end())
-			payment.category_key = findData->second;
-		else
-			continue;
-		payment.value = parsedCSV[2];
-		// Currency isn't implemented yet
-		parsedDate = splitCSVFixed(parsedCSV[4], '.', 3);
-		payment.date = parsedDate[2] + "-" + parsedDate[1] + "-" + parsedDate[0];
-		payment.note = parsedCSV[5];
-		if (!controller.insertPayment(payment))  // convert each line to UTF-8
-			break;
-	}
-	loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableViews::PAYMENTS_VIEW);
-
-}
-
 void MainFrame::onImport(wxCommandEvent&)
 {
-	static int id = 0;
-	wxFileDialog openFileDialog(this, "Select a text file",
-		"", "", "Text files |*.txt|All files |*.*", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	wxFileDialog openFileDialog(this, "Select a zip file",
+		"", "", "Marvus zip |*.zip", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return; // user pressed "Cancel"
 
 	wxString path = openFileDialog.GetPath();
 
-	// Read the file into a vector<string>
-	wxTextFile file(path);
-	if (!file.Open())
-	{
-		wxMessageBox("Cannot open the selected file.", "Error", wxICON_ERROR);
-		return;
-	}
+	std::string msg;
 
-	switch (id)
+	if (controller.importFromZIP(std::string(path), msg))
 	{
-		case 0: importEnties(file); break;
-		case 1: importCategories(file); break;
-		case 2: importPayments(file); break;
+		loadViewToGrid(marvus::Table::ESTABLISHMENTS, marvus::TableViews::ESTABLISHMENTS_VIEW);
+		loadViewToGrid(marvus::Table::CATEGORIES, marvus::TableViews::CATEGORIES_VIEW);
+		loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableViews::PAYMENTS_VIEW);
 	}
-	id++;
+	else
+		wxMessageBox(msg, "Import error", wxICON_ERROR);
 }
 
 // Event table to link menu actions with functions

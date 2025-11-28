@@ -44,7 +44,7 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 	int x = 1;
 	StatementGuard sg(stmt);
 
-	for (const insertPair& dataPair : data)
+	for (const insertData& dataPair : data)
 	{
 		if (dataPair.data == "" && dataPair.catchNull)
 			result = sqlite3_bind_null(stmt, x);

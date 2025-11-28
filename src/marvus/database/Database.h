@@ -26,8 +26,8 @@ struct InsertData
 	std::string data;
 };
 
-using insertPair = InsertData;
-using insertVector = std::vector<insertPair>;
+using insertData = InsertData;
+using insertVector = std::vector<insertData>;
 using tableRow = std::vector<std::string>;
 using tableRowVector = std::vector<tableRow>;
 using tableHeaderAndData = std::pair<tableRow, tableRowVector>;

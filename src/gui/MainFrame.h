@@ -2,7 +2,7 @@
 // File       : MainFrame.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Nov 27, 2025
+// Last edit  : Nov 28, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -23,6 +23,8 @@
 
 #include "../marvus/Controller.h"
 #include "../marvus/wxw/PaymentDialog.h"
+
+#include "FileUtils.h"
 
 namespace keo
 {
@@ -57,9 +59,6 @@ class MainFrame : public wxFrame
 		void onInsertTestData(wxCommandEvent& event);
 		void onImport(wxCommandEvent& event);
 		//
-		void importCategories(wxTextFile& sourceFile);
-		void importEnties(wxTextFile& sourceFile);
-		void importPayments(wxTextFile& sourceFile);
 		wxDECLARE_EVENT_TABLE();
 	public:
 		MainFrame(const wxString& title, ConsoleLib::argVector& config);

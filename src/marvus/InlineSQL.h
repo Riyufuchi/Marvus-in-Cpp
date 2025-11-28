@@ -19,12 +19,12 @@ class InlineSQL
 public:
 	static inline const std::string ESTABLISHMENTS_VIEW = "SELECT * FROM ESTABLISHMENT_VIEW;";
 	static inline const std::string CATEGORIES_VIEW = "SELECT * FROM CATEGORY_VIEW;";
-	static inline const std::string PAYMENTS_VIEW = "SELECT * FROM PAYMENT_VIEW_CURR_MONTH;";
-	static inline const std::string PAYMENTS_VIEW_CURR_MONTH = "SELECT * FROM PAYMENT_VIEW WHERE strftime('%Y-%m', payment_date) = strftime('%Y-%m', 'now');";
+	static inline const std::string PAYMENTS_VIEW = "SELECT * FROM PAYMENT_VIEW;";
+	static inline const std::string PAYMENTS_VIEW_CURR_MONTH = "SELECT * FROM PAYMENT_VIEW WHERE substr(Date, 4, 2) = strftime('%m', 'now');";
 	// Inserts
 	static inline const std::string INSERT_ESTABLISHMENT = "INSERT INTO ESTABLISHMENTS (establishment_name) VALUES (?);";
 	static inline const std::string INSERT_CATEGORY = "INSERT INTO CATEGORIES (category_name) VALUES (?);";
-	static inline const std::string INSERT_PAYMENT = "INSERT INTO PAYMENTS (establishment_id_key, category_id_key, payment_value, payment_date, payment_note) VALUES (?, ?, ?, ?, ?);";
+	static inline const std::string INSERT_PAYMENT = "insert_payment.sql";
 	InlineSQL() = default;
 	virtual ~InlineSQL() = default;
 };

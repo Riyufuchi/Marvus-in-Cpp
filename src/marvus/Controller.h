@@ -16,6 +16,9 @@
 #include "InlineSQL.h"
 // ConsoleLib
 #include "ArgumentParser.h"
+#include "FileUtils.h"
+// miniZ
+#include "../include/miniz.h"
 
 namespace marvus
 {
@@ -42,6 +45,9 @@ private:
 	std::unordered_map<marvus::TableViews, std::string> views;
 	std::unordered_map<marvus::Table, marvus::TableViews> selectedViews;
 	MarvusDB marvusDB;
+	bool importEnties(const std::string& source);
+	bool importCategories(const std::string& source);
+	bool importData(const std::string& source);
 public:
 	Controller();
 	virtual ~Controller() = default;
@@ -51,6 +57,7 @@ public:
 	bool insertEntity(const Establishment& e);
 	bool insertCategory(const Category& c);
 	bool insertPayment(const Payment& p);
+	bool importFromZIP(const std::string& path, std::string& errorMessage);
 	tableHeaderAndData obtainDataFromView(Table table, TableViews view);
 };
 
