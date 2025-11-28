@@ -22,8 +22,8 @@ MarvusDB::MarvusDB(std::string database) : Database(database, "sql/")
 
 bool MarvusDB::insertEstablishment(const Establishment& establishment)
 {
-	return insertNewData({ establishment.name }, InlineSQL::INSERT_ESTABLISHMENT);
-
+	static const std::string SQL_INSERT = MarvusDB::sqlScriptFiles.getScript(InlineSQL::INSERT_ESTABLISHMENT);
+	return insertNewData({ establishment.name }, SQL_INSERT);
 }
 
 bool MarvusDB::insertCategory(const Category& category)

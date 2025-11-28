@@ -8,6 +8,7 @@ This application originally began as a purely CLI-based project (which is also t
 This project is written mainly in C++ and utilize \gls{wxwidgets} for the \gls{gui}.  \gls{wxwidgets} is cross-platform and utilize naive GUI libraries for each supported platform.
 
 \subsection{SQLite}
+This project use SQLite for simplicity as main focus is on C++ and GUI. So this application will not produce accurate statistics as SQLite do not support accurate decimal data type and use only double. I will compare results from this application with results from my Java application that uses BigDecimal for accurate decimal calculations.
 
 \subsection{ConsoleLib}
 \texttt{ConsoleLib} is my custom library developed to simplify the creation of CLI applications. 
@@ -20,6 +21,9 @@ It provides an abstract \texttt{IConsole} interface and several platform-specifi
 \end{itemize}
 
 The library also includes additional utility modules such as an argument parser and other helpers commonly required in CLI tools, making it reusable across multiple projects.
+
+\subsection{MiniZ}
+MiniZ is simple C library for working with zip files which are used to import data from my Java application to this one. 
 
 \section{Commiting a git commit}
 \begin{table} [H]
