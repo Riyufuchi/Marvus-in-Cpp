@@ -1,9 +1,18 @@
+//==============================================================================
+// File       : Database.h
+// Author     : riyufuchi
+// Created on : Mar 31, 2025
+// Last edit  : Nov 29, 2025
+// Copyright  : Copyright (c) 2025, riyufuchi
+// Description: Marvus-in-Cpp
+//==============================================================================
+
 #ifndef DATABASE_H
 #define DATABASE_H
 
 #include <variant>
+#include <vector>
 
-#include <wx/wx.h>
 #include <sqlite3.h>
 
 #include "ScriptMap.h"
@@ -39,17 +48,17 @@ class Database
 		Database(std::string databaseFile);
 		Database(std::string databaseFile, std::string sqlScripts);
 		virtual ~Database();
-		// Procedures
-		void setSQL_Scripts(std::string path);
 		// Functions
 		bool initializeViews();
 		bool initializeDatabase();
 		bool reconnect(const std::string& databaseFile);
-		bool executeSQL(const std::string& sql);
-		bool executeSQL_script(const std::string& sql);
+		bool executeFileSQL(const std::string& sql);
+		bool executeScriptSQL(const std::string& sql);
 		int insertNewData(const insertVector& data, const std::string& insertSQL);
 		tableRowVector obtainTableData(const std::string& selectSQL);
 		tableHeaderAndData obtainTableHeaderAndData(const std::string& viewSQL);
+		// Setters
+		void setPathToSQL_Scripts(std::string path);
 };
 }
 #endif /* DATABASE_H */ 

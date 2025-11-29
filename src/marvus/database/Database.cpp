@@ -1,3 +1,12 @@
+//==============================================================================
+// File       : Database.cpp
+// Author     : riyufuchi
+// Created on : Mar 31, 2025
+// Last edit  : Nov 29, 2025
+// Copyright  : Copyright (c) 2025, riyufuchi
+// Description: Marvus-in-Cpp
+//==============================================================================
+
 #include "Database.h"
 
 namespace marvus
@@ -8,7 +17,6 @@ Database::Database(std::string databaseFile) : Database(databaseFile, "")
 
 Database::Database(std::string databaseFile, std::string sqlScriptsPath) : stmt(nullptr), sqlScriptsPath(sqlScriptsPath), result(0), c_ErrorMessage(nullptr)
 {
-	// Open the SQLite database and create the table
 	sqlite3_open(databaseFile.c_str(), &db);
 }
 
@@ -163,7 +171,7 @@ bool Database::initializeViews()
 {
 	for (const auto& [scriptFile, fileContent] : sqlScriptFiles.getScriptMap())
 		if (scriptFile.find("view") != std::string::npos)
-			if (!executeSQL(fileContent))
+			if (!executeFileSQL(fileContent))
 				return false;
 	return true;
 }
@@ -172,42 +180,34 @@ bool Database::initializeDatabase()
 {
 	if (!sqlScriptFiles.loadScripts(sqlScriptsPath))
 		return false;
-	std::string sqlScript = sqlScriptFiles.getScript(INIT_DB_SQL);
-	int rc = sqlite3_exec(db, sqlScript.c_str(), nullptr, nullptr, &c_ErrorMessage);
-	if (rc != SQLITE_OK)
-	{
-		wxMessageBox(wxString::Format("SQL error: %s", c_ErrorMessage), "Error", wxOK | wxICON_ERROR);
-		sqlite3_free(c_ErrorMessage);
-		return false;
-	}
-	return true;
+	return executeFileSQL(sqlScriptFiles.getScript(INIT_DB_SQL));
 }
 
-bool Database::executeSQL(const std::string& sqlScript)
+bool Database::executeFileSQL(const std::string& sqlScript)
 {
 	int rc = sqlite3_exec(db, sqlScript.c_str(), nullptr, nullptr, &c_ErrorMessage);
 	if (rc != SQLITE_OK)
 	{
-		wxMessageBox(wxString::Format("%s", c_ErrorMessage), "SQL error", wxOK | wxICON_ERROR);
+		std::cerr << c_ErrorMessage << "\n";
 		sqlite3_free(c_ErrorMessage);
 		return false;
 	}
 	return true;
 }
 
-bool Database::executeSQL_script(const std::string& sqlScript)
+bool Database::executeScriptSQL(const std::string& sqlScript)
 {
 	int rc = sqlite3_prepare_v2(db, sqlScript.c_str(), -1, &stmt, nullptr);
 	if (rc != SQLITE_OK)
 	{
-		wxMessageBox(wxString::Format("%s", c_ErrorMessage), "SQL error", wxOK | wxICON_ERROR);
+		std::cerr << c_ErrorMessage << "\n";
 		sqlite3_free(c_ErrorMessage);
 		return false;
 	}
 	return true;
 }
 
-void Database::setSQL_Scripts(std::string path)
+void Database::setPathToSQL_Scripts(std::string path)
 {
 	this->sqlScriptsPath = path;
 }

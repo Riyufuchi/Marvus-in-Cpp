@@ -2,7 +2,7 @@
 // File       : Controller.cpp
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Nov 27, 2025
+// Last edit  : Nov 29, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -14,7 +14,7 @@ namespace marvus
 
 Controller::Controller() : marvusDB(DATABASE_FILE)
 {
-	this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; marvusDB.setSQL_Scripts(vector[0]); };
+	this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; marvusDB.setPathToSQL_Scripts(vector[0]); };
 
 	views[TableViews::ESTABLISHMENTS_VIEW] = InlineSQL::ESTABLISHMENTS_VIEW;
 	views[TableViews::CATEGORIES_VIEW] = InlineSQL::CATEGORIES_VIEW;
