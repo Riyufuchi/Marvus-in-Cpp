@@ -2,7 +2,7 @@
 // File       : ManagerApp.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Nov 25, 2025
+// Last edit  : Nov 30, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -15,7 +15,7 @@
 #include "MainFrame.h"
 #include "ArgumentParser.h"
 
-namespace keo
+namespace wxw
 {
 class ManagerApp : public wxApp
 {

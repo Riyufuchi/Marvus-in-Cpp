@@ -20,13 +20,14 @@
 #include <wx/textfile.h>
 
 #include "../wxw/FactoryWxW.h"
+#include "../wxw/ToolsWxW.h"
 
 #include "../marvus/Controller.h"
 #include "../marvus/wxw/PaymentDialog.h"
 
 #include "FileUtils.h"
 
-namespace keo
+namespace wxw
 {
 
 enum

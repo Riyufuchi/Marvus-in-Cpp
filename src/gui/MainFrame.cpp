@@ -2,14 +2,14 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Nov 28, 2025
+// Last edit  : Nov 30, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
 
 #include "MainFrame.h"
 
-namespace keo
+namespace wxw
 {
 
 MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxFrame(NULL, wxID_ANY, title)
@@ -37,26 +37,31 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 	wxPanel* categoriesTab = new wxPanel(notebook);
 	
 	notebook->AddPage(establishmentsTab, "Establishments");
-	notebook->AddPage(paymentsTab, "Payments", true);
 	notebook->AddPage(categoriesTab, "Categories");
+	notebook->AddPage(paymentsTab, "Payments", true);
 
 	// Create a grid and add to tab1
-	wxGrid* tempGrid = wxw::FactoryWxW::newGrid(establishmentsTab, wxID_ANY);
+	wxGrid* tempGrid = FactoryWxW::newGrid(establishmentsTab, wxID_ANY);
 	establishmentsTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
 	grids[marvus::Table::ESTABLISHMENTS] = tempGrid;
 
 	// Tab 2
-	tempGrid = wxw::FactoryWxW::newGrid(paymentsTab, wxID_ANY);
+	tempGrid = FactoryWxW::newGrid(paymentsTab, wxID_ANY);
 	paymentsTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
 	grids[marvus::Table::PAYMENTS] = tempGrid;
 
 	// Tab 3
-	tempGrid = wxw::FactoryWxW::newGrid(categoriesTab, wxID_ANY);
+	tempGrid = FactoryWxW::newGrid(categoriesTab, wxID_ANY);
 	categoriesTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
 	grids[marvus::Table::CATEGORIES] = tempGrid;
 
+	for (const auto& grid : grids)
+	{
+		ToolsWxW::updateFontSizeInGrid(grid.second, 10);
+	}
+
 	// Layout the notebook
-	SetSizerAndFit(wxw::FactoryWxW::newMaxSizer(notebook));
+	SetSizerAndFit(FactoryWxW::newMaxSizer(notebook));
 	// Attempt to load data
 	loadViewToGrid(marvus::Table::ESTABLISHMENTS, marvus::TableViews::ESTABLISHMENTS_VIEW);
 	loadViewToGrid(marvus::Table::CATEGORIES, marvus::TableViews::CATEGORIES_VIEW);
