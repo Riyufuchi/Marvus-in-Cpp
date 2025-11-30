@@ -2,7 +2,7 @@
 // File       : Database.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Nov 29, 2025
+// Last edit  : Nov 30, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -15,7 +15,7 @@ Database::Database(std::string databaseFile) : Database(databaseFile, "")
 {
 }
 
-Database::Database(std::string databaseFile, std::string sqlScriptsPath) : stmt(nullptr), sqlScriptsPath(sqlScriptsPath), result(0), c_ErrorMessage(nullptr)
+Database::Database(std::string databaseFile, std::string sqlScriptsPath) : sqlScriptsPath(sqlScriptsPath), result(0), c_ErrorMessage(nullptr)
 {
 	sqlite3_open(databaseFile.c_str(), &db);
 }
@@ -37,27 +37,15 @@ int Database::rowCallback(void* /*data*/, int argc, char** argv, char** /*azColN
 	return 0; // Continue processing
 }
 
-int Database::insertNewData(const insertVector& data, const std::string& insertSQL)
+int Database::bindValuesToSQL(const insertVector& data, StatementSQL& stmtSQL)
 {
-	if (insertSQL == "")
-	{
-		std::cerr << "Invalid or missing SQL statement.\n";
-		return 0;
-	}
-
-	result = sqlite3_prepare_v2(db, insertSQL.c_str(), -1, &stmt, nullptr);
-	if (checkSuccessFor("Statement preparation"))
-		return 0;
-
 	int x = 1;
-	StatementGuard sg(stmt);
-
 	for (const insertData& dataToInsert : data)
 	{
 		// Handle NULL early
 		if (std::holds_alternative<std::monostate>(dataToInsert))
 		{
-			result = sqlite3_bind_null(stmt, x);
+			result = sqlite3_bind_null(stmtSQL, x);
 		}
 		else
 		{
@@ -68,19 +56,19 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 
 				if constexpr (std::is_same_v<T, std::string>)
 				{
-					return sqlite3_bind_text(stmt, x, val.c_str(), -1, SQLITE_TRANSIENT);
+					return sqlite3_bind_text(stmtSQL, x, val.c_str(), -1, SQLITE_TRANSIENT);
 				}
 				else if constexpr (std::is_same_v<T, int>)
 				{
-					return sqlite3_bind_int(stmt, x, val);
+					return sqlite3_bind_int(stmtSQL, x, val);
 				}
 				else if constexpr (std::is_same_v<T, long long>)
 				{
-					return sqlite3_bind_int64(stmt, x, val);
+					return sqlite3_bind_int64(stmtSQL, x, val);
 				}
 				else if constexpr (std::is_same_v<T, double>)
 				{
-					return sqlite3_bind_double(stmt, x, val);
+					return sqlite3_bind_double(stmtSQL, x, val);
 				}
 				else
 				{
@@ -93,8 +81,27 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 			return 0;
 		x++;
 	}
+	return 1;
+}
 
-	result = sqlite3_step(stmt);
+int Database::insertNewData(const insertVector& data, const std::string& insertSQL)
+{
+	if (insertSQL == "")
+	{
+		std::cerr << "Invalid or missing SQL statement.\n";
+		return 0;
+	}
+
+	StatementSQL stmtSQL;
+
+	result = sqlite3_prepare_v2(db, insertSQL.c_str(), -1, stmtSQL, nullptr);
+	if (checkSuccessFor("Statement preparation"))
+		return 0;
+
+
+	bindValuesToSQL(data, stmtSQL);
+
+	result = sqlite3_step(stmtSQL);
 	if (checkSuccessFor("SQL execution of insert", SQLITE_DONE))
 		return 0;
 
@@ -114,12 +121,52 @@ tableRowVector Database::obtainTableData(const std::string& selectSQL)
 	return tableData;
 }
 
+tableHeaderAndData Database::obtainFromFilterView(const std::string& viewSQL, const insertVector& data)
+{
+	tableRow header;
+	tableRowVector tableData;
+	bool ok;
+	StatementSQL stmt = prepareScriptSQL(viewSQL, ok, data);
+
+	if (!ok)
+		return {};
+
+	int colCount = sqlite3_column_count(stmt);
+
+	if (!colCount)
+		return {};
+
+	int i = 0;
+	const char* value = nullptr;
+	while (sqlite3_step(stmt) == SQLITE_ROW)
+	{
+		tableRow rowData;
+		rowData.reserve(colCount); // Optimize vector allocation
+		for (i = 0; i < colCount; i++)
+		{
+			value = reinterpret_cast<const char*>(sqlite3_column_text(stmt, i));
+			rowData.push_back(value ? std::string(value) : "NULL");
+		}
+		tableData.push_back(std::move(rowData));
+	}
+
+	header.reserve(colCount - 1);
+	for (int i = 1; i < colCount; ++i) // As we don't need ID column header
+	{
+		header.push_back(sqlite3_column_name(stmt, i));
+	}
+
+	return tableHeaderAndData(header, tableData);
+}
+
 tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL)
 {
 	tableRow header;
 	tableRowVector tableData;
 
-	if (!sqlite3_prepare_v2(db, viewSQL.c_str(), -1, &stmt, nullptr) == SQLITE_OK)
+	StatementSQL stmt;
+
+	if (!sqlite3_prepare_v2(db, viewSQL.c_str(), -1, stmt, nullptr) == SQLITE_OK)
 	{
 		std::cerr << "SQL prepare error: " << sqlite3_errmsg(db) << std::endl;
 	}
@@ -145,7 +192,6 @@ tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL
 		header.push_back(sqlite3_column_name(stmt, i));
 	}
 
-	sqlite3_finalize(stmt);
 	return tableHeaderAndData(header, tableData);
 }
 
@@ -195,16 +241,24 @@ bool Database::executeFileSQL(const std::string& sqlScript)
 	return true;
 }
 
-bool Database::executeScriptSQL(const std::string& sqlScript)
+StatementSQL Database::prepareScriptSQL(const std::string& sql, bool& success, const insertVector& data)
 {
-	int rc = sqlite3_prepare_v2(db, sqlScript.c_str(), -1, &stmt, nullptr);
-	if (rc != SQLITE_OK)
+	StatementSQL stmt;
+	result = sqlite3_prepare_v2(db, sql.c_str(), -1, stmt, nullptr);
+	if (checkSuccessFor("Statement preparation"))
 	{
-		std::cerr << c_ErrorMessage << "\n";
-		sqlite3_free(c_ErrorMessage);
-		return false;
+		success = false;
+		return stmt;
 	}
-	return true;
+
+	if (!bindValuesToSQL(data, stmt))
+	{
+		success = false;
+		return stmt;
+	}
+
+	success = true;
+	return stmt;
 }
 
 void Database::setPathToSQL_Scripts(std::string path)
