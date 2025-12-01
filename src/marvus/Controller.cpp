@@ -2,7 +2,7 @@
 // File       : Controller.cpp
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Nov 29, 2025
+// Last edit  : Dec 01, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -18,7 +18,8 @@ Controller::Controller() : marvusDB(DATABASE_FILE)
 
 	views[TableViews::ESTABLISHMENTS_VIEW] = InlineSQL::ESTABLISHMENTS_VIEW;
 	views[TableViews::CATEGORIES_VIEW] = InlineSQL::CATEGORIES_VIEW;
-	views[TableViews::PAYMENTS_VIEW] = InlineSQL::PAYMENTS_VIEW_CURR_MONTH;
+	views[TableViews::PAYMENTS_VIEW] = InlineSQL::PAYMENTS_VIEW;
+	views[TableViews::PAYMENTS_VIEW_FOR_MONTH] = InlineSQL::PAYMENTS_VIEW_CURR_MONTH;
 }
 
 void Controller::configure(ConsoleLib::argVector& config)
@@ -39,7 +40,8 @@ bool Controller::initDB(std::string& errorMsg)
 		errorMsg = "Database initialization failed.\nExiting program!";
 		return true;
 	}
-	if (!marvusDB.initializeViews())
+
+	if (!marvusDB.executeFileSQL(marvusDB.getScriptSQL("init_views.sql")))
 	{
 		errorMsg = "Views initialization failed.\nExiting program!";
 		return true;
@@ -54,13 +56,21 @@ void Controller::dropDB()
 	marvusDB.initializeViews();
 }
 
-tableHeaderAndData Controller::obtainDataFromView(Table table, TableViews view)
+tableHeaderAndData Controller::obtainDataFromView(TableViews view)
 {
-	selectedViews[table] = view;
+	//selectedViews[table] = view;
 	auto viewPair = views.find(view);
 	if (viewPair == views.end())
 		return {};
-	return marvusDB.obtainTableHeaderAndData(viewPair->second);
+	return marvusDB.obtainTableHeaderAndData(marvusDB.getScriptSQL(viewPair->second));
+}
+
+tableHeaderAndData Controller::obtainDataFromView(TableViews view, const insertVector& data)
+{
+	auto viewPair = views.find(view);
+	if (viewPair == views.end())
+		return {};
+	return marvusDB.obtainFromFilterView(marvusDB.getScriptSQL(viewPair->second), data);
 }
 
 bool Controller::insertEntity(const Establishment& e)
@@ -108,8 +118,8 @@ bool Controller::importCategories(const std::string& source)
 
 bool Controller::importData(const std::string& source)
 {
-	const tableHeaderAndData ents = obtainDataFromView(Table::ESTABLISHMENTS, TableViews::ESTABLISHMENTS_VIEW);
-	const tableHeaderAndData cats = obtainDataFromView(Table::CATEGORIES, TableViews::CATEGORIES_VIEW);
+	const tableHeaderAndData ents = obtainDataFromView(TableViews::ESTABLISHMENTS_VIEW);
+	const tableHeaderAndData cats = obtainDataFromView(TableViews::CATEGORIES_VIEW);
 
 	std::unordered_map<std::string, int> entMap;
 	std::unordered_map<std::string, int> catMap;

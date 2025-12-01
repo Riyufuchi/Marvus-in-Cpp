@@ -2,7 +2,7 @@
 // File       : MainFrame.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Nov 28, 2025
+// Last edit  : Dec 01, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -11,6 +11,7 @@
 #define MAINFRAME_H
 
 #include <iostream>
+#include <format>
 
 #include "../../assets/icon.xpm"
 
@@ -46,10 +47,18 @@ class MainFrame : public wxFrame
 {
 	private:
 		std::unordered_map<marvus::Table, wxGrid*> grids;
+		// Controls
 		wxNotebook* notebook; // Tabbed pane
+		wxChoice* monthChoice;
+		wxCheckBox* monthFilterCheck;
+		// Backend
 		marvus::Controller controller;
-		void loadViewToGrid(marvus::Table table, marvus::TableViews view);
+		// UI
 		wxMenuBar* createMenuBar();
+		void createToolBar();
+		// Data handlers
+		void loadViewToGrid(marvus::Table table, marvus::TableViews view);
+		void fillGrid(marvus::Table table, const marvus::tableHeaderAndData& data);
 		// Events
 		void onExit(wxCommandEvent& event);
 		void onAbout(wxCommandEvent& event);
@@ -59,6 +68,7 @@ class MainFrame : public wxFrame
 		void onDropDatabase(wxCommandEvent& event);
 		void onInsertTestData(wxCommandEvent& event);
 		void onImport(wxCommandEvent& event);
+		void onDateFilterChanged(wxCommandEvent& event);
 		//
 		wxDECLARE_EVENT_TABLE();
 	public:

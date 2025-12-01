@@ -1,0 +1,1 @@
+SELECT * FROM PAYMENT_VIEW WHERE substr(Date, 4, 2) = ?; --strftime('%m', 'now');

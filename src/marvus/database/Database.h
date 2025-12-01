@@ -2,7 +2,7 @@
 // File       : Database.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Nov 30, 2025
+// Last edit  : Dec 01, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -53,13 +53,15 @@ class Database
 		bool initializeDatabase();
 		bool reconnect(const std::string& databaseFile);
 		bool executeFileSQL(const std::string& sql);
-		StatementSQL prepareScriptSQL(const std::string& sql, bool& success, const insertVector& data = {});
+		bool prepareScriptSQL(const std::string& sql, StatementSQL& statement, const insertVector& data = {});
 		int insertNewData(const insertVector& data, const std::string& insertSQL);
 		tableRowVector obtainTableData(const std::string& selectSQL);
 		tableHeaderAndData obtainTableHeaderAndData(const std::string& viewSQL);
 		tableHeaderAndData obtainFromFilterView(const std::string& viewSQL, const insertVector& data);
 		// Setters
 		void setPathToSQL_Scripts(std::string path);
+		// Getters
+		const std::string& getScriptSQL(const std::string& scrpiptFileName);
 };
 }
 #endif /* DATABASE_H */ 

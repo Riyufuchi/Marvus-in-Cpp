@@ -2,7 +2,7 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Nov 30, 2025
+// Last edit  : Dec 01, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -29,6 +29,7 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 	}
 
 	SetMenuBar(createMenuBar()); // Set the menu bar for this frame
+	createToolBar();
 
 	this->notebook = new wxNotebook(this, wxID_ANY);
 
@@ -75,6 +76,38 @@ MainFrame::~MainFrame()
 	Unbind(wxEVT_MENU, &MainFrame::onAbout, this, ID_About);
 }
 
+void MainFrame::createToolBar()
+{
+	wxToolBar* tb = CreateToolBar(wxTB_HORIZONTAL | wxTB_TEXT);
+
+	wxArrayString months;
+	months.Add("January");
+	months.Add("February");
+	months.Add("March");
+	months.Add("April");
+	months.Add("May");
+	months.Add("June");
+	months.Add("July");
+	months.Add("August");
+	months.Add("September");
+	months.Add("October");
+	months.Add("November");
+	months.Add("December");
+
+	monthFilterCheck = new wxCheckBox(tb, wxID_ANY, "Month filter");
+	monthFilterCheck->SetValue(true);
+	tb->AddControl(monthFilterCheck);
+
+	monthChoice = new wxChoice(tb, wxID_ANY, wxDefaultPosition, wxDefaultSize, months);
+	monthChoice->SetSelection(0);
+	tb->AddControl(monthChoice);
+	//
+	tb->Realize();
+	// Bind events
+	Bind(wxEVT_CHOICE, &MainFrame::onDateFilterChanged, this, monthChoice->GetId());
+	Bind(wxEVT_CHECKBOX, &MainFrame::onDateFilterChanged, this, monthChoice->GetId());
+}
+
 wxMenuBar* MainFrame::createMenuBar()
 {
 	wxMenu* fileMenu = new wxMenu;
@@ -115,9 +148,13 @@ wxMenuBar* MainFrame::createMenuBar()
 	return menuBar;
 }
 
-void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableViews view)
+void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& tableData)
 {
-	marvus::tableHeaderAndData tableData = controller.obtainDataFromView(table, view);
+	if (tableData.second.empty())
+	{
+		wxMessageBox("No data received from the database.", "Table view result", wxOK | wxICON_INFORMATION, this);
+		return;
+	}
 
 	if (!grids.contains(table))
 		return;
@@ -138,12 +175,6 @@ void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableViews view)
 	grid.SetRowLabelSize(wxGRID_AUTOSIZE);
 	grid.AutoSizeColumns(); // Auto-size column headers
 
-	if (tableData.second.empty())
-	{
-		wxMessageBox("No data in the table", "Table view result", wxOK | wxICON_INFORMATION, this);
-		return;
-	}
-
 	if (grid.GetNumberRows() > 0)
 		grid.DeleteRows(0, grid.GetNumberRows()); // Remove old rows
 	grid.AppendRows(tableData.second.size());
@@ -162,6 +193,21 @@ void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableViews view)
 	}
 	grid.AutoSizeColumns(); // Auto-size column headers
 	grid.AutoSizeRows();
+}
+
+void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableViews view)
+{
+	fillGrid(table, controller.obtainDataFromView(view));
+}
+
+// Events
+
+void MainFrame::onDateFilterChanged(wxCommandEvent&)
+{
+	//int month = m_monthChoice->GetSelection() + 1;
+	fillGrid(marvus::Table::PAYMENTS,
+		controller.obtainDataFromView(marvus::TableViews::PAYMENTS_VIEW_FOR_MONTH, { std::format("{:02}", monthChoice->GetSelection() + 1) }));
+
 }
 
 void MainFrame::onRefreshWindow(wxCommandEvent&)

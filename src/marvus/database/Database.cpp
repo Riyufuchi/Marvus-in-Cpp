@@ -2,7 +2,7 @@
 // File       : Database.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Nov 30, 2025
+// Last edit  : Dec 01, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -125,10 +125,10 @@ tableHeaderAndData Database::obtainFromFilterView(const std::string& viewSQL, co
 {
 	tableRow header;
 	tableRowVector tableData;
-	bool ok;
-	StatementSQL stmt = prepareScriptSQL(viewSQL, ok, data);
 
-	if (!ok)
+	StatementSQL stmt;
+
+	if (!prepareScriptSQL(viewSQL, stmt, data))
 		return {};
 
 	int colCount = sqlite3_column_count(stmt);
@@ -169,6 +169,7 @@ tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL
 	if (!sqlite3_prepare_v2(db, viewSQL.c_str(), -1, stmt, nullptr) == SQLITE_OK)
 	{
 		std::cerr << "SQL prepare error: " << sqlite3_errmsg(db) << std::endl;
+		return {};
 	}
 
 	int colCount = sqlite3_column_count(stmt);
@@ -241,29 +242,30 @@ bool Database::executeFileSQL(const std::string& sqlScript)
 	return true;
 }
 
-StatementSQL Database::prepareScriptSQL(const std::string& sql, bool& success, const insertVector& data)
+bool Database::prepareScriptSQL(const std::string& sql, StatementSQL& statement, const insertVector& data)
 {
-	StatementSQL stmt;
-	result = sqlite3_prepare_v2(db, sql.c_str(), -1, stmt, nullptr);
+	result = sqlite3_prepare_v2(db, sql.c_str(), -1, statement, nullptr);
 	if (checkSuccessFor("Statement preparation"))
 	{
-		success = false;
-		return stmt;
+		return false;
 	}
 
-	if (!bindValuesToSQL(data, stmt))
+	if (!bindValuesToSQL(data, statement))
 	{
-		success = false;
-		return stmt;
+		return false;
 	}
 
-	success = true;
-	return stmt;
+	return true;
 }
 
 void Database::setPathToSQL_Scripts(std::string path)
 {
 	this->sqlScriptsPath = path;
+}
+
+const std::string& Database::getScriptSQL(const std::string& scrpiptFileName)
+{
+	return sqlScriptFiles.getScript(scrpiptFileName);
 }
 
 }
