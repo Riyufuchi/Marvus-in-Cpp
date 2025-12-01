@@ -2,7 +2,7 @@
 // Name        : ConsoleUtility
 // Author      : Riyufuchi
 // Created on  : Oct 27, 2021
-// Last Edit   : Nov 09, 2025
+// Last Edit   : Nov 30, 2025
 //============================================================================
 
 #ifndef _CONSOLE_UTILITY_H_
@@ -26,7 +26,7 @@
 /**
  * This class helps with console interactions
  */
-namespace ConsoleLib
+namespace consolelib
 {
 
 class ConsoleUtils
@@ -40,32 +40,33 @@ public:
 	static bool yesNo(const char* text);
 	static int getIntSafe();
 	static int getIntSafe(int min, int max);
-	template <typename T> static T getInput()
+	static std::optional<int> obtainInt();
+	static std::optional<int> obtainInt(int min, int max);
+	template <typename T>
+	static std::optional<T> getInput()
 	{
-		T x;
-		while(true)
-		{
-			std::cin >> x;
-			std::cin.get();
-			if (!std::cin.fail())
-				break;
-			std::cerr << "Bad input.\n";
-			std::cout << "Input again: ";
-			std::cin.clear();
-			std::cin.ignore(10,'\n');
-		}
-		return x;
+		std::string line;
+		if (!std::getline(std::cin, line))
+			return std::nullopt; // EOF or error
+
+		T value;
+		std::stringstream ss(line);
+		// Try to parse and ensure no leftovers remain
+		if (ss >> value && ss.eof())
+			return value;
+
+		return std::nullopt;
 	}
-	static void header(std::string);
-	static void header(std::string text, IConsole& console);
+	static void header(const std::string& text);
+	static void header(const std::string& text, IConsole& console);
 	[[deprecated("Redundant color attribute")]]
-	static void header(std::string text, IConsole& console, Color textColor);
+	static void header(const std::string& text, IConsole& console, const Color& textColor);
 	static int basicMenu(int lenght, const char* menu[]);
 	static int basicMenu(std::vector<const char*>& menu);
 	static int basicMenu(std::vector<std::string>& menu, IConsole& console);
 	static void createManual(std::string* args, int lenght);
 	static std::string createTable(std::string* args, int lenght);
-	static void listFilesInFolder(std::string workspacePath);
+	static void listFilesInFolder(const std::string& workspacePath = "");
 };
 }
 #endif

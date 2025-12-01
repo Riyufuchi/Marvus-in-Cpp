@@ -14,7 +14,7 @@
 #include <vector>
 #include <algorithm>
 
-namespace ConsoleLib
+namespace consolelib
 {
 template <typename K, typename T>
 class Delegate

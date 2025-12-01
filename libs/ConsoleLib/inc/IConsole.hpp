@@ -14,7 +14,7 @@
 
 #include "ColorUtils.h"
 
-namespace ConsoleLib
+namespace consolelib
 {
 class IConsole
 {

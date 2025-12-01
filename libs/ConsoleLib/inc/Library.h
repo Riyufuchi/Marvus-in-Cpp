@@ -4,7 +4,7 @@
 // Created on : Mar 27, 2024
 // Last edit  : Nov 17, 2025
 // Copyright  : Copyright (c) Riyufuchi
-// Description: ConsoleLib
+// Description: consolelib
 //==============================================================================
 
 #ifndef _CONSOLE_LIB_LIBRARY_H_
@@ -14,9 +14,9 @@
 #include <string>
 #include <format>
 
-#define _VERSION "6.7b"
+#define _VERSION "6.9"
 
-namespace ConsoleLib
+namespace consolelib
 {
 class Library
 {
@@ -26,5 +26,5 @@ public:
 	~Library();
 	static std::string aboutLibrary();
 };
-} /* namespace ConsoleLib */
+} /* namespace consolelib */
 #endif /* _CONSOLE_LIB_LIBRARY_H_ */

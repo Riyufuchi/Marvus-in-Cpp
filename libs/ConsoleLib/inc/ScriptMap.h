@@ -2,9 +2,9 @@
 // File       : ScriptMap.h
 // Author     : riyufuchi
 // Created on : Mar 28, 2025
-// Last edit  : Mar 31, 2025
+// Last edit  : Nov 30, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
-// Description: ConsoleLib
+// Description: consolelib
 //==============================================================================
 
 #ifndef SRC_INC_SCRIPTMAP_H_
@@ -17,7 +17,7 @@
 #include <algorithm>
 #include <filesystem>
 
-namespace ConsoleLib
+namespace consolelib
 {
 class ScriptMap
 {
@@ -27,7 +27,7 @@ public:
 	ScriptMap();
 	~ScriptMap();
 	bool loadScripts(std::string path = "");
-	std::string getScript(const std::string& scriptname) const;
+	const std::string&  getScript(const std::string& scriptname) const;
 	std::unordered_map<std::string, std::string>& getScriptMap();
 };
 }

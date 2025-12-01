@@ -16,7 +16,7 @@
 #include <sstream>
 
 
-namespace ConsoleLib
+namespace consolelib
 {
 struct TimeStamp
 {

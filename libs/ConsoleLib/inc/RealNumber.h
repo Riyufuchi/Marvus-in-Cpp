@@ -4,7 +4,7 @@
 // Created on : Jun 16, 2025
 // Last edit  : Nov 20, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
-// Description: ConsoleLib
+// Description: consolelib
 //==============================================================================
 
 #ifndef SRC_CONSOLELIB_REALNUMBER_H_
@@ -19,7 +19,7 @@
 
 #define PRECISION 10
 
-namespace ConsoleLib
+namespace consolelib
 {
 
 template<typename T>

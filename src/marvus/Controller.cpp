@@ -22,10 +22,10 @@ Controller::Controller() : marvusDB(DATABASE_FILE)
 	views[TableViews::PAYMENTS_VIEW_FOR_MONTH] = InlineSQL::PAYMENTS_VIEW_CURR_MONTH;
 }
 
-void Controller::configure(ConsoleLib::argVector& config)
+void Controller::configure(consolelib::argVector& config)
 {
 	auto it = argumentMethods.find("");
-	for (const ConsoleLib::argVectorItem& argument : config)
+	for (const consolelib::argVectorItem& argument : config)
 	{
 		it = argumentMethods.find(argument.first);
 		if (it != argumentMethods.end())
@@ -145,7 +145,7 @@ bool Controller::importData(const std::string& source)
 
 	while (std::getline(ss, line))
 	{
-		parsedCSV = ConsoleLib::FileUtils::splitCSV(line, ';', 6);
+		parsedCSV = consolelib::FileUtils::splitCSV(line, ';', 6);
 		findData = entMap.find(parsedCSV[0]);
 		if (findData != entMap.end())
 			payment.ent_key = findData->second;
@@ -158,7 +158,7 @@ bool Controller::importData(const std::string& source)
 			continue;
 		payment.value = parsedCSV[2];
 		// Currency isn't implemented yet
-		parsedDate = ConsoleLib::FileUtils::splitCSV(parsedCSV[4], '.', 3);
+		parsedDate = consolelib::FileUtils::splitCSV(parsedCSV[4], '.', 3);
 		payment.date = parsedDate[2] + "-" + parsedDate[1] + "-" + parsedDate[0];
 		payment.note = parsedCSV[5];
 		if (!insertPayment(payment))  // convert each line to UTF-8

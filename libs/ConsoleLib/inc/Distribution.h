@@ -12,7 +12,7 @@
 
 #include <math.h>
 
-namespace ConsoleLib
+namespace consolelib
 {
 using u_bigInt = long double; // unsigned long long; - temporary solution as precision errors might occur
 using bigDouble = long double;

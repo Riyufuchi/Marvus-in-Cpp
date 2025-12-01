@@ -23,7 +23,7 @@ class ManagerApp : public wxApp
 		MainFrame* frame;
 		bool areArgs;
 		std::string text;
-		ConsoleLib::argVector args;
+		consolelib::argVector args;
 	public:
 		ManagerApp(int argc, char** argv);
 		~ManagerApp();

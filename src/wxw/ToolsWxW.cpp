@@ -20,4 +20,4 @@ void ToolsWxW::updateFontSizeInGrid(wxGrid* grid, int size)
 	grid->ForceRefresh();
 }
 
-} /* namespace ConsoleLib */
+} /* namespace consolelib */

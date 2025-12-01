@@ -4,7 +4,7 @@
 // Created on : Mar 15, 2025
 // Last edit  : Apr 24, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
-// Description: ConsoleLib
+// Description: consolelib
 //==============================================================================
 
 #ifndef SRC_CONSOLEUTILS_CONSOLEMENU_H_
@@ -26,7 +26,7 @@
 
 #define CLEAR_SCREEN "\x1B[3J\x1B[H\x1B[2J"
 
-namespace ConsoleLib
+namespace consolelib
 {
 class ConsoleMenu
 {

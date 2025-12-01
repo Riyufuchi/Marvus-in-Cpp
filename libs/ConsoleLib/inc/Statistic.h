@@ -17,7 +17,7 @@
 #include <cmath>
 #include <numeric> // For std::accumulate
 
-namespace ConsoleLib
+namespace consolelib
 {
 template <typename T>
 class Statistic

@@ -24,6 +24,6 @@ public:
 	static void updateFontSizeInGrid(wxGrid* grid, int size);
 };
 
-} /* namespace ConsoleLib */
+} /* namespace consolelib */
 
 #endif /* WXW_TOOLSWXW_H_ */

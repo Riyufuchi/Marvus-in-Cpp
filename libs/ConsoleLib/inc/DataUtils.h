@@ -4,7 +4,7 @@
 // Created on : Mar 8, 2024
 // Last edit  : Jan 29, 2025
 // Copyright  : Copyright (c) 2024, riyufuchi
-// Description: ConsoleLib
+// Description: consolelib
 //==============================================================================
 
 #ifndef _DATA_UTILS_H_
@@ -12,7 +12,7 @@
 
 #include <string>
 
-namespace ConsoleLib
+namespace consolelib
 {
 class DataUtils
 {

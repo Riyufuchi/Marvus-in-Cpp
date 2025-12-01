@@ -14,7 +14,7 @@
 
 #include "database/MarvusDB.h"
 #include "InlineSQL.h"
-// ConsoleLib
+// consolelib
 #include "ArgumentParser.h"
 #include "FileUtils.h"
 // miniZ
@@ -51,7 +51,7 @@ private:
 public:
 	Controller();
 	virtual ~Controller() = default;
-	void configure(ConsoleLib::argVector& config);
+	void configure(consolelib::argVector& config);
 	bool initDB(std::string& errorMsg);
 	void dropDB();
 	bool insertEntity(const Establishment& e);

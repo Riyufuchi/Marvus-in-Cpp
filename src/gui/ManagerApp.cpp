@@ -13,7 +13,7 @@ namespace wxw
 {
 ManagerApp::ManagerApp(int argc, char** argv) : wxApp(), frame(nullptr), areArgs(false)
 {
-	this->args = ConsoleLib::ArgumentParser::analyzeInOrder(argc, argv, areArgs, text);
+	this->args = consolelib::ArgumentParser::analyzeInOrder(argc, argv, areArgs, text);
 }
 
 ManagerApp::~ManagerApp()

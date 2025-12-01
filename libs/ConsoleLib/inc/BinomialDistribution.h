@@ -12,7 +12,7 @@
 
 #include "Distribution.h"
 
-namespace ConsoleLib
+namespace consolelib
 {
 class BinomialDistribution : Distribution
 {

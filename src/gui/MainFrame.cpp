@@ -12,7 +12,7 @@
 namespace wxw
 {
 
-MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxFrame(NULL, wxID_ANY, title)
+MainFrame::MainFrame(const wxString& title, consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, title)
 {
 	wxIcon icon(icon_xpm);
 	SetIcon(icon);
@@ -66,7 +66,9 @@ MainFrame::MainFrame(const wxString& title, ConsoleLib::argVector& config) : wxF
 	// Attempt to load data
 	loadViewToGrid(marvus::Table::ESTABLISHMENTS, marvus::TableViews::ESTABLISHMENTS_VIEW);
 	loadViewToGrid(marvus::Table::CATEGORIES, marvus::TableViews::CATEGORIES_VIEW);
-	loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableViews::PAYMENTS_VIEW);
+	monthChoice->SetSelection(0);
+	wxCommandEvent e;
+	onDateFilterChanged(e);
 	SetSize(800, 600);
 }
 
@@ -99,7 +101,6 @@ void MainFrame::createToolBar()
 	tb->AddControl(monthFilterCheck);
 
 	monthChoice = new wxChoice(tb, wxID_ANY, wxDefaultPosition, wxDefaultSize, months);
-	monthChoice->SetSelection(0);
 	tb->AddControl(monthChoice);
 	//
 	tb->Realize();
@@ -249,7 +250,7 @@ void MainFrame::onInsertPayment(wxCommandEvent&)
 
 void MainFrame::onInsertTestData(wxCommandEvent& event)
 {
-	ConsoleLib::ScriptMap map;
+	consolelib::ScriptMap map;
 	map.loadScripts("../data/");
 
 	onRefreshWindow(event);

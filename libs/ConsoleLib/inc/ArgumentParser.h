@@ -4,7 +4,7 @@
 // Created on : Apr 6, 2025
 // Last edit  : Apr 6, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
-// Description: ConsoleLib
+// Description: consolelib
 //==============================================================================
 
 #ifndef SRC_INC_ARGUMENTPARSER_H_
@@ -15,7 +15,7 @@
 #include <string>
 #include <map>
 
-namespace ConsoleLib
+namespace consolelib
 {
 
 using argVectorItem = std::pair<std::string, std::vector<std::string>>;
@@ -36,6 +36,6 @@ public:
 
 };
 
-} /* namespace ConsoleLib */
+} /* namespace consolelib */
 
 #endif /* SRC_INC_ARGUMENTPARSER_H_ */

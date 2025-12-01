@@ -72,7 +72,7 @@ class MainFrame : public wxFrame
 		//
 		wxDECLARE_EVENT_TABLE();
 	public:
-		MainFrame(const wxString& title, ConsoleLib::argVector& config);
+		MainFrame(const wxString& title, consolelib::argVector& config);
 		virtual ~MainFrame();
 };
 }

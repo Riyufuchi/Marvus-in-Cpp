@@ -4,7 +4,7 @@
 // Created on : Feb 19, 2024
 // Last edit  : Nov 24, 2025
 // Copyright  : Copyright (c) 2024, Riyufuchi
-// Description: ConsoleLib
+// Description: consolelib
 //==============================================================================
 
 #ifndef SRC_INC_DEFAULTCONSOLE_H_
@@ -15,7 +15,7 @@
 
 #include "IConsole.hpp"
 
-namespace ConsoleLib
+namespace consolelib
 {
 class DefaultConsole : public IConsole
 {

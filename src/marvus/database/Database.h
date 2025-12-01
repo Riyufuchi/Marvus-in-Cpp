@@ -34,7 +34,7 @@ using tableHeaderAndData = std::pair<tableRow, tableRowVector>;
 class Database
 {
 	protected:
-		ConsoleLib::ScriptMap sqlScriptFiles;
+		consolelib::ScriptMap sqlScriptFiles;
 		sqlite3* db; // SQLite database connection
 		std::string sqlScriptsPath;
 		int result;

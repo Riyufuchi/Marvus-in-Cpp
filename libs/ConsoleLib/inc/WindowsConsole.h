@@ -15,7 +15,7 @@
 
 #include "UnixConsole.h"
 
-namespace ConsoleLib
+namespace consolelib
 {
 class WindowsConsole : public UnixConsole
 {

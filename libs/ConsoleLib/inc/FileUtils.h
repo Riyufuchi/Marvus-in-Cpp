@@ -4,7 +4,7 @@
 // Created on : Nov 28, 2025
 // Last edit  : Nov 28, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
-// Description: ConsoleLib
+// Description: consolelib
 //==============================================================================
 
 #ifndef SRC_INC_FILEUTILS_H_
@@ -13,7 +13,7 @@
 #include <string>
 #include <vector>
 
-namespace ConsoleLib
+namespace consolelib
 {
 
 class FileUtils
@@ -24,6 +24,6 @@ public:
 	static std::vector<std::string> splitCSV(const std::string& line, char delimeter, size_t expectedCount = 2);
 };
 
-} /* namespace ConsoleLib */
+} /* namespace consolelib */
 
 #endif /* SRC_INC_FILEUTILS_H_ */

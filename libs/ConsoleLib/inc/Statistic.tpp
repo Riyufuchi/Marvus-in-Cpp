@@ -9,7 +9,7 @@
 
 #include "Statistic.h"
 
-namespace ConsoleLib
+namespace consolelib
 {
 template <typename T>
 Statistic<T>::Statistic()

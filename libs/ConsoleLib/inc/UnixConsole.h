@@ -17,7 +17,7 @@
 #define HIGHLIGHT "\x1B[7m"
 #define RESET "\x1B[0m"
 
-namespace ConsoleLib
+namespace consolelib
 {
 class UnixConsole : public IConsole
 {
