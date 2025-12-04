@@ -18,7 +18,7 @@ This project is for learning how to work with wxWidgets and database. It is an u
 | Name | Used for | Included in this repository |
 | :------: | :----------: | :---: |
 | [wxWidgets](https://www.wxwidgets.org/) | GUI | ❌ |
-| [SQLite](https://www.sqlite.org/) | Database | ❌ |
+| [SQLite](https://www.sqlite.org/) | Database | ✅ |
 | [ConsoleLib](https://github.com/Riyufuchi/ConsoleLib) | Console & utils stuff | ✅ |
 | [Miniz](https://github.com/richgel999/miniz) | Zip file | ✅ |
 
@@ -55,15 +55,13 @@ This project is for learning how to work with wxWidgets and database. It is an u
 | Ubuntu | g++ 15.2.0 |
 | <s>Windows 10</s> | <s>MSVC v143</s> |
 
-### Linux
+### Installing WxWidgets
 
    *For debian based systems*
 
    ```bash
    # wxWidgets
    sudo apt install libwxgtk3.2-dev
-   # SQLite
-   sudo apt install libsqlite3-dev
    ```
   
 ### CMake
