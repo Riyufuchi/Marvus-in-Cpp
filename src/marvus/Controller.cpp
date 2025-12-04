@@ -12,7 +12,7 @@
 namespace marvus
 {
 
-Controller::Controller() : marvusDB(DATABASE_FILE)
+Controller::Controller(errorFunctionSignature errorHandler) : marvusDB(DATABASE_FILE, errorHandler)
 {
 	this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; marvusDB.setPathToSQL_Scripts(vector[0]); };
 
@@ -240,9 +240,9 @@ bool Controller::exportToZIP(const std::string& path, std::string& errorMessage)
 	return false;
 }
 
-const char* Controller::obtainSQLiteError()
+void Controller::setShowErrorFunction(errorFunctionSignature func)
 {
-	return marvusDB.getSQLiteError();
+	marvusDB.setShowErrorFunction(func);
 }
 
 } /* namespace marvus */

@@ -11,11 +11,12 @@
 
 namespace marvus
 {
-Database::Database(std::string databaseFile) : Database(databaseFile, "")
+Database::Database(std::string databaseFile, errorFunctionSignature showError) : Database(databaseFile, "", showError)
 {
 }
 
-Database::Database(std::string databaseFile, std::string sqlScriptsPath) : sqlScriptsPath(sqlScriptsPath), result(0), c_ErrorMessage(nullptr)
+Database::Database(std::string databaseFile, std::string sqlScriptsPath, errorFunctionSignature showError) : sqlScriptsPath(sqlScriptsPath), result(0),
+	c_ErrorMessage(nullptr), showError(showError)
 {
 	sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr);
 }
@@ -168,7 +169,7 @@ tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL
 
 	if (sqlite3_prepare_v2(db, viewSQL.c_str(), -1, stmt, nullptr) != SQLITE_OK)
 	{
-		std::cerr << "SQL prepare error: " << sqlite3_errmsg(db) << std::endl;
+		showError("SQL prepare error: ", sqlite3_errmsg(db));
 		return {};
 	}
 
@@ -200,7 +201,7 @@ bool Database::checkSuccessFor(const std::string& action, int expectedResult)
 {
 	if (result != expectedResult)
 	{
-		std::cerr << action << ": " << sqlite3_errmsg(db) << "\n";
+		showError(action, sqlite3_errmsg(db));
 		return true;
 	}
 	return false;
@@ -210,7 +211,8 @@ bool Database::reconnect(const std::string& databaseFile)
 {
 	if (db)
 		sqlite3_close(db);
-	if(sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr) == SQLITE_OK)
+	result = sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr);
+	if (checkSuccessFor("Database connection"))
 		return initializeDatabase();
 	return false;
 }
@@ -236,7 +238,7 @@ bool Database::executeFileSQL(const std::string& sqlScript)
 	int rc = sqlite3_exec(db, sqlScript.c_str(), nullptr, nullptr, &c_ErrorMessage);
 	if (rc != SQLITE_OK)
 	{
-		std::cerr << c_ErrorMessage << "\n";
+		showError("SQL script file execution", c_ErrorMessage);
 		sqlite3_free(c_ErrorMessage);
 		return false;
 	}
@@ -264,14 +266,14 @@ void Database::setPathToSQL_Scripts(std::string path)
 	this->sqlScriptsPath = path;
 }
 
+void Database::setShowErrorFunction(errorFunctionSignature func)
+{
+	showError = func;
+}
+
 const std::string& Database::getScriptSQL(const std::string& scrpiptFileName)
 {
 	return sqlScriptFiles.getScript(scrpiptFileName);
-}
-
-const char* Database::getSQLiteError() const
-{
-	return sqlite3_errmsg(db);
 }
 
 }

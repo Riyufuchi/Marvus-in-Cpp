@@ -50,7 +50,7 @@ private:
 	bool importCategories(const std::string& source);
 	bool importData(const std::string& source);
 public:
-	Controller();
+	Controller(errorFunctionSignature errorHandler = [](const std::string& title, const std::string& message) { std::cerr << title << ": " << message << "\n"; });
 	virtual ~Controller() = default;
 	void configure(consolelib::argVector& config);
 	// Database file IO
@@ -64,9 +64,9 @@ public:
 	tableHeaderAndData obtainDataFromView(TableViews view);
 	tableHeaderAndData obtainDataFromView(TableViews view, const insertVector& data);
 	// Other IO
+	void setShowErrorFunction(errorFunctionSignature func);
 	bool importFromZIP(const std::string& path, std::string& errorMessage);
 	bool exportToZIP(const std::string& path, std::string& errorMessage);
-	const char* obtainSQLiteError();
 };
 
 } /* namespace marvus */

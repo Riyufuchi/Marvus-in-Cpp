@@ -62,6 +62,8 @@ class MainFrame : public wxFrame
 		// Data handlers
 		void loadViewToGrid(marvus::Table table, marvus::TableViews view);
 		void fillGrid(marvus::Table table, const marvus::tableHeaderAndData& data);
+		//
+		void displayError(const std::string& title, const std::string& message);
 		// Events
 		void onNewDB(wxCommandEvent& event);
 		void onLoadDB(wxCommandEvent& event);

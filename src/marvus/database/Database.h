@@ -12,6 +12,7 @@
 
 #include <variant>
 #include <vector>
+#include <functional>
 
 #include "../../external/sqlite/sqlite3.h"
 
@@ -31,6 +32,8 @@ using tableRow = std::vector<std::string>;
 using tableRowVector = std::vector<tableRow>;
 using tableHeaderAndData = std::pair<tableRow, tableRowVector>;
 
+using errorFunctionSignature = std::function<void(const std::string&, const std::string&)>;
+
 class Database
 {
 	protected:
@@ -39,14 +42,15 @@ class Database
 		std::string sqlScriptsPath;
 		int result;
 		char* c_ErrorMessage;
+		errorFunctionSignature showError;
 		bool checkSuccessFor(const std::string& action, int expectedResult = SQLITE_OK);
 	private:
 		tableRowVector tableData;
 		int rowCallback(void* data, int argc, char** argv, char** azColName); // Callback function to handle each row of the result
 		int bindValuesToSQL(const insertVector& data, StatementSQL& stmtSQL);
 	public:
-		Database(std::string databaseFile);
-		Database(std::string databaseFile, std::string sqlScripts);
+		Database(std::string databaseFile, errorFunctionSignature showError);
+		Database(std::string databaseFile, std::string sqlScripts, errorFunctionSignature showError);
 		virtual ~Database();
 		// Functions
 		bool initializeViews();
@@ -60,8 +64,8 @@ class Database
 		tableHeaderAndData obtainFromFilterView(const std::string& viewSQL, const insertVector& data);
 		// Setters
 		void setPathToSQL_Scripts(std::string path);
+		void setShowErrorFunction(errorFunctionSignature func);
 		// Getters
-		const char* getSQLiteError() const;
 		const std::string& getScriptSQL(const std::string& scrpiptFileName);
 };
 }

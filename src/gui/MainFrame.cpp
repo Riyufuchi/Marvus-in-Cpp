@@ -12,7 +12,7 @@
 namespace wxw
 {
 
-MainFrame::MainFrame(const wxString& title, consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, title)
+MainFrame::MainFrame(const wxString& title, consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, title), controller([this](const std::string& title, const std::string& message) { displayError(title, message); })
 {
 	wxIcon icon(icon_xpm);
 	SetIcon(icon);
@@ -70,6 +70,11 @@ MainFrame::MainFrame(const wxString& title, consolelib::argVector& config) : wxF
 	wxCommandEvent e;
 	onDateFilterChanged(e);
 	SetSize(800, 600);
+}
+
+void MainFrame::displayError(const std::string& title, const std::string& message)
+{
+	wxMessageBox(message, title, wxICON_ERROR);
 }
 
 MainFrame::~MainFrame()
@@ -268,8 +273,7 @@ void MainFrame::onLoadDB(wxCommandEvent& event)
 	wxFileDialog openFileDialog(this, "Select a database file", "", "", "Database |*.db", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;
-	if (!controller.connectToDB(openFileDialog.GetPath().ToStdString()))
-		wxMessageBox(controller.obtainSQLiteError(), "Database error", wxICON_ERROR);
+	controller.connectToDB(openFileDialog.GetPath().ToStdString());
 
 }
 
@@ -279,8 +283,7 @@ void MainFrame::onNewDB(wxCommandEvent& event)
 	wxTextEntryDialog dialog(this, "Database name:", "New database", defaultValue);
 	if (dialog.ShowModal() == wxID_OK)
 	{
-		if (!controller.connectToDB(dialog.GetValue().ToStdString()))
-			wxMessageBox(controller.obtainSQLiteError(), "Database error", wxICON_ERROR);
+		controller.connectToDB(dialog.GetValue().ToStdString());
 	}
 }
 

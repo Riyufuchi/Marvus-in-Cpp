@@ -2,7 +2,7 @@
 // File       : MarvusDB.h
 // Author     : riyufuchi
 // Created on : Nov 25, 2025
-// Last edit  : Nov 25, 2025
+// Last edit  : Dec 04, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -35,15 +35,15 @@ struct Payment
 	int ent_key { 0 };
 	int category_key { 0 };
 	std::string value { "0" };
-	std::string date {"1.1.2000"};
+	std::string date { "2000-01-01" };
 	std::string note { "" };
 };
 
 class MarvusDB : public Database
 {
 public:
-	MarvusDB();
-	MarvusDB(std::string database);
+	MarvusDB(errorFunctionSignature errorHandler);
+	MarvusDB(std::string database, errorFunctionSignature errorHandler);
 	virtual ~MarvusDB() = default;
 	bool insertEstablishment(const Establishment& establishment);
 	bool insertCategory(const Category& category);
