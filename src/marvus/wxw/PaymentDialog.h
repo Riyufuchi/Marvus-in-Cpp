@@ -2,7 +2,7 @@
 // File       : PaymentDialog.h
 // Author     : riyufuchi
 // Created on : Nov 25, 2025
-// Last edit  : Nov 26, 2025
+// Last edit  : Dec 05, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: KEO-manager
 //==============================================================================
@@ -15,6 +15,10 @@
 
 #include "../../gui/base/DialogKEO.h"
 #include "../../wxw/FactoryWxW.h"
+
+#include "../database/MarvusDB.h"
+
+#include "DataUtils.h"
 
 namespace marvus
 {
@@ -31,14 +35,15 @@ public:
 private:
 	wxComboBox* establishmentComboBox;
 	wxComboBox* categoryComboBox;
-	wxSpinCtrl* valueCtrl;
-	wxDatePickerCtrl* picker;
+	wxSpinCtrlDouble* valueCtrl;
+	wxDatePickerCtrl* datePicker;
 	wxTextCtrl* note_txtbox;
 public:
 	PaymentDialog(wxWindow* parent, const InputData& inputData);
 	virtual ~PaymentDialog();
+	marvus::Payment getUserInput();
 };
 
-} /* namespace twdb */
+} /* namespace */
 
-#endif /* VILLAGEDIALOG_H_ */
+#endif

@@ -2,7 +2,7 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 04, 2025
+// Last edit  : Dec 05, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -197,7 +197,7 @@ void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& 
 		}
 		row++;
 	}
-	grid.AutoSizeColumns(); // Auto-size column headers
+	grid.AutoSizeColumns();
 	grid.AutoSizeRows();
 }
 
@@ -242,17 +242,28 @@ void MainFrame::onAbout(wxCommandEvent&)
 	wxMessageBox("This is a wxWidgets application.", "About", wxOK | wxICON_INFORMATION, this);
 }
 
-void MainFrame::onInsertPayment(wxCommandEvent&)
+void MainFrame::onInsertPayment(wxCommandEvent& event)
 {
 	marvus::PaymentDialog::InputData data;
 
-	data.establishments = {{"1", "McDonnald's"}};
-	data.categories = {{"1", "Food"}};
+	data.establishments = controller.obtainDataFromView(marvus::TableViews::ESTABLISHMENTS_VIEW).second;
+	if (data.establishments.empty())
+	{
+		displayError("ESTABLISHMENTS_VIEW", "No data recieved from the table.");
+		return;
+	}
+	data.categories = controller.obtainDataFromView(marvus::TableViews::CATEGORIES_VIEW).second;
+	if (data.categories.empty())
+	{
+		displayError("CATEGORIES_VIEW", "No data recieved from the table.");
+		return;
+	}
 
 	marvus::PaymentDialog dialog(this, data);
 	if (dialog.ShowModal() == wxID_OK && dialog.isConfirmed())
 	{
-
+		if (controller.insertPayment(dialog.getUserInput()))
+			onDateFilterChanged(event);
 	}
 }
 

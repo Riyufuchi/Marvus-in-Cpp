@@ -2,7 +2,7 @@
 // File       : PaymentDialog.cpp
 // Author     : riyufuchi
 // Created on : Nov 25, 2025
-// Last edit  : Nov 27, 2025
+// Last edit  : Dec 05, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: KEO-manager
 //==============================================================================
@@ -28,7 +28,10 @@ PaymentDialog::PaymentDialog(wxWindow* parent, const InputData& inputData) : keo
 	gridSizer->Add(categoryComboBox, 0, wxEXPAND | wxALL, 5);
 
 	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Value:"), 0, wxTOP | wxLEFT, 5);
-	valueCtrl = new wxSpinCtrl(this, wxID_ANY);
+	//valueCtrl = new wxTextCtrl(this, wxID_ANY);
+	valueCtrl = new wxSpinCtrlDouble(this, wxID_ANY, "0.00", wxDefaultPosition,wxDefaultSize,
+		wxSP_ARROW_KEYS | wxSP_WRAP, -1e9, 1e9, 0.0, 0.25);
+	valueCtrl->SetDigits(2);
 	gridSizer->Add(valueCtrl, 0, wxALL | wxEXPAND, 5);
 
 	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Date:"), 0, wxTOP | wxLEFT, 5);
@@ -36,9 +39,9 @@ PaymentDialog::PaymentDialog(wxWindow* parent, const InputData& inputData) : keo
 	wxDateTime current;
 	current.ParseDate(inputData.date);
 
-	picker = new wxDatePickerCtrl(this, wxID_ANY, current.IsValid() ? current : wxDateTime::Today(),
+	datePicker = new wxDatePickerCtrl(this, wxID_ANY, current.IsValid() ? current : wxDateTime::Today(),
 		wxDefaultPosition, wxDefaultSize, wxDP_DROPDOWN);
-	gridSizer->Add(picker, 0, wxALL | wxEXPAND, 5);
+	gridSizer->Add(datePicker, 0, wxALL | wxEXPAND, 5);
 
 	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Note:"), 0, wxTOP | wxLEFT, 5);
 	note_txtbox = new wxTextCtrl(this, wxID_ANY);
@@ -57,34 +60,19 @@ PaymentDialog::PaymentDialog(wxWindow* parent, const InputData& inputData) : keo
 PaymentDialog::~PaymentDialog()
 {
 }
-/*
-void PaymentDialog::onDateButtonClick(wxCommandEvent&)
+
+marvus::Payment PaymentDialog::getUserInput()
 {
-	wxDateTime current;
-	current.ParseDate(dateButton->GetLabel());
+	marvus::Payment payment;
+	payment.ent_key = 1;
+	payment.category_key = 1;
 
-	wxDialog dlg(this, wxID_ANY, "Choose Date");
+	payment.value = valueCtrl->GetTextValue().ToStdString();
 
-	// Popup date picker dialog
+	payment.date = datePicker->GetValue().Format("%Y-%m-%d").ToStdString();
 
-
-	// Show it modally through a simple dialog
-
-	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
-	sizer->Add(picker, 1, wxALL | wxEXPAND, 10);
-
-	// OK button
-	wxButton* okBtn = new wxButton(&dlg, wxID_OK, "OK");
-	sizer->Add(okBtn, 0, wxALL | wxALIGN_CENTER, 10);
-
-	dlg.SetSizerAndFit(sizer);
-
-	if (dlg.ShowModal() == wxID_OK)
-	{
-		wxDateTime selected = picker->GetValue();
-		wxString newDate = selected.Format("%d.%m.%Y");
-		dateButton->SetLabel(newDate);
-	}
-}*/
+	payment.note = note_txtbox->GetValue().ToStdString();
+	return payment;
+}
 
 } /* namespace */
