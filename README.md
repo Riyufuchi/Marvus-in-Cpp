@@ -53,7 +53,7 @@ This project is for learning how to work with wxWidgets and database. It is an u
 | OS | Compiler |
 | :------: | :----------: |
 | Ubuntu | g++ 15.2.0 |
-| <s>Windows 10</s> | <s>MSVC v143</s> |
+| Windows 10 | MSVC 19.50.35719.0 |
 
 ### Installing WxWidgets
 

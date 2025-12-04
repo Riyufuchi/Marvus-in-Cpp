@@ -2,7 +2,7 @@
 // File       : ManagerApp.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Nov 30, 2025
+// Last edit  : Dec 04, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -26,7 +26,6 @@ class ManagerApp : public wxApp
 		consolelib::argVector args;
 	public:
 		ManagerApp();
-		ManagerApp(int argc, char** argv);
 		~ManagerApp();
 		virtual bool OnInit() override;
 };
