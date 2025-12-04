@@ -50,6 +50,7 @@ class MainFrame : public wxFrame
 {
 	private:
 		std::unordered_map<marvus::Table, wxGrid*> grids;
+		std::unordered_map<marvus::Table, marvus::TableViews> selectedViewForTable;
 		// Controls
 		wxNotebook* notebook; // Tabbed pane
 		wxChoice* monthChoice;

@@ -63,6 +63,7 @@ void Controller::dropDB()
 {
 	std::filesystem::remove(DATABASE_FILE);
 	marvusDB.reconnect(DATABASE_FILE);
+	marvusDB.initializeDatabase();
 	marvusDB.initializeViews();
 }
 

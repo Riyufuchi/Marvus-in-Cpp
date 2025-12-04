@@ -203,6 +203,7 @@ void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& 
 
 void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableViews view)
 {
+	selectedViewForTable[table] = view;
 	fillGrid(table, controller.obtainDataFromView(view));
 }
 
@@ -218,10 +219,12 @@ void MainFrame::onDateFilterChanged(wxCommandEvent&)
 
 void MainFrame::onRefreshWindow(wxCommandEvent&)
 {
-	/*for (const auto& view : selectedViews)
+	if (selectedViewForTable.empty())
+		return;
+	for (const auto& view : selectedViewForTable)
 	{
 		loadViewToGrid(view.first, view.second);
-	}*/
+	}
 }
 
 void MainFrame::onNotImplemented(wxCommandEvent&)
@@ -255,29 +258,39 @@ void MainFrame::onInsertPayment(wxCommandEvent&)
 
 void MainFrame::onInsertTestData(wxCommandEvent& event)
 {
-	marvus::Establishment e { .name = "Establishment" };
+	marvus::Establishment e { .name = "Gusto's" };
 	marvus::Category c { .name = "Food" };
 
 	controller.insertEntity(e);
 	controller.insertCategory(c);
 
+	int valueInt = 100;
 	marvus::Payment p {0, 1, 1, "100", "2025-10-10", ""};
+	size_t pos = 5;
 
-	controller.insertPayment(p);
+	for (int i = 1; i < 13; ++i)
+	{
+		std::ostringstream oss;
+		oss << std::setw(2) << std::setfill('0') << i; // format as 2 digits
 
+		p.value = std::to_string(valueInt + i);
+		p.date.replace(pos, 2, oss.str());
+
+		controller.insertPayment(p);
+	}
+	onDateFilterChanged(event); // Updates grid by current selection
 	onRefreshWindow(event);
 }
 
-void MainFrame::onLoadDB(wxCommandEvent& event)
+void MainFrame::onLoadDB(wxCommandEvent&)
 {
 	wxFileDialog openFileDialog(this, "Select a database file", "", "", "Database |*.db", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;
 	controller.connectToDB(openFileDialog.GetPath().ToStdString());
-
 }
 
-void MainFrame::onNewDB(wxCommandEvent& event)
+void MainFrame::onNewDB(wxCommandEvent&)
 {
 	wxString defaultValue = "database";
 	wxTextEntryDialog dialog(this, "Database name:", "New database", defaultValue);
@@ -298,7 +311,7 @@ void MainFrame::onImport(wxCommandEvent&)
 		"", "", "Marvus zip |*.zip", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
-		return; // user pressed "Cancel"
+		return;
 
 	wxString path = openFileDialog.GetPath();
 

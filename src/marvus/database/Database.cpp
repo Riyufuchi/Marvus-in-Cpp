@@ -212,9 +212,7 @@ bool Database::reconnect(const std::string& databaseFile)
 	if (db)
 		sqlite3_close(db);
 	result = sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr);
-	if (checkSuccessFor("Database connection"))
-		return initializeDatabase();
-	return false;
+	return checkSuccessFor("Database connection");
 }
 
 bool Database::initializeViews()
