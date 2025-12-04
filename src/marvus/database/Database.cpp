@@ -17,7 +17,7 @@ Database::Database(std::string databaseFile) : Database(databaseFile, "")
 
 Database::Database(std::string databaseFile, std::string sqlScriptsPath) : sqlScriptsPath(sqlScriptsPath), result(0), c_ErrorMessage(nullptr)
 {
-	sqlite3_open_v2(databaseFile.c_str(), SQLITE_ACCESS_READWRITE, &db);
+	sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr);
 }
 
 Database::~Database()
@@ -166,7 +166,7 @@ tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL
 
 	StatementSQL stmt;
 
-	if (!sqlite3_prepare_v2(db, viewSQL.c_str(), -1, stmt, nullptr) == SQLITE_OK)
+	if (sqlite3_prepare_v2(db, viewSQL.c_str(), -1, stmt, nullptr) != SQLITE_OK)
 	{
 		std::cerr << "SQL prepare error: " << sqlite3_errmsg(db) << std::endl;
 		return {};
@@ -210,7 +210,7 @@ bool Database::reconnect(const std::string& databaseFile)
 {
 	if (db)
 		sqlite3_close(db);
-	if(sqlite3_open_v2(databaseFile.c_str(), SQLITE_ACCESS_READWRITE, &db) == SQLITE_OK)
+	if(sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr) == SQLITE_OK)
 		return initializeDatabase();
 	return false;
 }

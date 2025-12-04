@@ -24,6 +24,9 @@ class ManagerApp : public wxApp
 		bool areArgs;
 		std::string text;
 		consolelib::argVector args;
+	#ifdef _WIN32
+		void SetCustomWindowsTheme();
+	#endif
 	public:
 		ManagerApp();
 		~ManagerApp();
