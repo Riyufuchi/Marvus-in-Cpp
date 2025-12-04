@@ -9,7 +9,7 @@
 
 ## About
 
-This project is for learning how to work with wxWidgets and database. It is an uplift for my Java Swing flat file application.
+This project is for learning how to work with wxWidgets and database. It is an uplift for [Marvus](https://github.com/Riyufuchi/Marvus) my Java Swing flat file application.
 
 ## Used libraries
 
@@ -65,13 +65,15 @@ This project is for learning how to work with wxWidgets and database. It is an u
 
 #### Windows
 
-Just extract the zip file in libs folder.
+   ```bash
+   # Just extract the zip file in libs folder.
+   ```
   
 ### CMake
   
    ```bash
-   git clone https://github.com/Riyufuchi/ConsoleArt.git
-   cd ConsoleArt
+   git clone https://github.com/Riyufuchi/Marvus-in-Cpp.git
+   cd Marvus-in-Cpp
    # CMake
    cmake -B build -S .
    cmake --build build --config Release
