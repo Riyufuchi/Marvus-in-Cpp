@@ -2,7 +2,7 @@
 // Name        : WindowsConsole
 // Author      : Riyufuchi
 // Created on  : Feb 28, 2024
-// Last Edit   : Mar 31, 2025
+// Last Edit   : Dec 01, 2025
 //============================================================================
 
 #ifdef _WIN32
@@ -22,7 +22,7 @@ class WindowsConsole : public UnixConsole
 	public:
 		WindowsConsole();
 		~WindowsConsole();
-		enableVirtualTerminalProcessing();
+		void enableVirtualTerminalProcessing();
 	};
 }
 #endif

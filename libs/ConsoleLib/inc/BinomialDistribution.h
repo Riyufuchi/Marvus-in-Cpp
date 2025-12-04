@@ -4,7 +4,7 @@
 // Created on : Oct 22, 2024
 // Last edit  : Nov 20, 2025
 // Copyright  : Copyright (c) 2024, riyufuchi
-// Description: ConsoleArt
+// Description: consoleart
 //==============================================================================
 
 #ifndef CONSOLELIB_BINOMIALDISTRIBUTION_H_
@@ -37,5 +37,5 @@ public:
 	bigDouble getP() const;
 	int getN() const;
 };
-} /* namespace ConsoleArt */
+} /* namespace consoleart */
 #endif /* OTHER_BINOMIALDISTRIBUTION_H_ */

@@ -14,6 +14,7 @@
 #include <vector>
 #include <map>
 #include <format>
+#include <limits>
 
 #include "IConsole.hpp"
 #include "UnixConsole.h"

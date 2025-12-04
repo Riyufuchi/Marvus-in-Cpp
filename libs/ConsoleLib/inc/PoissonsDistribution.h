@@ -2,9 +2,9 @@
 // File       : PoissonsDistribution.h
 // Author     : riyufuchi
 // Created on : Nov 01, 2024
-// Last edit  : Nov 20, 2025
+// Last edit  : Dec 02, 2025
 // Copyright  : Copyright (c) 2024, riyufuchi
-// Description: ConsoleArt
+// Description: consoleart
 //==============================================================================
 
 #ifndef OTHER_POISSONSDISTRIBUTION_H_
@@ -17,7 +17,7 @@ namespace consolelib
 class PoissonsDistribution: public Distribution
 {
 private:
-	int λ;
+	int lambda; //λ;
 public:
 	PoissonsDistribution(int lambda);
 	~PoissonsDistribution();
@@ -26,6 +26,6 @@ public:
 	virtual bigDouble varX() override;
 };
 
-} /* namespace ConsoleArt */
+} /* namespace consoleart */
 
 #endif /* OTHER_POISSONSDISTRIBUTION_H_ */

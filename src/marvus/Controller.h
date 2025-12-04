@@ -18,7 +18,8 @@
 #include "ArgumentParser.h"
 #include "FileUtils.h"
 // miniZ
-#include "../include/miniz.h"
+
+#include "../external/miniz.h"
 
 namespace marvus
 {

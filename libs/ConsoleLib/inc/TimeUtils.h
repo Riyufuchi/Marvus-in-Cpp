@@ -4,7 +4,7 @@
 // Created on : Mar 26, 2024
 // Last edit  : May 07, 2025
 // Copyright  : Copyright (c) 2024, Riyufuchi
-// Description: ConsoleArt
+// Description: consoleart
 //==============================================================================
 
 #ifndef _OTHER_TIME_UTILS_H_

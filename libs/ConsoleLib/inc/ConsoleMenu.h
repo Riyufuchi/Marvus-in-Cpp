@@ -50,6 +50,6 @@ public:
 	void enableLineBuffering();
 };
 
-} /* namespace ConsoleArt */
+} /* namespace consoleart */
 
 #endif /* SRC_CONSOLEUTILS_CONSOLEMENU_H_ */

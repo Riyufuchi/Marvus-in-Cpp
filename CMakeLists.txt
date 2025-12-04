@@ -1,26 +1,41 @@
 cmake_minimum_required(VERSION 3.20)
-project(MyApp LANGUAGES C CXX)
+project(Marvus-in-Cpp LANGUAGES C CXX)
 
-# --- C++ Standard ---
+#
+# C++ version
+#
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# --- Default build type ---
+#
+# Default build type
+#
 if(NOT CMAKE_BUILD_TYPE)
-    set(CMAKE_BUILD_TYPE Release CACHE STRING "" FORCE)
+	set(CMAKE_BUILD_TYPE Release CACHE STRING "" FORCE)
 endif()
 
-# --- Warnings ---
+#
+# Warnings
+#
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    add_compile_options(-Wall -Wextra -pedantic)
+	add_compile_options(-Wall -Wextra -pedantic)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    add_compile_options(/W4)
+	add_compile_definitions(NOMINMAX)
+	add_compile_options(/W4)
 endif()
 
-# --- Optimization ---
-set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+#
+# Optimization
+#
+if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
+	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+	set(CMAKE_CXX_FLAGS_RELEASE "/O2")
+endif()
 
+#
 # My static libraries
+#
 
 set(CONSOLE_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/ConsoleLib)
 
@@ -30,7 +45,7 @@ add_library(ConsoleLib STATIC IMPORTED)
 # Point the IMPORTED target to the actual file
 if (WIN32)
 	set_target_properties(ConsoleLib PROPERTIES
-	IMPORTED_LOCATION ${CONSOLE_LIB_DIR}/libConsoleLib.lib
+	IMPORTED_LOCATION ${CONSOLE_LIB_DIR}/ConsoleLib.lib
 	INTERFACE_INCLUDE_DIRECTORIES ${CONSOLE_LIB_DIR}/inc)
 else()
 	set_target_properties(ConsoleLib PROPERTIES
@@ -51,22 +66,9 @@ endif()
 
 include(${wxWidgets_USE_FILE})
 
-# SQLite
-
-if (WIN32)
-	#
-	# Windows: using sqlite3.lib + sqlite3.dll from downloaded package
-	#
-	set(SQLITE3_INCLUDE_DIR "C:/sqlite")       # <-- change if needed
-	set(SQLITE3_LIBRARY     "C:/sqlite/sqlite3.lib")
-else()
-	#
-	# Linux: system-provided SQLite
-	#
-	find_package(SQLite3 REQUIRED)
-endif()
-
+#
 # Marvus-in-Cpp
+#
 file(MAKE_DIRECTORY build)
 
 file(GLOB_RECURSE APP_SOURCES
@@ -84,19 +86,12 @@ target_link_libraries(Marvus PRIVATE ConsoleLib)
 # wxWidgets
 target_link_libraries(Marvus PRIVATE ${wxWidgets_LIBRARIES})
 
-# SQLite
-if (WIN32)
-	target_include_directories(Marvus PRIVATE ${SQLITE3_INCLUDE_DIR})
-	target_link_libraries(Marvus PRIVATE ${SQLITE3_LIBRARY})
-else()
-	target_link_libraries(Marvus PRIVATE SQLite::SQLite3)
-endif()
-
 # Copy assets folder into build directory
 file(COPY ${CMAKE_SOURCE_DIR}/sql DESTINATION ${CMAKE_BINARY_DIR})
 
-
+#
 # Documentation
+#
 
 # Path to LaTeX source folder
 set(LATEX_DIR ${CMAKE_CURRENT_SOURCE_DIR}/latex-doc)

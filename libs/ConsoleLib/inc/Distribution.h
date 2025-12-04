@@ -4,13 +4,14 @@
 // Created on : Oct 25, 2024
 // Last edit  : Nov 20, 2025
 // Copyright  : Copyright (c) 2024, riyufuchi
-// Description: ConsoleArt
+// Description: consoleart
 //==============================================================================
 
 #ifndef CONSOLELIB_DISTRIBUTION_H_
 #define CONSOLELIB_DISTRIBUTION_H_
 
 #include <math.h>
+#include <cmath>
 
 namespace consolelib
 {

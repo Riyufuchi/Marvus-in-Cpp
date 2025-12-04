@@ -4,7 +4,7 @@
 // Created on : Jan 14, 2025
 // Last edit  : Nov 24, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
-// Description: ConsoleArt
+// Description: consoleart
 //==============================================================================
 
 #ifndef CONSOLELIB_STATISTICSGENERIC_H_

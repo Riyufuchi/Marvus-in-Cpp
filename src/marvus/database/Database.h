@@ -13,7 +13,7 @@
 #include <variant>
 #include <vector>
 
-#include <sqlite3.h>
+#include "../../external/sqlite/sqlite3.h"
 
 #include "ScriptMap.h"
 #include "StatementSQL.h"
