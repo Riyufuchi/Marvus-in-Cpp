@@ -256,7 +256,7 @@ void MainFrame::onInsertTestData(wxCommandEvent& event)
 	controller.insertEntity(e);
 	controller.insertCategory(c);
 
-	marvus::Payment p {0, 1, 1, "100", "10.10.2025", ""};
+	marvus::Payment p {0, 1, 1, "100", "2025-10-10", ""};
 
 	controller.insertPayment(p);
 
