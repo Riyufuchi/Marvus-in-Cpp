@@ -2,7 +2,7 @@
 // File       : Controller.cpp
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 04, 2025
+// Last edit  : Dec 05, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -61,8 +61,7 @@ bool Controller::connectToDB(const std::string& name)
 
 void Controller::dropDB()
 {
-	std::filesystem::remove(DATABASE_FILE);
-	marvusDB.reconnect(DATABASE_FILE);
+	marvusDB.executeFileSQL(marvusDB.getScriptSQL("drop_db.sql"));
 	marvusDB.initializeDatabase();
 	marvusDB.initializeViews();
 }

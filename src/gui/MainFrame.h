@@ -2,7 +2,7 @@
 // File       : MainFrame.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 04, 2025
+// Last edit  : Dec 05, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -50,7 +50,7 @@ class MainFrame : public wxFrame
 {
 	private:
 		std::unordered_map<marvus::Table, wxGrid*> grids;
-		std::unordered_map<marvus::Table, marvus::TableViews> selectedViewForTable;
+		std::unordered_map<marvus::Table, std::pair<marvus::TableViews, marvus::insertVector>> selectedViewForTable;
 		// Controls
 		wxNotebook* notebook; // Tabbed pane
 		wxChoice* monthChoice;
@@ -61,7 +61,7 @@ class MainFrame : public wxFrame
 		wxMenuBar* createMenuBar();
 		void createToolBar();
 		// Data handlers
-		void loadViewToGrid(marvus::Table table, marvus::TableViews view);
+		void loadViewToGrid(marvus::Table table, marvus::TableViews view, marvus::insertVector data = {});
 		void fillGrid(marvus::Table table, const marvus::tableHeaderAndData& data);
 		//
 		void displayError(const std::string& title, const std::string& message);

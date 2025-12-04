@@ -156,16 +156,18 @@ wxMenuBar* MainFrame::createMenuBar()
 
 void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& tableData)
 {
-	if (tableData.second.empty())
-	{
-		wxMessageBox("No data received from the database.", "Table view result", wxOK | wxICON_INFORMATION, this);
-		return;
-	}
-
 	if (!grids.contains(table))
 		return;
 
 	wxGrid& grid = *grids.find(table)->second;
+
+	if (tableData.second.empty())
+	{
+		wxMessageBox("No data received from the database.", "Table view result", wxOK | wxICON_INFORMATION, this);
+		if (grid.GetNumberRows() > 0)
+			grid.DeleteRows(0, grid.GetNumberRows()); // Remove old rows
+		return;
+	}
 
 	if (grid.GetNumberCols() > 0)
 		grid.DeleteCols(0, grid.GetNumberCols()); // Remove old cols
@@ -201,20 +203,17 @@ void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& 
 	grid.AutoSizeRows();
 }
 
-void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableViews view)
+void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableViews view, marvus::insertVector data)
 {
-	selectedViewForTable[table] = view;
-	fillGrid(table, controller.obtainDataFromView(view));
+	selectedViewForTable[table] = {view, data};
+	fillGrid(table, controller.obtainDataFromView(view, data));
 }
 
 // Events
 
 void MainFrame::onDateFilterChanged(wxCommandEvent&)
 {
-	//int month = m_monthChoice->GetSelection() + 1;
-	fillGrid(marvus::Table::PAYMENTS,
-		controller.obtainDataFromView(marvus::TableViews::PAYMENTS_VIEW_FOR_MONTH, { std::format("{:02}", monthChoice->GetSelection() + 1) }));
-
+	loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableViews::PAYMENTS_VIEW_FOR_MONTH, { std::format("{:02}", monthChoice->GetSelection() + 1) });
 }
 
 void MainFrame::onRefreshWindow(wxCommandEvent&)
@@ -223,7 +222,7 @@ void MainFrame::onRefreshWindow(wxCommandEvent&)
 		return;
 	for (const auto& view : selectedViewForTable)
 	{
-		loadViewToGrid(view.first, view.second);
+		loadViewToGrid(view.first, view.second.first, view.second.second);
 	}
 }
 
