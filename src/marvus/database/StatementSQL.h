@@ -10,7 +10,7 @@
 #ifndef DATABASE_STATEMENT_SQL_H_
 #define DATABASE_STATEMENT_SQL_H_
 
-#include <sqlite3.h>
+#include "../../external/sqlite/sqlite3.h"
 
 namespace marvus
 {

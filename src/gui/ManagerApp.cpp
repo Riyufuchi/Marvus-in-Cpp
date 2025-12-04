@@ -11,6 +11,9 @@
 
 namespace wxw
 {
+ManagerApp::ManagerApp() : ManagerApp(wxApp::argc, wxApp::argv)
+{
+}
 ManagerApp::ManagerApp(int argc, char** argv) : wxApp(), frame(nullptr), areArgs(false)
 {
 	this->args = consolelib::ArgumentParser::analyzeInOrder(argc, argv, areArgs, text);

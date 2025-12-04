@@ -9,9 +9,9 @@
 
 #include "gui/ManagerApp.h"
 
-//wxIMPLEMENT_APP(wxw::ManagerApp);
+wxIMPLEMENT_APP(wxw::ManagerApp);
 
-int main(int argc, char** argv)
+/*int main(int argc, char** argv)
 {
 	wxApp::SetInstance(new wxw::ManagerApp(argc, argv));
 	wxEntryStart(argc, argv);
@@ -19,6 +19,7 @@ int main(int argc, char** argv)
 	wxTheApp->OnRun();
 	wxTheApp->OnExit();
 	wxEntryCleanup();
-}
+}*/
+
 
 

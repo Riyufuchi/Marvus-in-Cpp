@@ -25,6 +25,7 @@ class ManagerApp : public wxApp
 		std::string text;
 		consolelib::argVector args;
 	public:
+		ManagerApp();
 		ManagerApp(int argc, char** argv);
 		~ManagerApp();
 		virtual bool OnInit() override;

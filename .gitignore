@@ -6,6 +6,7 @@ build
 build/
 test
 libs-git
+libs/wxWidgets
 
 # Utils
 *.drawio

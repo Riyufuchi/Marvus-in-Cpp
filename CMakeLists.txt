@@ -53,18 +53,26 @@ else()
 	INTERFACE_INCLUDE_DIRECTORIES ${CONSOLE_LIB_DIR}/inc)
 endif()
 
-
+#
 # WxWidgets
+#
 
 if (WIN32)
-	# Windows: use built wxWidgets (must be built beforehand)
-	set(wxWidgets_ROOT_DIR "C:/wxWidgets")  # <-- change to your path
-	set(wxWidgets_LIB_DIR  "C:/wxWidgets/lib/vc_x64_dll") # if using dll/debug libs
+	set(wx_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/libs/wxWidgets)
+
+	set(wxWidgets_INCLUDE_DIRS ${wx_ROOT})
+	set(wxWidgets_LIB_DIR ${wx_ROOT}/vc_x64_lib)
+
+	# Collect ALL .lib files
+	file(GLOB wxWidgets_LIBRARIES "${wxWidgets_LIB_DIR}/*.lib")
+
+	# Include wxWidgets headers
+	include_directories(${wxWidgets_INCLUDE_DIRS})
 else()
 	find_package(wxWidgets REQUIRED COMPONENTS core base)
+	include(${wxWidgets_USE_FILE})
 endif() 
 
-include(${wxWidgets_USE_FILE})
 
 #
 # Marvus-in-Cpp
@@ -76,7 +84,24 @@ file(GLOB_RECURSE APP_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
-add_executable(Marvus ${APP_SOURCES})
+
+if (WIN32)
+	add_executable(Marvus WIN32
+		${APP_SOURCES} 
+		src/MainSource.cpp
+)
+
+	# Link manifest
+	set_target_properties(Marvus PROPERTIES
+		WIN32_EXECUTABLE TRUE
+	LINK_FLAGS "/MANIFESTUAC:\"level='asInvoker' uiAccess='false'\""
+	# Optional: explicitly specify manifest file
+	RESOURCE app.manifest
+    )
+else()
+	add_executable(Marvus ${APP_SOURCES})
+endif() 
+
 
 # Link everything
 target_include_directories(Marvus PRIVATE ${CONSOLE_LIB_DIR}/inc)
@@ -86,8 +111,20 @@ target_link_libraries(Marvus PRIVATE ConsoleLib)
 # wxWidgets
 target_link_libraries(Marvus PRIVATE ${wxWidgets_LIBRARIES})
 
+if (WIN32)
+	target_link_libraries(Marvus PRIVATE
+		comctl32
+		rpcrt4
+		uxtheme      # recommended, not required
+)
+endif()
+
 # Copy assets folder into build directory
-file(COPY ${CMAKE_SOURCE_DIR}/sql DESTINATION ${CMAKE_BINARY_DIR})
+if (WIN32)
+	file(COPY ${CMAKE_SOURCE_DIR}/sql DESTINATION "${CMAKE_BINARY_DIR}/Release")
+else()
+	file(COPY ${CMAKE_SOURCE_DIR}/sql DESTINATION ${CMAKE_BINARY_DIR})
+endif() 
 
 #
 # Documentation

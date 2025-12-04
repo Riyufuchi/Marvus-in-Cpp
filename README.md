@@ -17,7 +17,7 @@ This project is for learning how to work with wxWidgets and database. It is an u
 
 | Name | Used for | Included in this repository |
 | :------: | :----------: | :---: |
-| [wxWidgets](https://www.wxwidgets.org/) | GUI | ❌ |
+| [wxWidgets](https://www.wxwidgets.org/) | GUI | ✅ (For Windows only) |
 | [SQLite](https://www.sqlite.org/) | Database | ✅ |
 | [ConsoleLib](https://github.com/Riyufuchi/ConsoleLib) | Console & utils stuff | ✅ |
 | [Miniz](https://github.com/richgel999/miniz) | Zip file | ✅ |
@@ -57,24 +57,24 @@ This project is for learning how to work with wxWidgets and database. It is an u
 
 ### Installing WxWidgets
 
-   *For debian based systems*
+#### Linux
 
    ```bash
-   # wxWidgets
    sudo apt install libwxgtk3.2-dev
    ```
+
+#### Windows
+
+Just extract the zip file in libs folder.
   
 ### CMake
   
    ```bash
    git clone https://github.com/Riyufuchi/ConsoleArt.git
    cd ConsoleArt
-   
-   # On Windows
-   #Fill in paths to SQLite and WxWidgets into the CMake
-
+   # CMake
    cmake -B build -S .
-   cmake --build build
+   cmake --build build --config Release
    ```
 
 ## Project guide
