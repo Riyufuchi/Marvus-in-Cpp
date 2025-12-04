@@ -2,7 +2,7 @@
 // File       : MainFrame.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 01, 2025
+// Last edit  : Dec 04, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -12,21 +12,22 @@
 
 #include <iostream>
 #include <format>
-
-#include "../../assets/icon.xpm"
-
+//wxWidgets
 #include <wx/wx.h>
 #include <wx/grid.h>
 #include <wx/notebook.h>
 #include <wx/textfile.h>
-
+#include <wx/textdlg.h>
+// Cutom wxWidgets tools
 #include "../wxw/FactoryWxW.h"
 #include "../wxw/ToolsWxW.h"
-
+// Local
 #include "../marvus/Controller.h"
 #include "../marvus/wxw/PaymentDialog.h"
-
+// ConsoleLib
 #include "FileUtils.h"
+// Other
+#include "../../assets/icon.xpm"
 
 namespace wxw
 {
@@ -40,7 +41,9 @@ enum
 	ID_InserTestData,
 	ID_NotImplementedYet,
 	ID_INSERT_PAYMENT,
-	ID_Import
+	ID_Import,
+	ID_NewDB,
+	ID_OpenDB
 };
 
 class MainFrame : public wxFrame
@@ -60,6 +63,8 @@ class MainFrame : public wxFrame
 		void loadViewToGrid(marvus::Table table, marvus::TableViews view);
 		void fillGrid(marvus::Table table, const marvus::tableHeaderAndData& data);
 		// Events
+		void onNewDB(wxCommandEvent& event);
+		void onLoadDB(wxCommandEvent& event);
 		void onExit(wxCommandEvent& event);
 		void onAbout(wxCommandEvent& event);
 		void onNotImplemented(wxCommandEvent& event);

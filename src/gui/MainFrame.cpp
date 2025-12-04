@@ -2,7 +2,7 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 01, 2025
+// Last edit  : Dec 04, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -112,8 +112,8 @@ void MainFrame::createToolBar()
 wxMenuBar* MainFrame::createMenuBar()
 {
 	wxMenu* fileMenu = new wxMenu;
-	fileMenu->Append(ID_NotImplementedYet, "&New");
-	fileMenu->Append(ID_NotImplementedYet, "&Open");
+	fileMenu->Append(ID_NewDB, "&New");
+	fileMenu->Append(ID_OpenDB, "&Open");
 	fileMenu->Append(ID_Import, "&Import");
 	fileMenu->Append(ID_NotImplementedYet, "&Export");
 	fileMenu->AppendSeparator();
@@ -221,7 +221,7 @@ void MainFrame::onRefreshWindow(wxCommandEvent&)
 
 void MainFrame::onNotImplemented(wxCommandEvent&)
 {
-	wxMessageBox("This function have not been implemented yet!.", "Implmentatation info", wxOK | wxICON_INFORMATION, this);
+	wxMessageBox("This function have not been implemented yet!.", "Implementation info", wxOK | wxICON_INFORMATION, this);
 }
 
 void MainFrame::onExit(wxCommandEvent&)
@@ -250,10 +250,38 @@ void MainFrame::onInsertPayment(wxCommandEvent&)
 
 void MainFrame::onInsertTestData(wxCommandEvent& event)
 {
-	consolelib::ScriptMap map;
-	map.loadScripts("../data/");
+	marvus::Establishment e { .name = "Establishment" };
+	marvus::Category c { .name = "Food" };
+
+	controller.insertEntity(e);
+	controller.insertCategory(c);
+
+	marvus::Payment p {0, 1, 1, "100", "10.10.2025", ""};
+
+	controller.insertPayment(p);
 
 	onRefreshWindow(event);
+}
+
+void MainFrame::onLoadDB(wxCommandEvent& event)
+{
+	wxFileDialog openFileDialog(this, "Select a database file", "", "", "Database |*.db", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+	if (openFileDialog.ShowModal() == wxID_CANCEL)
+		return;
+	if (!controller.connectToDB(openFileDialog.GetPath().ToStdString()))
+		wxMessageBox(controller.obtainSQLiteError(), "Database error", wxICON_ERROR);
+
+}
+
+void MainFrame::onNewDB(wxCommandEvent& event)
+{
+	wxString defaultValue = "database";
+	wxTextEntryDialog dialog(this, "Database name:", "New database", defaultValue);
+	if (dialog.ShowModal() == wxID_OK)
+	{
+		if (!controller.connectToDB(dialog.GetValue().ToStdString()))
+			wxMessageBox(controller.obtainSQLiteError(), "Database error", wxICON_ERROR);
+	}
 }
 
 void MainFrame::onDropDatabase(wxCommandEvent&)
@@ -293,6 +321,8 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_InserTestData, MainFrame::onInsertTestData)
 	EVT_MENU(ID_NotImplementedYet, MainFrame::onNotImplemented)
 	EVT_MENU(ID_Import, MainFrame::onImport)
+	EVT_MENU(ID_NewDB, MainFrame::onNewDB)
+	EVT_MENU(ID_OpenDB, MainFrame::onLoadDB)
 wxEND_EVENT_TABLE()
 
 }

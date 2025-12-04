@@ -2,7 +2,7 @@
 // File       : Controller.h
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 01, 2025
+// Last edit  :Dec 04, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -53,14 +53,20 @@ public:
 	Controller();
 	virtual ~Controller() = default;
 	void configure(consolelib::argVector& config);
+	// Database file IO
 	bool initDB(std::string& errorMsg);
 	void dropDB();
+	bool connectToDB(const std::string& name);
+	// Database interaction
 	bool insertEntity(const Establishment& e);
 	bool insertCategory(const Category& c);
 	bool insertPayment(const Payment& p);
-	bool importFromZIP(const std::string& path, std::string& errorMessage);
 	tableHeaderAndData obtainDataFromView(TableViews view);
 	tableHeaderAndData obtainDataFromView(TableViews view, const insertVector& data);
+	// Other IO
+	bool importFromZIP(const std::string& path, std::string& errorMessage);
+	bool exportToZIP(const std::string& path, std::string& errorMessage);
+	const char* obtainSQLiteError();
 };
 
 } /* namespace marvus */

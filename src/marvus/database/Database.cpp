@@ -2,7 +2,7 @@
 // File       : Database.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 01, 2025
+// Last edit  : Dec 04, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -17,7 +17,7 @@ Database::Database(std::string databaseFile) : Database(databaseFile, "")
 
 Database::Database(std::string databaseFile, std::string sqlScriptsPath) : sqlScriptsPath(sqlScriptsPath), result(0), c_ErrorMessage(nullptr)
 {
-	sqlite3_open(databaseFile.c_str(), &db);
+	sqlite3_open_v2(databaseFile.c_str(), SQLITE_ACCESS_READWRITE, &db);
 }
 
 Database::~Database()
@@ -210,8 +210,9 @@ bool Database::reconnect(const std::string& databaseFile)
 {
 	if (db)
 		sqlite3_close(db);
-	sqlite3_open(databaseFile.c_str(), &db);
-	return initializeDatabase();
+	if(sqlite3_open_v2(databaseFile.c_str(), SQLITE_ACCESS_READWRITE, &db) == SQLITE_OK)
+		return initializeDatabase();
+	return false;
 }
 
 bool Database::initializeViews()
@@ -266,6 +267,11 @@ void Database::setPathToSQL_Scripts(std::string path)
 const std::string& Database::getScriptSQL(const std::string& scrpiptFileName)
 {
 	return sqlScriptFiles.getScript(scrpiptFileName);
+}
+
+const char* Database::getSQLiteError() const
+{
+	return sqlite3_errmsg(db);
 }
 
 }

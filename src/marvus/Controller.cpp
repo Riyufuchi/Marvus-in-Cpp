@@ -2,7 +2,7 @@
 // File       : Controller.cpp
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 01, 2025
+// Last edit  : Dec 04, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -47,6 +47,16 @@ bool Controller::initDB(std::string& errorMsg)
 		return true;
 	}
 	return false;
+}
+
+bool Controller::connectToDB(const std::string& name)
+{
+	std::filesystem::path databaseFile(name);
+	if (databaseFile.extension() != ".db")
+	{
+		return marvusDB.reconnect(databaseFile.generic_string() + ".db");
+	}
+	return marvusDB.reconnect(databaseFile.generic_string());
 }
 
 void Controller::dropDB()
@@ -223,6 +233,16 @@ bool Controller::importFromZIP(const std::string& path, std::string& errorMessag
 	if (importEnties(entities) && importCategories(categories))
 		return importData(dataFile);
 	return false;
+}
+
+bool Controller::exportToZIP(const std::string& path, std::string& errorMessage)
+{
+	return false;
+}
+
+const char* Controller::obtainSQLiteError()
+{
+	return marvusDB.getSQLiteError();
 }
 
 } /* namespace marvus */

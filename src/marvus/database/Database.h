@@ -2,7 +2,7 @@
 // File       : Database.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 01, 2025
+// Last edit  : Dec 04, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -61,6 +61,7 @@ class Database
 		// Setters
 		void setPathToSQL_Scripts(std::string path);
 		// Getters
+		const char* getSQLiteError() const;
 		const std::string& getScriptSQL(const std::string& scrpiptFileName);
 };
 }
