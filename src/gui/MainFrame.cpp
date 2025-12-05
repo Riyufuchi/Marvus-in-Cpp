@@ -269,10 +269,19 @@ void MainFrame::onInsertPayment(wxCommandEvent& event)
 void MainFrame::onInsertTestData(wxCommandEvent& event)
 {
 	marvus::Establishment e { .name = "Gusto's" };
+	marvus::Establishment e1 { .name = "Luigi's" };
+	marvus::Establishment e2 { .name = "Red Rocket" };
+
 	marvus::Category c { .name = "Food" };
+	marvus::Category c1 { .name = "Fuel" };
+	marvus::Category c2 { .name = "Tires" };
 
 	controller.insertEntity(e);
+	controller.insertEntity(e1);
+	controller.insertEntity(e2);
 	controller.insertCategory(c);
+	controller.insertCategory(c1);
+	controller.insertCategory(c2);
 
 	int valueInt = 100;
 	marvus::Payment p {0, 1, 1, "100", "2025-10-10", ""};

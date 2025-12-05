@@ -33,6 +33,7 @@ public:
 		std::string date;
 	};
 private:
+	const InputData& inputData;
 	wxComboBox* establishmentComboBox;
 	wxComboBox* categoryComboBox;
 	wxSpinCtrlDouble* valueCtrl;

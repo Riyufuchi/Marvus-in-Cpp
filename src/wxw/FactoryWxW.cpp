@@ -2,7 +2,7 @@
 // File       : FactoryWxW.cpp
 // Author     : riyufuchi
 // Created on : Apr 01, 2025
-// Last edit  : Nov 27, 2025
+// Last edit  : Dec 05, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: KEO-manager
 //==============================================================================
@@ -47,7 +47,7 @@ wxComboBox* FactoryWxW::newComboBox(wxWindow* parent, const enumVector& data)
 	else
 		for (const std::vector<std::string>& row : data)
 		{
-			wxPlayerNames.Add(row[1]);
+			wxPlayerNames.Add(wxString::FromUTF8(row[1]));
 		}
 	// Create the combo box (parent, id, default, pos, size, choices, style)
 	wxComboBox* cb = new wxComboBox(parent, wxID_ANY, "", wxDefaultPosition, wxDefaultSize, wxPlayerNames, wxCB_READONLY);

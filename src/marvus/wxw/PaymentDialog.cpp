@@ -12,7 +12,7 @@
 namespace marvus
 {
 
-PaymentDialog::PaymentDialog(wxWindow* parent, const InputData& inputData) : keo::DialogKEO(parent, "Add new Payment")
+PaymentDialog::PaymentDialog(wxWindow* parent, const InputData& inputData) : keo::DialogKEO(parent, "Add new Payment"), inputData(inputData)
 {
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	wxFlexGridSizer* gridSizer = new wxFlexGridSizer(2, 5, 5);
@@ -64,8 +64,8 @@ PaymentDialog::~PaymentDialog()
 marvus::Payment PaymentDialog::getUserInput()
 {
 	marvus::Payment payment;
-	payment.ent_key = 1;
-	payment.category_key = 1;
+	payment.ent_key = std::stoi(inputData.establishments[establishmentComboBox->GetCurrentSelection()][0]);
+	payment.category_key = std::stoi(inputData.categories[categoryComboBox->GetCurrentSelection()][0]);
 
 	payment.value = valueCtrl->GetTextValue().ToStdString();
 
