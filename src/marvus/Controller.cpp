@@ -16,10 +16,10 @@ Controller::Controller(errorFunctionSignature errorHandler) : marvusDB(DATABASE_
 {
 	this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; marvusDB.setPathToSQL_Scripts(vector[0]); };
 
-	views[TableViews::ESTABLISHMENTS_VIEW] = InlineSQL::ESTABLISHMENTS_VIEW;
-	views[TableViews::CATEGORIES_VIEW] = InlineSQL::CATEGORIES_VIEW;
-	views[TableViews::PAYMENTS_VIEW] = InlineSQL::PAYMENTS_VIEW;
-	views[TableViews::PAYMENTS_VIEW_FOR_MONTH] = InlineSQL::PAYMENTS_VIEW_CURR_MONTH;
+	views[TableView::ESTABLISHMENTS_VIEW] = InlineSQL::ESTABLISHMENTS_VIEW;
+	views[TableView::CATEGORIES_VIEW] = InlineSQL::CATEGORIES_VIEW;
+	views[TableView::PAYMENTS_VIEW] = InlineSQL::PAYMENTS_VIEW;
+	views[TableView::PAYMENTS_VIEW_FOR_MONTH] = InlineSQL::PAYMENTS_VIEW_CURR_MONTH;
 }
 
 void Controller::configure(consolelib::argVector& config)
@@ -66,7 +66,7 @@ void Controller::dropDB()
 	marvusDB.initializeViews();
 }
 
-tableHeaderAndData Controller::obtainDataFromView(TableViews view)
+tableHeaderAndData Controller::obtainDataFromView(TableView view)
 {
 	//selectedViews[table] = view;
 	auto viewPair = views.find(view);
@@ -75,7 +75,7 @@ tableHeaderAndData Controller::obtainDataFromView(TableViews view)
 	return marvusDB.obtainTableHeaderAndData(marvusDB.getScriptSQL(viewPair->second));
 }
 
-tableHeaderAndData Controller::obtainDataFromView(TableViews view, const insertVector& data)
+tableHeaderAndData Controller::obtainDataFromView(TableView view, const insertVector& data)
 {
 	auto viewPair = views.find(view);
 	if (viewPair == views.end())
@@ -128,8 +128,8 @@ bool Controller::importCategories(const std::string& source)
 
 bool Controller::importData(const std::string& source)
 {
-	const tableHeaderAndData ents = obtainDataFromView(TableViews::ESTABLISHMENTS_VIEW);
-	const tableHeaderAndData cats = obtainDataFromView(TableViews::CATEGORIES_VIEW);
+	const tableHeaderAndData ents = obtainDataFromView(TableView::ESTABLISHMENTS_VIEW);
+	const tableHeaderAndData cats = obtainDataFromView(TableView::CATEGORIES_VIEW);
 
 	std::unordered_map<std::string, int> entMap;
 	std::unordered_map<std::string, int> catMap;

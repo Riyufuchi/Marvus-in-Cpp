@@ -71,7 +71,7 @@ marvus::Payment PaymentDialog::getUserInput()
 
 	payment.date = datePicker->GetValue().Format("%Y-%m-%d").ToStdString();
 
-	payment.note = note_txtbox->GetValue().ToStdString();
+	payment.note = std::string(note_txtbox->GetValue().ToUTF8());
 	return payment;
 }
 

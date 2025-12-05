@@ -64,8 +64,8 @@ MainFrame::MainFrame(const wxString& title, consolelib::argVector& config) : wxF
 	// Layout the notebook
 	SetSizerAndFit(FactoryWxW::newMaxSizer(notebook));
 	// Attempt to load data
-	loadViewToGrid(marvus::Table::ESTABLISHMENTS, marvus::TableViews::ESTABLISHMENTS_VIEW);
-	loadViewToGrid(marvus::Table::CATEGORIES, marvus::TableViews::CATEGORIES_VIEW);
+	loadViewToGrid(marvus::Table::ESTABLISHMENTS, marvus::TableView::ESTABLISHMENTS_VIEW);
+	loadViewToGrid(marvus::Table::CATEGORIES, marvus::TableView::CATEGORIES_VIEW);
 	monthChoice->SetSelection(0);
 	wxCommandEvent e;
 	onDateFilterChanged(e);
@@ -134,8 +134,10 @@ wxMenuBar* MainFrame::createMenuBar()
 	payment->Append(ID_INSERT_PAYMENT, "&Add Payment");
 
 	wxMenu* overviews = new wxMenu();
+	overviews->Append(ID_TableListView, "&Table list");
 
 	wxMenu* tools = new wxMenu();
+	tools->Append(ID_NotImplementedYet, "&Entity manager");
 
 	wxMenu* debug = new wxMenu();
 	debug->Append(ID_DropDB, "&Reset database");
@@ -203,7 +205,7 @@ void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& 
 	grid.AutoSizeRows();
 }
 
-void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableViews view, marvus::insertVector data)
+void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableView view, marvus::insertVector data)
 {
 	selectedViewForTable[table] = {view, data};
 	fillGrid(table, controller.obtainDataFromView(view, data));
@@ -211,9 +213,14 @@ void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableViews view, mar
 
 // Events
 
+void MainFrame::onViewChanged(wxCommandEvent& event)
+{
+	loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableView::PAYMENTS_VIEW);
+}
+
 void MainFrame::onDateFilterChanged(wxCommandEvent&)
 {
-	loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableViews::PAYMENTS_VIEW_FOR_MONTH, { std::format("{:02}", monthChoice->GetSelection() + 1) });
+	loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableView::PAYMENTS_VIEW_FOR_MONTH, { std::format("{:02}", monthChoice->GetSelection() + 1) });
 }
 
 void MainFrame::onRefreshWindow(wxCommandEvent&)
@@ -238,20 +245,20 @@ void MainFrame::onExit(wxCommandEvent&)
 
 void MainFrame::onAbout(wxCommandEvent&)
 {
-	wxMessageBox("This is a wxWidgets application.", "About", wxOK | wxICON_INFORMATION, this);
+	wxMessageBox("This is a wxWidgets application.\n\n" + consolelib::Library::aboutLibrary(), "About", wxOK | wxICON_INFORMATION, this);
 }
 
 void MainFrame::onInsertPayment(wxCommandEvent& event)
 {
 	marvus::PaymentDialog::InputData data;
 
-	data.establishments = controller.obtainDataFromView(marvus::TableViews::ESTABLISHMENTS_VIEW).second;
+	data.establishments = controller.obtainDataFromView(marvus::TableView::ESTABLISHMENTS_VIEW).second;
 	if (data.establishments.empty())
 	{
 		displayError("ESTABLISHMENTS_VIEW", "No data recieved from the table.");
 		return;
 	}
-	data.categories = controller.obtainDataFromView(marvus::TableViews::CATEGORIES_VIEW).second;
+	data.categories = controller.obtainDataFromView(marvus::TableView::CATEGORIES_VIEW).second;
 	if (data.categories.empty())
 	{
 		displayError("CATEGORIES_VIEW", "No data recieved from the table.");
@@ -301,30 +308,39 @@ void MainFrame::onInsertTestData(wxCommandEvent& event)
 	onRefreshWindow(event);
 }
 
-void MainFrame::onLoadDB(wxCommandEvent&)
+void MainFrame::onLoadDB(wxCommandEvent& event)
 {
 	wxFileDialog openFileDialog(this, "Select a database file", "", "", "Database |*.db", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;
 	controller.connectToDB(openFileDialog.GetPath().ToStdString());
+	onRefreshWindow(event);
 }
 
-void MainFrame::onNewDB(wxCommandEvent&)
+void MainFrame::onNewDB(wxCommandEvent& event)
 {
 	wxString defaultValue = "database";
 	wxTextEntryDialog dialog(this, "Database name:", "New database", defaultValue);
 	if (dialog.ShowModal() == wxID_OK)
 	{
 		controller.connectToDB(dialog.GetValue().ToStdString());
+		std::string msg;
+		if (controller.initDB(msg))
+		{
+			displayError("New DB creation", msg);
+			return;
+		}
+		onRefreshWindow(event);
 	}
 }
 
-void MainFrame::onDropDatabase(wxCommandEvent&)
+void MainFrame::onDropDatabase(wxCommandEvent& event)
 {
 	controller.dropDB();
+	onRefreshWindow(event);
 }
 
-void MainFrame::onImport(wxCommandEvent&)
+void MainFrame::onImport(wxCommandEvent& event)
 {
 	wxFileDialog openFileDialog(this, "Select a zip file",
 		"", "", "Marvus zip |*.zip", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -338,9 +354,7 @@ void MainFrame::onImport(wxCommandEvent&)
 
 	if (controller.importFromZIP(std::string(path), msg))
 	{
-		loadViewToGrid(marvus::Table::ESTABLISHMENTS, marvus::TableViews::ESTABLISHMENTS_VIEW);
-		loadViewToGrid(marvus::Table::CATEGORIES, marvus::TableViews::CATEGORIES_VIEW);
-		loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableViews::PAYMENTS_VIEW);
+		onRefreshWindow(event);
 	}
 	else
 		wxMessageBox(msg, "Import error", wxICON_ERROR);
@@ -358,6 +372,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_Import, MainFrame::onImport)
 	EVT_MENU(ID_NewDB, MainFrame::onNewDB)
 	EVT_MENU(ID_OpenDB, MainFrame::onLoadDB)
+	EVT_MENU(ID_TableListView, MainFrame::onViewChanged)
 wxEND_EVENT_TABLE()
 
 }

@@ -32,7 +32,7 @@ enum class Table
 	CATEGORIES
 };
 
-enum class TableViews
+enum class TableView
 {
 	PAYMENTS_VIEW,
 	ESTABLISHMENTS_VIEW,
@@ -44,7 +44,7 @@ class Controller
 {
 private:
 	std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argumentMethods;
-	std::unordered_map<marvus::TableViews, std::string> views;
+	std::unordered_map<marvus::TableView, std::string> views;
 	MarvusDB marvusDB;
 	bool importEnties(const std::string& source);
 	bool importCategories(const std::string& source);
@@ -61,8 +61,8 @@ public:
 	bool insertEntity(const Establishment& e);
 	bool insertCategory(const Category& c);
 	bool insertPayment(const Payment& p);
-	tableHeaderAndData obtainDataFromView(TableViews view);
-	tableHeaderAndData obtainDataFromView(TableViews view, const insertVector& data);
+	tableHeaderAndData obtainDataFromView(TableView view);
+	tableHeaderAndData obtainDataFromView(TableView view, const insertVector& data);
 	// Other IO
 	void setShowErrorFunction(errorFunctionSignature func);
 	bool importFromZIP(const std::string& path, std::string& errorMessage);

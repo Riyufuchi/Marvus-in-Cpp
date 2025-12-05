@@ -26,6 +26,7 @@
 #include "../marvus/wxw/PaymentDialog.h"
 // ConsoleLib
 #include "FileUtils.h"
+#include "Library.h"
 // Other
 #include "../../assets/icon.xpm"
 
@@ -43,14 +44,15 @@ enum
 	ID_INSERT_PAYMENT,
 	ID_Import,
 	ID_NewDB,
-	ID_OpenDB
+	ID_OpenDB,
+	ID_TableListView
 };
 
 class MainFrame : public wxFrame
 {
 	private:
 		std::unordered_map<marvus::Table, wxGrid*> grids;
-		std::unordered_map<marvus::Table, std::pair<marvus::TableViews, marvus::insertVector>> selectedViewForTable;
+		std::unordered_map<marvus::Table, std::pair<marvus::TableView, marvus::insertVector>> selectedViewForTable;
 		// Controls
 		wxNotebook* notebook; // Tabbed pane
 		wxChoice* monthChoice;
@@ -61,7 +63,7 @@ class MainFrame : public wxFrame
 		wxMenuBar* createMenuBar();
 		void createToolBar();
 		// Data handlers
-		void loadViewToGrid(marvus::Table table, marvus::TableViews view, marvus::insertVector data = {});
+		void loadViewToGrid(marvus::Table table, marvus::TableView view, marvus::insertVector data = {});
 		void fillGrid(marvus::Table table, const marvus::tableHeaderAndData& data);
 		//
 		void displayError(const std::string& title, const std::string& message);
@@ -77,6 +79,7 @@ class MainFrame : public wxFrame
 		void onInsertTestData(wxCommandEvent& event);
 		void onImport(wxCommandEvent& event);
 		void onDateFilterChanged(wxCommandEvent& event);
+		void onViewChanged(wxCommandEvent& event);
 		//
 		wxDECLARE_EVENT_TABLE();
 	public:
