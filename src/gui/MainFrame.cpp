@@ -12,7 +12,7 @@
 namespace wxw
 {
 
-MainFrame::MainFrame(const wxString& title, consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, title), controller([this](const std::string& title, const std::string& message) { displayError(title, message); })
+MainFrame::MainFrame(const wxString& title, consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, _MARVUS_VERSION), controller([this](const std::string& title, const std::string& message) { displayError(title, message); })
 {
 	wxIcon icon(icon_xpm);
 	SetIcon(icon);
@@ -245,7 +245,7 @@ void MainFrame::onExit(wxCommandEvent&)
 
 void MainFrame::onAbout(wxCommandEvent&)
 {
-	wxMessageBox("This is a wxWidgets application.\n\n" + consolelib::Library::aboutLibrary(), "About", wxOK | wxICON_INFORMATION, this);
+	wxMessageBox(marvus::Controller::aboutApplication(), "About", wxOK | wxICON_INFORMATION, this);
 }
 
 void MainFrame::onInsertPayment(wxCommandEvent& event)

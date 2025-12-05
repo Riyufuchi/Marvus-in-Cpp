@@ -10,16 +10,29 @@
 #ifndef MARVUS_CONTROLLER_H_
 #define MARVUS_CONTROLLER_H_
 
+// wxWidgets
 #include <wx/wx.h>
-
+// Local
 #include "database/MarvusDB.h"
 #include "InlineSQL.h"
-// consolelib
+// ConsoleLib
 #include "ArgumentParser.h"
 #include "FileUtils.h"
+#include "Library.h"
 // miniZ
-
 #include "../external/miniz.h"
+
+#define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
+
+#define _APP_NAME "Marvus in C++"
+#define _APP_VERSION "0.5"
+
+#ifdef DEBUG
+	#define _APP_BETA_VERSION " - beta 1"
+	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION _APP_BETA_VERSION " (debug)"
+#else
+	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION
+#endif
 
 namespace marvus
 {
@@ -67,6 +80,8 @@ public:
 	void setShowErrorFunction(errorFunctionSignature func);
 	bool importFromZIP(const std::string& path, std::string& errorMessage);
 	bool exportToZIP(const std::string& path, std::string& errorMessage);
+	// Static
+	static std::string aboutApplication();
 };
 
 } /* namespace marvus */

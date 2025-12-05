@@ -26,7 +26,6 @@
 #include "../marvus/wxw/PaymentDialog.h"
 // ConsoleLib
 #include "FileUtils.h"
-#include "Library.h"
 // Other
 #include "../../assets/icon.xpm"
 

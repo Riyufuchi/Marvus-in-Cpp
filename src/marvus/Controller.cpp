@@ -245,4 +245,18 @@ void Controller::setShowErrorFunction(errorFunctionSignature func)
 	marvusDB.setShowErrorFunction(func);
 }
 
+std::string Controller::aboutApplication()
+{
+	std::stringstream aboutStringStream;
+	aboutStringStream << "Marvus in C++\n";
+	aboutStringStream << _COPYRIGHT_HEADER;
+	aboutStringStream << "This version was compiled on: " << __DATE__ << " "
+			<< __TIME__ << "\n";
+	aboutStringStream << "C++ version: " << __cplusplus << "\n\n";
+
+	aboutStringStream << consolelib::Library::aboutLibrary();
+	return aboutStringStream.str();
+}
+
+
 } /* namespace marvus */
