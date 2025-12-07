@@ -16,7 +16,7 @@ MarvusDB::MarvusDB(errorFunctionSignature errorHandler) : MarvusDB("database.db"
 {
 }
 
-MarvusDB::MarvusDB(std::string database, errorFunctionSignature errorHandler) : Database(database, "sql/", errorHandler)
+MarvusDB::MarvusDB(std::string database, errorFunctionSignature errorHandler) : Database(database, InlineSQL::SQL_ROOT_FOLDER, errorHandler)
 {
 }
 

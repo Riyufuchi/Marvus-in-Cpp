@@ -16,11 +16,11 @@ Controller::Controller(errorFunctionSignature errorHandler) : marvusDB(DATABASE_
 {
 	this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; marvusDB.setPathToSQL_Scripts(vector[0]); };
 
-	views[TableView::ESTABLISHMENTS_VIEW] = InlineSQL::ESTABLISHMENTS_VIEW;
-	views[TableView::CATEGORIES_VIEW] = InlineSQL::CATEGORIES_VIEW;
-	views[TableView::PAYMENTS_VIEW] = InlineSQL::PAYMENTS_VIEW;
-	views[TableView::PAYMENTS_VIEW_FOR_MONTH] = InlineSQL::PAYMENTS_VIEW_CURR_MONTH;
-	views[TableView::PAYMENT_MACRO_VIEW] = InlineSQL::PAYMENT_MACRO_VIEW;
+	views[TableView::ESTABLISHMENTS_VIEW] = InlineSQL::SELECT_ESTABLISHMENTS;
+	views[TableView::CATEGORIES_VIEW] = InlineSQL::SELECT_CATEGORIES;
+	views[TableView::PAYMENTS_VIEW] = InlineSQL::SELECT_PAYMENTS;
+	views[TableView::PAYMENTS_VIEW_FOR_MONTH] = InlineSQL::SELECT_PAYMENTS_WHERE_MONTH;
+	views[TableView::PAYMENT_MACRO_VIEW] = InlineSQL::SELECT_PAYMENT_MACROS;
 }
 
 void Controller::configure(consolelib::argVector& config)
@@ -42,7 +42,7 @@ bool Controller::initDB(std::string& errorMsg)
 		return true;
 	}
 
-	if (!marvusDB.executeFileSQL(marvusDB.getScriptSQL("init_views.sql")))
+	if (!marvusDB.executeFileSQL(marvusDB.getScriptSQL(InlineSQL::INITIALIZE_VIEWS)))
 	{
 		errorMsg = "Views initialization failed.\nExiting program!";
 		return true;
@@ -62,7 +62,7 @@ bool Controller::connectToDB(const std::string& name)
 
 void Controller::dropDB()
 {
-	marvusDB.executeFileSQL(marvusDB.getScriptSQL("drop_db.sql"));
+	marvusDB.executeFileSQL(marvusDB.getScriptSQL(InlineSQL::DROP_DATABASE));
 	marvusDB.initializeDatabase();
 	marvusDB.initializeViews();
 }

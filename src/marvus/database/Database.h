@@ -14,15 +14,16 @@
 #include <vector>
 #include <functional>
 
-#include "../../external/sqlite/sqlite3.h"
-
-#include "ScriptMap.h"
+// Local - Marvus
 #include "StatementSQL.h"
+#include "../InlineSQL.h"
+// SQLite
+#include "../../external/sqlite/sqlite3.h"
+// ConsoleLib
+#include "ScriptMap.h"
 
 namespace marvus
 {
-
-inline const std::string INIT_DB_SQL = "initialize_database.sql";
 
 using valueForDB = std::variant<std::monostate, int, long long, double, std::string>;
 

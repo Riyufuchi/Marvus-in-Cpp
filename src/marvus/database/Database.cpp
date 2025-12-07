@@ -228,9 +228,9 @@ bool Database::initializeViews()
 
 bool Database::initializeDatabase()
 {
-	if (!sqlScriptFiles.loadScripts(sqlScriptsPath))
+	if (!sqlScriptFiles.loadScriptsRecursive(sqlScriptsPath))
 		return false;
-	return executeFileSQL(sqlScriptFiles.getScript(INIT_DB_SQL));
+	return executeFileSQL(sqlScriptFiles.getScript(InlineSQL::INITIALIZE_DATABASE_SQL));
 }
 
 bool Database::executeFileSQL(const std::string& sqlScript)
