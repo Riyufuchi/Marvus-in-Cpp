@@ -1,0 +1,1 @@
+INSERT INTO PAYMENT_MACROS (establishment_id_key, category_id_key, payment_value, payment_note) VALUES (?, ?, ?, ?);

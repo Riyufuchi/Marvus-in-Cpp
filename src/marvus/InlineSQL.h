@@ -2,7 +2,7 @@
 // File       : InlineSQL.h
 // Author     : riyufuchi
 // Created on : Nov 27, 2025
-// Last edit  : Dec 01, 2025
+// Last edit  : Dec 07, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -21,10 +21,12 @@ public:
 	static inline const std::string CATEGORIES_VIEW = "category_view.sql";
 	static inline const std::string PAYMENTS_VIEW = "payment_view.sql";
 	static inline const std::string PAYMENTS_VIEW_CURR_MONTH = "payment_view_month.sql";
+	static inline const std::string PAYMENT_MACRO_VIEW = "payment_macro_view.sql";
 	// Inserts
 	static inline const std::string INSERT_ESTABLISHMENT = "insert_establishment.sql";
 	static inline const std::string INSERT_CATEGORY = "insert_category.sql";
 	static inline const std::string INSERT_PAYMENT = "insert_payment.sql";
+	static inline const std::string INSERT_PAYMENT_MACRO = "insert_payment_macro.sql";
 	InlineSQL() = default;
 	virtual ~InlineSQL() = default;
 };

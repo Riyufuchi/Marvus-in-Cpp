@@ -2,7 +2,7 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 05, 2025
+// Last edit  : Dec 07, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -12,7 +12,7 @@
 namespace wxw
 {
 
-MainFrame::MainFrame(const wxString& title, consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, _MARVUS_VERSION), controller([this](const std::string& title, const std::string& message) { displayError(title, message); })
+MainFrame::MainFrame(const wxString&, consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, _MARVUS_VERSION), controller([this](const std::string& title, const std::string& message) { displayError(title, message); })
 {
 	wxIcon icon(icon_xpm);
 	SetIcon(icon);
@@ -36,10 +36,12 @@ MainFrame::MainFrame(const wxString& title, consolelib::argVector& config) : wxF
 	wxPanel* establishmentsTab = new wxPanel(notebook);
 	wxPanel* paymentsTab = new wxPanel(notebook);
 	wxPanel* categoriesTab = new wxPanel(notebook);
+	wxPanel* macrosTab = new wxPanel(notebook);
 	
 	notebook->AddPage(establishmentsTab, "Establishments");
 	notebook->AddPage(categoriesTab, "Categories");
 	notebook->AddPage(paymentsTab, "Payments", true);
+	notebook->AddPage(macrosTab, "Payment macros");
 
 	// Create a grid and add to tab1
 	wxGrid* tempGrid = FactoryWxW::newGrid(establishmentsTab, wxID_ANY);
@@ -56,19 +58,25 @@ MainFrame::MainFrame(const wxString& title, consolelib::argVector& config) : wxF
 	categoriesTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
 	grids[marvus::Table::CATEGORIES] = tempGrid;
 
+	// Tab 3
+	tempGrid = FactoryWxW::newGrid(macrosTab, wxID_ANY);
+	macrosTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
+	grids[marvus::Table::PAYMENT_MACROS] = tempGrid;
+
 	for (const auto& grid : grids)
 	{
 		ToolsWxW::updateFontSizeInGrid(grid.second, 10);
 	}
-
 	// Layout the notebook
 	SetSizerAndFit(FactoryWxW::newMaxSizer(notebook));
 	// Attempt to load data
-	loadViewToGrid(marvus::Table::ESTABLISHMENTS, marvus::TableView::ESTABLISHMENTS_VIEW);
-	loadViewToGrid(marvus::Table::CATEGORIES, marvus::TableView::CATEGORIES_VIEW);
+	selectedViewForTable[marvus::Table::ESTABLISHMENTS] = {marvus::TableView::ESTABLISHMENTS_VIEW, {}};
+	selectedViewForTable[marvus::Table::CATEGORIES] = {marvus::TableView::CATEGORIES_VIEW, {}};
+	selectedViewForTable[marvus::Table::PAYMENT_MACROS] = {marvus::TableView::PAYMENT_MACRO_VIEW, {}};
 	monthChoice->SetSelection(0);
 	wxCommandEvent e;
 	onDateFilterChanged(e);
+	onRefreshWindow(e);
 	SetSize(800, 600);
 }
 

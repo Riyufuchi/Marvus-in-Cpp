@@ -2,7 +2,7 @@
 // File       : Controller.h
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 04, 2025
+// Last edit  : Dec 07, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -15,17 +15,16 @@
 // Local
 #include "database/MarvusDB.h"
 #include "InlineSQL.h"
+#include "tools/ToolsIO.h"
 // ConsoleLib
 #include "ArgumentParser.h"
 #include "FileUtils.h"
 #include "Library.h"
-// miniZ
-#include "../external/miniz.h"
 
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "0.5"
+#define _APP_VERSION "0.6"
 
 #ifdef DEBUG
 	#define _APP_BETA_VERSION " - beta 1"
@@ -42,7 +41,8 @@ enum class Table
 {
 	PAYMENTS,
 	ESTABLISHMENTS,
-	CATEGORIES
+	CATEGORIES,
+	PAYMENT_MACROS
 };
 
 enum class TableView
@@ -50,7 +50,8 @@ enum class TableView
 	PAYMENTS_VIEW,
 	ESTABLISHMENTS_VIEW,
 	CATEGORIES_VIEW,
-	PAYMENTS_VIEW_FOR_MONTH
+	PAYMENTS_VIEW_FOR_MONTH,
+	PAYMENT_MACRO_VIEW
 };
 
 class Controller
@@ -59,9 +60,6 @@ private:
 	std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argumentMethods;
 	std::unordered_map<marvus::TableView, std::string> views;
 	MarvusDB marvusDB;
-	bool importEnties(const std::string& source);
-	bool importCategories(const std::string& source);
-	bool importData(const std::string& source);
 public:
 	Controller(errorFunctionSignature errorHandler = [](const std::string& title, const std::string& message) { std::cerr << title << ": " << message << "\n"; });
 	virtual ~Controller() = default;
@@ -74,6 +72,7 @@ public:
 	bool insertEntity(const Establishment& e);
 	bool insertCategory(const Category& c);
 	bool insertPayment(const Payment& p);
+	bool insertPaymentMacro(const PaymentMacro& pm);
 	tableHeaderAndData obtainDataFromView(TableView view);
 	tableHeaderAndData obtainDataFromView(TableView view, const insertVector& data);
 	// Other IO

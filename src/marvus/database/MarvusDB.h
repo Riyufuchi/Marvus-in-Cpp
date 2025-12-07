@@ -2,7 +2,7 @@
 // File       : MarvusDB.h
 // Author     : riyufuchi
 // Created on : Nov 25, 2025
-// Last edit  : Dec 04, 2025
+// Last edit  : Dec 07, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -39,6 +39,15 @@ struct Payment
 	std::string note { "" };
 };
 
+struct PaymentMacro
+{
+	int id { 0 };
+	int ent_key { 0 };
+	int category_key { 0 };
+	std::string value { "0" };
+	std::string note { "" };
+};
+
 class MarvusDB : public Database
 {
 public:
@@ -48,6 +57,7 @@ public:
 	bool insertEstablishment(const Establishment& establishment);
 	bool insertCategory(const Category& category);
 	bool insertPayment(const Payment& payment);
+	bool insertPaymentMacro(const PaymentMacro& paymentMacro);
 };
 
 } /* namespace marvus */

@@ -2,7 +2,7 @@
 // File       : Database.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 04, 2025
+// Last edit  : Dec 07, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -40,10 +40,9 @@ class Database
 		consolelib::ScriptMap sqlScriptFiles;
 		sqlite3* db; // SQLite database connection
 		std::string sqlScriptsPath;
-		int result;
 		char* c_ErrorMessage;
 		errorFunctionSignature showError;
-		bool checkSuccessFor(const std::string& action, int expectedResult = SQLITE_OK);
+		bool checkSuccess(int result, int expectedResult = SQLITE_OK);
 	private:
 		tableRowVector tableData;
 		int rowCallback(void* data, int argc, char** argv, char** azColName); // Callback function to handle each row of the result

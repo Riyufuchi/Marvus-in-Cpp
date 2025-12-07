@@ -2,7 +2,7 @@
 // File       : Database.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 04, 2025
+// Last edit  : Dec 07, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -15,10 +15,11 @@ Database::Database(std::string databaseFile, errorFunctionSignature showError) :
 {
 }
 
-Database::Database(std::string databaseFile, std::string sqlScriptsPath, errorFunctionSignature showError) : sqlScriptsPath(sqlScriptsPath), result(0),
-	c_ErrorMessage(nullptr), showError(showError)
+Database::Database(std::string databaseFile, std::string sqlScriptsPath, errorFunctionSignature showError) : sqlScriptsPath(sqlScriptsPath), c_ErrorMessage(nullptr),
+		showError(showError)
 {
-	sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr);
+	int result = sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr);
+	checkSuccess(result);
 }
 
 Database::~Database()
@@ -41,6 +42,7 @@ int Database::rowCallback(void* /*data*/, int argc, char** argv, char** /*azColN
 int Database::bindValuesToSQL(const insertVector& data, StatementSQL& stmtSQL)
 {
 	int x = 1;
+	static int result;
 	for (const insertData& dataToInsert : data)
 	{
 		// Handle NULL early
@@ -78,7 +80,7 @@ int Database::bindValuesToSQL(const insertVector& data, StatementSQL& stmtSQL)
 			}, dataToInsert);
 		}
 
-		if (checkSuccessFor("SQL binding"))
+		if (checkSuccess(result))
 			return 0;
 		x++;
 	}
@@ -87,6 +89,7 @@ int Database::bindValuesToSQL(const insertVector& data, StatementSQL& stmtSQL)
 
 int Database::insertNewData(const insertVector& data, const std::string& insertSQL)
 {
+	static int result;
 	if (insertSQL == "")
 	{
 		std::cerr << "Invalid or missing SQL statement.\n";
@@ -96,14 +99,14 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 	StatementSQL stmtSQL;
 
 	result = sqlite3_prepare_v2(db, insertSQL.c_str(), -1, stmtSQL, nullptr);
-	if (checkSuccessFor("Statement preparation"))
+	if (checkSuccess(result))
 		return 0;
 
 
 	bindValuesToSQL(data, stmtSQL);
 
 	result = sqlite3_step(stmtSQL);
-	if (checkSuccessFor("SQL execution of insert", SQLITE_DONE))
+	if (checkSuccess(result, SQLITE_DONE))
 		return 0;
 
 	return sqlite3_last_insert_rowid(db);
@@ -112,12 +115,12 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 tableRowVector Database::obtainTableData(const std::string& selectSQL)
 {
 	tableData.clear();
-	result = sqlite3_exec(db, selectSQL.c_str(),
+	static int result = sqlite3_exec(db, selectSQL.c_str(),
 		[](void* data, int argc, char** argv, char** azColName) -> int {
 			return static_cast<Database*>(data)->rowCallback(data, argc, argv, azColName);
 		},
 		this, &c_ErrorMessage);
-	if (checkSuccessFor("SQL execution of SELECT", SQLITE_OK))
+	if (checkSuccess(result))
 		tableData.clear();
 	return tableData;
 }
@@ -197,11 +200,11 @@ tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL
 	return tableHeaderAndData(header, tableData);
 }
 
-bool Database::checkSuccessFor(const std::string& action, int expectedResult)
+bool Database::checkSuccess(int result, int expectedResult)
 {
 	if (result != expectedResult)
 	{
-		showError(action, sqlite3_errmsg(db));
+		showError("SQLite  error", sqlite3_errmsg(db));
 		return true;
 	}
 	return false;
@@ -211,8 +214,7 @@ bool Database::reconnect(const std::string& databaseFile)
 {
 	if (db)
 		sqlite3_close(db);
-	result = sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr);
-	return checkSuccessFor("Database connection");
+	return checkSuccess(sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr));
 }
 
 bool Database::initializeViews()
@@ -245,8 +247,7 @@ bool Database::executeFileSQL(const std::string& sqlScript)
 
 bool Database::prepareScriptSQL(const std::string& sql, StatementSQL& statement, const insertVector& data)
 {
-	result = sqlite3_prepare_v2(db, sql.c_str(), -1, statement, nullptr);
-	if (checkSuccessFor("Statement preparation"))
+	if (checkSuccess(sqlite3_prepare_v2(db, sql.c_str(), -1, statement, nullptr)))
 	{
 		return false;
 	}

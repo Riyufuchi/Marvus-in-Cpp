@@ -2,7 +2,7 @@
 // File       : MarvusDB.cpp
 // Author     : riyufuchi
 // Created on : Nov 25, 2025
-// Last edit  : Dec 04, 2025
+// Last edit  : Dec 07, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -43,6 +43,18 @@ bool MarvusDB::insertPayment(const Payment& payment)
 	data.emplace_back(payment.note);
 
 	return insertNewData(data, SQL_INSERT_PAYMENT);
+}
+
+bool MarvusDB::insertPaymentMacro(const PaymentMacro& paymentMacro)
+{
+	static const std::string SQL_INSERT_PAYMENT_MACRO = MarvusDB::sqlScriptFiles.getScript(InlineSQL::INSERT_PAYMENT_MACRO);
+	insertVector data;
+	data.emplace_back(paymentMacro.ent_key);
+	data.emplace_back(paymentMacro.category_key);
+	data.emplace_back(paymentMacro.value);
+	data.emplace_back(paymentMacro.note);
+
+	return insertNewData(data, SQL_INSERT_PAYMENT_MACRO);
 }
 
 } /* namespace marvus */
