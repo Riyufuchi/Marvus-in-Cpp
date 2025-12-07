@@ -14,7 +14,7 @@
 #include <string>
 #include <format>
 
-#define _VERSION "6.9c"
+#define _VERSION "6.9d"
 
 namespace consolelib
 {
