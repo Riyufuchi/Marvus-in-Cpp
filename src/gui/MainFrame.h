@@ -18,12 +18,13 @@
 #include <wx/notebook.h>
 #include <wx/textfile.h>
 #include <wx/textdlg.h>
-// Cutom wxWidgets tools
+// Custom wxWidgets tools
 #include "../wxw/FactoryWxW.h"
 #include "../wxw/ToolsWxW.h"
 // Local
 #include "../marvus/Controller.h"
 #include "../marvus/wxw/PaymentDialog.h"
+#include "../marvus/wxw/FileTransferDialog.h"
 // ConsoleLib
 #include "FileUtils.h"
 // Other
@@ -44,7 +45,9 @@ enum
 	ID_Import,
 	ID_NewDB,
 	ID_OpenDB,
-	ID_TableListView
+	ID_TableListView,
+	ID_SendFile,
+	ID_RecieveFile
 };
 
 class MainFrame : public wxFrame
@@ -79,6 +82,8 @@ class MainFrame : public wxFrame
 		void onImport(wxCommandEvent& event);
 		void onDateFilterChanged(wxCommandEvent& event);
 		void onViewChanged(wxCommandEvent& event);
+		void onSendFile(wxCommandEvent& event);
+		void onRecieveFile(wxCommandEvent& event);
 		//
 		wxDECLARE_EVENT_TABLE();
 	public:

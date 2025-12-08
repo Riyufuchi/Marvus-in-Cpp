@@ -144,6 +144,10 @@ wxMenuBar* MainFrame::createMenuBar()
 	wxMenu* overviews = new wxMenu();
 	overviews->Append(ID_TableListView, "&Table list");
 
+	wxMenu* network = new wxMenu();
+	network->Append(ID_SendFile, "&Send data");
+	network->Append(ID_RecieveFile, "&Recieve data");
+
 	wxMenu* tools = new wxMenu();
 	tools->Append(ID_NotImplementedYet, "&Entity manager");
 
@@ -156,6 +160,7 @@ wxMenuBar* MainFrame::createMenuBar()
 	menuBar->Append(fileMenu, "&File");
 	menuBar->Append(payment, "&Payment");
 	menuBar->Append(overviews, "&Overview mode");
+	menuBar->Append(network, "&Network");
 	menuBar->Append(tools, "&Tools");
 	menuBar->Append(window, "&Window");
 	menuBar->Append(helpMenu, "&Help");
@@ -316,6 +321,23 @@ void MainFrame::onInsertTestData(wxCommandEvent& event)
 	onRefreshWindow(event);
 }
 
+void MainFrame::onSendFile(wxCommandEvent& event)
+{
+	marvus::FileTransferDialog networkDialog(this, "Send data");
+	wxString ipAddress = "192.168.0.100";
+	wxTextEntryDialog taxtDialog(this, "IPv4 address:", "Network setup", ipAddress);
+	if (taxtDialog.ShowModal() == wxID_OK)
+	{
+		networkDialog.startClient(taxtDialog.GetValue(), 6969, "data.zip");
+	}
+}
+
+void MainFrame::onRecieveFile(wxCommandEvent& event)
+{
+	marvus::FileTransferDialog dialog(this, "Recieve data");
+	dialog.startServer(6969, "recievedData.zip");
+}
+
 void MainFrame::onLoadDB(wxCommandEvent& event)
 {
 	wxFileDialog openFileDialog(this, "Select a database file", "", "", "Database |*.db", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
@@ -381,6 +403,8 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_NewDB, MainFrame::onNewDB)
 	EVT_MENU(ID_OpenDB, MainFrame::onLoadDB)
 	EVT_MENU(ID_TableListView, MainFrame::onViewChanged)
+	EVT_MENU(ID_SendFile, MainFrame::onSendFile)
+	EVT_MENU(ID_RecieveFile, MainFrame::onRecieveFile)
 wxEND_EVENT_TABLE()
 
 }

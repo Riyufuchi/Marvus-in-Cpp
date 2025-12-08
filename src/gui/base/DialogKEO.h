@@ -20,8 +20,9 @@ class DialogKEO : public wxDialog
 {
 private:
 	bool confirmed;
+protected:
 	void onOK(wxCommandEvent& event);
-	void onCancel(wxCommandEvent& event);
+	virtual void onCancel(wxCommandEvent& event);
 public:
 	DialogKEO(wxWindow* parent, std::string title);
 	virtual ~DialogKEO();

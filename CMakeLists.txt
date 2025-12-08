@@ -105,6 +105,7 @@ endif()
 
 # Link everything
 target_include_directories(Marvus PRIVATE ${CONSOLE_LIB_DIR}/inc)
+target_include_directories(Marvus PRIVATE libs/boost_1_89_0)
 
 target_link_libraries(Marvus PRIVATE ConsoleLib)
 

@@ -4,7 +4,6 @@
 - [Used libraries](#used-libraries)
 - [Documentation](#documentation)
 - [Compilation](#compilation)
-- [Project guide](#project-guide)
 - [Donate](#donate)
 
 ## About
@@ -21,6 +20,7 @@ This project is for learning how to work with wxWidgets and database. It is an u
 | [SQLite](https://www.sqlite.org/) | Database | ✅ |
 | [ConsoleLib](https://github.com/Riyufuchi/ConsoleLib) | Console & utils stuff | ✅ |
 | [Miniz](https://github.com/richgel999/miniz) | Zip file | ✅ |
+| [Boost](https://www.boost.org/) | Networking and precise decimals... | ✅ |
 
 ## Documentation
 
@@ -55,15 +55,19 @@ This project is for learning how to work with wxWidgets and database. It is an u
 | Ubuntu | g++ 15.2.0 |
 | Windows 10 | MSVC 19.50.35719.0 |
 
-### Installing WxWidgets
+### Libraries
 
-#### Linux
+#### wxWidgets
 
    ```bash
+   # On Debian based systems
    sudo apt install libwxgtk3.2-dev
+   
+   # On Windows
+   # Just extract the zip file in libs folder.
    ```
 
-#### Windows
+#### Boost
 
    ```bash
    # Just extract the zip file in libs folder.
@@ -78,10 +82,6 @@ This project is for learning how to work with wxWidgets and database. It is an u
    cmake -B build -S .
    cmake --build build --config Release
    ```
-
-## Project guide
-
-- .hpp is used for single file code, that don't have coresponfing .cpp file
 
 ## Donate
 
