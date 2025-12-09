@@ -155,8 +155,8 @@ wxMenuBar* MainFrame::createMenuBar()
 	menuBar->Append(fileMenu, "&File");
 	menuBar->Append(payment, "&Payment");
 	menuBar->Append(overviews, "&Overview mode");
-	menuBar->Append(network, "&Network");
 	menuBar->Append(tools, "&Tools");
+	menuBar->Append(network, "&Network");
 	menuBar->Append(window, "&Window");
 	menuBar->Append(helpMenu, "&Help");
 	menuBar->Append(debug, "&Debug");
