@@ -2,7 +2,7 @@
 // File       : FileTransferDialog.cpp
 // Author     : riyufuchi
 // Created on : Dec 8, 2025
-// Last edit  : Dec 8, 2025
+// Last edit  : Dec 9, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -45,9 +45,9 @@ void FileTransferDialog::OnUpdateProgress(wxThreadEvent& event)
 void FileTransferDialog::OnClose(wxCloseEvent& event)
 {
 	stop_flag = true; // signal thread to stop
-	if(network_thread_.joinable())
+	if(network_thread.joinable())
 	{
-		network_thread_.join(); // wait for thread to finish
+		network_thread.join(); // wait for thread to finish
 	}
 	Destroy();
 }
@@ -55,8 +55,11 @@ void FileTransferDialog::OnClose(wxCloseEvent& event)
 void FileTransferDialog::startServer(unsigned short port, const wxString& output_file)
 {
 	stop_flag = false; // reset stop flag
-	network_thread = std::thread([&]() {
-		clientServerTool.runFileServer(port, std::string(output_file.mb_str()), stop_flag,
+
+	std::string file = output_file.ToStdString();
+
+	network_thread = std::thread([file, port, this]() {
+		clientServerTool.runFileServer(port, file, stop_flag,
 		[this](size_t bytes_received, size_t total_bytes) {
 			// Send progress to GUI
 			int percent = static_cast<int>((bytes_received * 100) / total_bytes);
@@ -71,8 +74,13 @@ void FileTransferDialog::startClient(const wxString& server_ip, unsigned short p
 {
 	stop_flag = false;
 
-	network_thread_ = std::thread([&]() {
-		clientServerTool.runFileClient(std::string(server_ip.mb_str()), port, std::string(file_path.mb_str()), stop_flag,
+	std::string ip = server_ip.ToStdString();
+	std::string file = file_path.ToStdString();
+	unsigned short portCopy = port;
+
+	network_thread = std::thread([ip, portCopy, file, this]()
+	{
+		clientServerTool.runFileClient(ip, portCopy, file, stop_flag,
 		[this](size_t bytes_sent, size_t total_bytes)
 		{
 			int percent = static_cast<int>((bytes_sent * 100) / total_bytes);

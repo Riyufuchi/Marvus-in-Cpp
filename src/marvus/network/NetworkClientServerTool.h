@@ -2,7 +2,7 @@
 // File       : NetworkClientServerTool.h
 // Author     : riyufuchi
 // Created on : Dec 8, 2025
-// Last edit  : Dec 8, 2025
+// Last edit  : Dec 9, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -13,8 +13,12 @@
 #include <string>
 #include <atomic>
 #include <fstream>
+#include <iostream>
 // Boost
-#include <IncludeBoost.hpp>
+#include "boost/asio.hpp"
+#include "boost/endian.hpp"
+#include "boost/system.hpp"
+#include "boost/version.hpp"
 
 namespace marvus
 {

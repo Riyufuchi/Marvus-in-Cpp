@@ -2,7 +2,7 @@
 // File       : FileTransferDialog.h
 // Author     : riyufuchi
 // Created on : Dec 8, 2025
-// Last edit  : Dec 8, 2025
+// Last edit  : Dec 9, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -27,7 +27,6 @@ private:
 	std::atomic_bool stop_flag{false};
 	wxGauge* progress_bar_;
 	wxStaticText* status_text_;
-	std::thread network_thread_;
 	NetworkClientServerTool clientServerTool;
 	void OnUpdateProgress(wxThreadEvent& event);
 	void OnClose(wxCloseEvent& event);

@@ -80,11 +80,6 @@ MainFrame::MainFrame(const wxString&, consolelib::argVector& config) : wxFrame(N
 	SetSize(800, 600);
 }
 
-void MainFrame::displayError(const std::string& title, const std::string& message)
-{
-	wxMessageBox(message, title, wxICON_ERROR);
-}
-
 MainFrame::~MainFrame()
 {
 	Unbind(wxEVT_MENU, &MainFrame::onExit, this, ID_Exit);
@@ -167,6 +162,11 @@ wxMenuBar* MainFrame::createMenuBar()
 	menuBar->Append(debug, "&Debug");
 	
 	return menuBar;
+}
+
+void MainFrame::displayError(const std::string& title, const std::string& message)
+{
+	wxMessageBox(message, title, wxICON_ERROR);
 }
 
 void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& tableData)
@@ -325,17 +325,19 @@ void MainFrame::onSendFile(wxCommandEvent& event)
 {
 	marvus::FileTransferDialog networkDialog(this, "Send data");
 	wxString ipAddress = "192.168.0.100";
-	wxTextEntryDialog taxtDialog(this, "IPv4 address:", "Network setup", ipAddress);
-	if (taxtDialog.ShowModal() == wxID_OK)
+	wxTextEntryDialog textDialog(this, "IPv4 address:", "Network setup", ipAddress);
+	if (textDialog.ShowModal() == wxID_OK)
 	{
-		networkDialog.startClient(taxtDialog.GetValue(), 6969, "data.zip");
+		networkDialog.startClient(textDialog.GetValue(), 6969, "data.zip");
+		networkDialog.ShowModal();
 	}
 }
 
 void MainFrame::onRecieveFile(wxCommandEvent& event)
 {
-	marvus::FileTransferDialog dialog(this, "Recieve data");
-	dialog.startServer(6969, "recievedData.zip");
+	marvus::FileTransferDialog networkDialog(this, "Receive data");
+	networkDialog.startServer(6969, "recievedData.zip");
+	networkDialog.ShowModal();
 }
 
 void MainFrame::onLoadDB(wxCommandEvent& event)

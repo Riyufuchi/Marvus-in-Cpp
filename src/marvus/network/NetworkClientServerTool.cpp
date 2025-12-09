@@ -2,7 +2,7 @@
 // File       : NetworkClientServerTool.cpp
 // Author     : riyufuchi
 // Created on : Dec 8, 2025
-// Last edit  : Dec 8, 2025
+// Last edit  : Dec 9, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -58,17 +58,34 @@ void NetworkClientServerTool::runFileServer(unsigned short port, const std::stri
 
 void NetworkClientServerTool::runFileClient(const std::string& server_ip, unsigned short port, const std::string& file_path, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback)
 {
-	using namespace boost::asio;
-	io_context io_context;
-	ip::tcp::socket socket(io_context);
-	socket.connect(ip::tcp::endpoint(ip::make_address(server_ip), port));
+	boost::asio::io_context io_context;
+	boost::asio::ip::tcp::socket socket(io_context);
+
+	boost::system::error_code ec;
+
+	auto addr = boost::asio::ip::make_address(server_ip, ec);
+	if (ec)
+	{
+		std::cerr << "Invalid IP address '" << server_ip << "': " << ec.message() << "\n";
+		return;
+	}
+
+	boost::asio::ip::tcp::endpoint ep(addr, port);
+	socket.connect(ep, ec);
+	if (ec)
+	{
+		std::cerr << "Connect failed: " << ec.message() << "\n";
+		return;
+	}
 
 	std::ifstream in(file_path, std::ios::binary | std::ios::ate);
+	if(!in)
+		return;
 	size_t total_file_size = in.tellg();
 	in.seekg(0);
 
 	uint64_t network_file_size = boost::endian::native_to_big(total_file_size);
-	write(socket, buffer(&network_file_size, sizeof(network_file_size)));
+	boost::asio::write(socket, boost::asio::buffer(&network_file_size, sizeof(network_file_size)));
 
 	char buffer_data[4096];
 	size_t bytes_sent = 0;
@@ -80,7 +97,7 @@ void NetworkClientServerTool::runFileClient(const std::string& server_ip, unsign
 		if (n <= 0)
 			break;
 
-		write(socket, buffer(buffer_data, n));
+		boost::asio::write(socket, boost::asio::buffer(buffer_data, n));
 		bytes_sent += n;
 
 		if (progress_callback)

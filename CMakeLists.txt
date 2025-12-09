@@ -73,6 +73,19 @@ else()
 	include(${wxWidgets_USE_FILE})
 endif() 
 
+#
+# Boost
+#
+set(boost_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost_1_89_0)
+set(boost_INCLUDE_DIRS ${boost_ROOT})
+if (WIN32)
+	set(boost_LIB_DIR ${boost_ROOT}/windows)
+	file(GLOB boost_LIBRARIES "${boost_LIB_DIR}/*.lib")
+else()
+	set(boost_LIB_DIR ${boost_ROOT}/linux)
+	file(GLOB boost_LIBRARIES "${boost_LIB_DIR}/*.a")
+	include_directories(${boost_INCLUDE_DIRS})
+endif() 
 
 #
 # Marvus-in-Cpp
@@ -105,12 +118,11 @@ endif()
 
 # Link everything
 target_include_directories(Marvus PRIVATE ${CONSOLE_LIB_DIR}/inc)
-target_include_directories(Marvus PRIVATE libs/boost_1_89_0)
+target_include_directories(Marvus PRIVATE ${boost_INCLUDE_DIRS})
 
 target_link_libraries(Marvus PRIVATE ConsoleLib)
-
-# wxWidgets
 target_link_libraries(Marvus PRIVATE ${wxWidgets_LIBRARIES})
+target_link_libraries(Marvus PRIVATE ${boost_LIBRARIES})
 
 if (WIN32)
 	target_link_libraries(Marvus PRIVATE
