@@ -76,6 +76,19 @@ endif()
 #
 # Boost
 #
+# Force static runtime for MSVC
+if(MSVC)
+	foreach(flag_var
+		CMAKE_C_FLAGS_RELEASE CMAKE_C_FLAGS_RELWITHDEBINFO
+		CMAKE_C_FLAGS_MINSIZEREL CMAKE_C_FLAGS_DEBUG
+		CMAKE_CXX_FLAGS_RELEASE CMAKE_CXX_FLAGS_RELWITHDEBINFO
+		CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_DEBUG)
+		if(${flag_var} MATCHES "/MD")
+			string(REGEX REPLACE "/MD" "/MT" ${flag_var} "${${flag_var}}")
+		endif()
+	endforeach()
+endif()
+
 set(boost_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost_1_89_0)
 set(boost_INCLUDE_DIRS ${boost_ROOT})
 if (WIN32)
@@ -122,6 +135,9 @@ target_include_directories(Marvus PRIVATE ${boost_INCLUDE_DIRS})
 
 target_link_libraries(Marvus PRIVATE ConsoleLib)
 target_link_libraries(Marvus PRIVATE ${wxWidgets_LIBRARIES})
+set(Boost_USE_STATIC_LIBS ON)
+set(Boost_USE_MULTITHREADED ON)
+set(Boost_USE_STATIC_RUNTIME ON)
 target_link_libraries(Marvus PRIVATE ${boost_LIBRARIES})
 
 if (WIN32)
