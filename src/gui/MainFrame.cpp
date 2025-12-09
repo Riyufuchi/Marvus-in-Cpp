@@ -226,7 +226,7 @@ void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableView view, marv
 
 // Events
 
-void MainFrame::onViewChanged(wxCommandEvent& event)
+void MainFrame::onViewChanged(wxCommandEvent&)
 {
 	loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableView::PAYMENTS_VIEW);
 }
@@ -321,9 +321,9 @@ void MainFrame::onInsertTestData(wxCommandEvent& event)
 	onRefreshWindow(event);
 }
 
-void MainFrame::onSendFile(wxCommandEvent& event)
+void MainFrame::onSendFile(wxCommandEvent&)
 {
-	marvus::FileTransferDialog networkDialog(this, "Send data");
+	marvus::FileTransferDialog networkDialog(this, "Send data", [this](const std::string& title, const std::string& message) { displayError(title, message); });
 	wxString ipAddress = "192.168.0.100";
 	wxTextEntryDialog textDialog(this, "IPv4 address:", "Network setup", ipAddress);
 	if (textDialog.ShowModal() == wxID_OK)
@@ -335,7 +335,7 @@ void MainFrame::onSendFile(wxCommandEvent& event)
 
 void MainFrame::onRecieveFile(wxCommandEvent& event)
 {
-	marvus::FileTransferDialog networkDialog(this, "Receive data");
+	marvus::FileTransferDialog networkDialog(this, "Receive data", [this](const std::string& title, const std::string& message) { displayError(title, message); });
 	networkDialog.startServer(6969, "recievedData.zip");
 	networkDialog.ShowModal();
 }

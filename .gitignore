@@ -7,7 +7,9 @@ build/
 test
 libs-git
 libs/wxWidgets
-libs/boost_1_89_0
+libs/boost_1_89_0/boost
+libs/boost_1_89_0/linux
+libs/boost_1_89_0/windows
 
 # Utils
 *.drawio

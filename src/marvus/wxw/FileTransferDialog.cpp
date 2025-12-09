@@ -12,7 +12,7 @@
 namespace marvus
 {
 
-FileTransferDialog::FileTransferDialog(wxWindow* parent, const wxString& title) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(300, 300))
+FileTransferDialog::FileTransferDialog(wxWindow* parent, const wxString& title, errorFunctionSignature errorCallback) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(300, 300)), clientServerTool(errorCallback)
 {
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
@@ -31,6 +31,7 @@ FileTransferDialog::FileTransferDialog(wxWindow* parent, const wxString& title) 
 
 FileTransferDialog::~FileTransferDialog()
 {
+	safeExit();
 }
 
 void FileTransferDialog::OnUpdateProgress(wxThreadEvent& event)
@@ -44,13 +45,19 @@ void FileTransferDialog::OnUpdateProgress(wxThreadEvent& event)
 
 void FileTransferDialog::OnClose(wxCloseEvent& event)
 {
+	safeExit();
+}
+
+void FileTransferDialog::safeExit()
+{
 	stop_flag = true; // signal thread to stop
-	if(network_thread.joinable())
+	if (network_thread.joinable())
 	{
 		network_thread.join(); // wait for thread to finish
 	}
 	Destroy();
 }
+
 
 void FileTransferDialog::startServer(unsigned short port, const wxString& output_file)
 {

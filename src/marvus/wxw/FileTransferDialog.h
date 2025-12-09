@@ -30,8 +30,9 @@ private:
 	NetworkClientServerTool clientServerTool;
 	void OnUpdateProgress(wxThreadEvent& event);
 	void OnClose(wxCloseEvent& event);
+	void safeExit();
 public:
-	FileTransferDialog(wxWindow* parent, const wxString& title);
+	FileTransferDialog(wxWindow* parent, const wxString& title, errorFunctionSignature errorCallback);
 	virtual ~FileTransferDialog();
 	void startServer(unsigned short port, const wxString& output_file);
 	void startClient(const wxString& server_ip, unsigned short port, const wxString& file_path);

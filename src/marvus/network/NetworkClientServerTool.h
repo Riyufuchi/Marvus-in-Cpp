@@ -19,14 +19,18 @@
 #include "boost/endian.hpp"
 #include "boost/system.hpp"
 #include "boost/version.hpp"
+// Local - Marvus
+#include "../database/Database.h"
 
 namespace marvus
 {
 
 class NetworkClientServerTool
 {
+private:
+	errorFunctionSignature errorCallback;
 public:
-	NetworkClientServerTool();
+	NetworkClientServerTool(errorFunctionSignature errorCallback);
 	virtual ~NetworkClientServerTool();
 	void runFileServer(unsigned short port, const std::string& output_file, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback);
 	void runFileClient(const std::string& server_ip, unsigned short port, const std::string& file_path, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback);

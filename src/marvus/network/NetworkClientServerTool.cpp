@@ -12,7 +12,7 @@
 namespace marvus
 {
 
-NetworkClientServerTool::NetworkClientServerTool()
+NetworkClientServerTool::NetworkClientServerTool(errorFunctionSignature errorCallback) : errorCallback(errorCallback)
 {
 }
 
@@ -66,7 +66,7 @@ void NetworkClientServerTool::runFileClient(const std::string& server_ip, unsign
 	auto addr = boost::asio::ip::make_address(server_ip, ec);
 	if (ec)
 	{
-		std::cerr << "Invalid IP address '" << server_ip << "': " << ec.message() << "\n";
+		errorCallback("Network error", "Invalid IP address '" + server_ip + "': " + ec.message());
 		return;
 	}
 
@@ -74,13 +74,16 @@ void NetworkClientServerTool::runFileClient(const std::string& server_ip, unsign
 	socket.connect(ep, ec);
 	if (ec)
 	{
-		std::cerr << "Connect failed: " << ec.message() << "\n";
+		errorCallback("Network error", "Connect failed: " + ec.message());
 		return;
 	}
 
 	std::ifstream in(file_path, std::ios::binary | std::ios::ate);
 	if(!in)
+	{
+		errorCallback("Network error", "Invalid file for transfer");
 		return;
+	}
 	size_t total_file_size = in.tellg();
 	in.seekg(0);
 
