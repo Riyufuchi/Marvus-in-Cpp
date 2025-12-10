@@ -2,7 +2,7 @@
 // File       : Controller.h
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 10, 2025
+// Last edit  : Dec 11, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -24,7 +24,7 @@
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "1.1 - Alpha"
+#define _APP_VERSION "1.2 - Alpha"
 
 #ifdef DEBUG
 	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION " (debug)"
@@ -72,8 +72,7 @@ public:
 	bool insertCategory(const Category& c);
 	bool insertPayment(const Payment& p);
 	bool insertPaymentMacro(const PaymentMacro& pm);
-	tableHeaderAndData obtainDataFromView(TableView view);
-	tableHeaderAndData obtainDataFromView(TableView view, const insertVector& data);
+	tableHeaderAndData obtainDataFromView(TableView view, const insertVector& data = {});
 	// Other IO
 	void setShowErrorFunction(errorFunctionSignature func);
 	bool importFromZIP(const std::string& path, std::string& errorMessage);

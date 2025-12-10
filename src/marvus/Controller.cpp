@@ -2,7 +2,7 @@
 // File       : Controller.cpp
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 10, 2025
+// Last edit  : Dec 11, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -74,15 +74,6 @@ void Controller::dropDB()
 	marvusDB.executeFileSQL(marvusDB.getScriptSQL(InlineSQL::DROP_DATABASE));
 	marvusDB.initializeDatabase();
 	marvusDB.initializeViews();
-}
-
-tableHeaderAndData Controller::obtainDataFromView(TableView view)
-{
-	//selectedViews[table] = view;
-	auto viewPair = views.find(view);
-	if (viewPair == views.end())
-		return {};
-	return marvusDB.obtainFromFilterView(marvusDB.getScriptSQL(viewPair->second));
 }
 
 tableHeaderAndData Controller::obtainDataFromView(TableView view, const insertVector& data)

@@ -12,8 +12,8 @@
 
 #include <wx/wx.h>
 
-#include "MainFrame.h"
 #include "ArgumentParser.h"
+#include "../wxWidgets/MainFrame.h"
 
 namespace wxw
 {

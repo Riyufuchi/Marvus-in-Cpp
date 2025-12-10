@@ -7,7 +7,7 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "ManagerApp.h"
+#include "../wxWidgets/ManagerApp.h"
 
 namespace wxw
 {
