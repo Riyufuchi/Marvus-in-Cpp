@@ -2,7 +2,7 @@
 // File       : Controller.h
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 07, 2025
+// Last edit  : Dec 10, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -24,7 +24,7 @@
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "0.8a"
+#define _APP_VERSION "0.9a"
 
 #ifdef DEBUG
 	#define _APP_BETA_VERSION " - beta 1"
@@ -42,7 +42,8 @@ enum class Table
 	PAYMENTS,
 	ESTABLISHMENTS,
 	CATEGORIES,
-	PAYMENT_MACROS
+	PAYMENT_MACROS,
+	STAT_GENERAL
 };
 
 enum class TableView
@@ -51,7 +52,8 @@ enum class TableView
 	ESTABLISHMENTS_VIEW,
 	CATEGORIES_VIEW,
 	PAYMENTS_VIEW_FOR_MONTH,
-	PAYMENT_MACRO_VIEW
+	PAYMENT_MACRO_VIEW,
+	STAT_PAYMENT_SUMMARY
 };
 
 class Controller

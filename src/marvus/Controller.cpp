@@ -2,7 +2,7 @@
 // File       : Controller.cpp
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 07, 2025
+// Last edit  : Dec 10, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -21,6 +21,7 @@ Controller::Controller(errorFunctionSignature errorHandler) : marvusDB(DATABASE_
 	views[TableView::PAYMENTS_VIEW] = InlineSQL::SELECT_PAYMENTS;
 	views[TableView::PAYMENTS_VIEW_FOR_MONTH] = InlineSQL::SELECT_PAYMENTS_WHERE_MONTH;
 	views[TableView::PAYMENT_MACRO_VIEW] = InlineSQL::SELECT_PAYMENT_MACROS;
+	views[TableView::STAT_PAYMENT_SUMMARY] = InlineSQL::SELECT_PAYMENT_SUMMARY;
 }
 
 void Controller::configure(consolelib::argVector& config)
@@ -42,11 +43,19 @@ bool Controller::initDB(std::string& errorMsg)
 		return true;
 	}
 
-	if (!marvusDB.executeFileSQL(marvusDB.getScriptSQL(InlineSQL::INITIALIZE_VIEWS)))
+	std::vector<std::string> views;
+	views.emplace_back(InlineSQL::INITIALIZE_VIEWS);
+	views.emplace_back(InlineSQL::STAT_YEAR_SUMMARY);
+
+	for (const std::string& view : views)
 	{
-		errorMsg = "Views initialization failed.\nExiting program!";
-		return true;
+		if (!marvusDB.executeFileSQL(marvusDB.getScriptSQL(view)))
+		{
+			errorMsg = "View " + view + " initialization failed.\nExiting program!";
+			return true;
+		}
 	}
+
 	return false;
 }
 

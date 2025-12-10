@@ -69,10 +69,9 @@ This project is for learning how to work with wxWidgets and database. It is an u
 
 #### Boost
 
-   ```bash
-   # Just extract the zip file in libs folder.
-   ```
-  
+   Headers and linux binaries are in **libs/** folder and [Windows binaries are located here](https://github.com/Riyufuchi/Marvus-in-Cpp/releases/tag/libs).
+   Just extract the needed zip files and make sure that the structure is **boost_1_89_0/boost** and **boost_1_89_0/[platform]**.
+   
 ### CMake
   
    ```bash
