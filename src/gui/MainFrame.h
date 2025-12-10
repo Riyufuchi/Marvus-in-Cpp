@@ -48,7 +48,10 @@ enum
 	ID_TableListView,
 	ID_SendFile,
 	ID_RecieveFile,
-	ID_YearSummary
+	ID_YearSummary,
+	ID_ViewEstablishment,
+	ID_ViewCategories,
+	ID_ViewMacros
 };
 
 class MainFrame : public wxFrame

@@ -33,22 +33,18 @@ MainFrame::MainFrame(const wxString&, consolelib::argVector& config) : wxFrame(N
 
 	this->notebook = new wxNotebook(this, wxID_ANY);
 
-	wxPanel* establishmentsTab = new wxPanel(notebook);
+	wxPanel* enumTab = new wxPanel(notebook);
 	wxPanel* paymentsTab = new wxPanel(notebook);
-	wxPanel* categoriesTab = new wxPanel(notebook);
-	wxPanel* macrosTab = new wxPanel(notebook);
 	wxPanel* statTab = new wxPanel(notebook);
 	
-	notebook->AddPage(establishmentsTab, "Establishments");
-	notebook->AddPage(categoriesTab, "Categories");
+	notebook->AddPage(enumTab, "Enum table");
 	notebook->AddPage(paymentsTab, "Payments", true);
-	notebook->AddPage(macrosTab, "Payment macros");
 	notebook->AddPage(statTab, "Statistic");
 
 	// Tab 1
-	wxGrid* tempGrid = FactoryWxW::newGrid(establishmentsTab, wxID_ANY);
-	establishmentsTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
-	grids[marvus::Table::ESTABLISHMENTS] = tempGrid;
+	wxGrid* tempGrid = FactoryWxW::newGrid(enumTab, wxID_ANY);
+	enumTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
+	grids[marvus::Table::ENUM_TABLE] = tempGrid;
 
 	// Tab 2
 	tempGrid = FactoryWxW::newGrid(paymentsTab, wxID_ANY);
@@ -56,19 +52,9 @@ MainFrame::MainFrame(const wxString&, consolelib::argVector& config) : wxFrame(N
 	grids[marvus::Table::PAYMENTS] = tempGrid;
 
 	// Tab 3
-	tempGrid = FactoryWxW::newGrid(categoriesTab, wxID_ANY);
-	categoriesTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
-	grids[marvus::Table::CATEGORIES] = tempGrid;
-
-	// Tab 3
-	tempGrid = FactoryWxW::newGrid(macrosTab, wxID_ANY);
-	macrosTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
-	grids[marvus::Table::PAYMENT_MACROS] = tempGrid;
-
-	// Tab 4
 	tempGrid = FactoryWxW::newGrid(statTab, wxID_ANY);
 	statTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
-	grids[marvus::Table::STAT_GENERAL] = tempGrid;
+	grids[marvus::Table::STAT_TABLE] = tempGrid;
 
 	for (const auto& grid : grids)
 	{
@@ -77,9 +63,7 @@ MainFrame::MainFrame(const wxString&, consolelib::argVector& config) : wxFrame(N
 	// Layout the notebook
 	SetSizerAndFit(FactoryWxW::newMaxSizer(notebook));
 	// Attempt to load data
-	selectedViewForTable[marvus::Table::ESTABLISHMENTS] = {marvus::TableView::ESTABLISHMENTS_VIEW, {}};
-	selectedViewForTable[marvus::Table::CATEGORIES] = {marvus::TableView::CATEGORIES_VIEW, {}};
-	selectedViewForTable[marvus::Table::PAYMENT_MACROS] = {marvus::TableView::PAYMENT_MACRO_VIEW, {}};
+	selectedViewForTable[marvus::Table::ENUM_TABLE] = {marvus::TableView::PAYMENT_MACRO_VIEW, {}};
 	monthChoice->SetSelection(0);
 	wxCommandEvent e;
 	onDateFilterChanged(e);
@@ -153,6 +137,9 @@ wxMenuBar* MainFrame::createMenuBar()
 
 	wxMenu* tools = new wxMenu();
 	tools->Append(ID_NotImplementedYet, "&Entity manager");
+	tools->Append(ID_ViewEstablishment, "&View Establishments");
+	tools->Append(ID_ViewCategories, "&View Categories");
+	tools->Append(ID_ViewMacros, "&View Macro");
 
 	wxMenu* debug = new wxMenu();
 	debug->Append(ID_DropDB, "&Reset database");
@@ -247,7 +234,10 @@ void MainFrame::onViewChanged(wxCommandEvent& event)
 	switch (event.GetId())
 	{
 		case ID_TableListView: loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableView::PAYMENTS_VIEW); break;
-		case ID_YearSummary: loadViewToGrid(marvus::Table::STAT_GENERAL, marvus::TableView::STAT_PAYMENT_SUMMARY); break;
+		case ID_YearSummary: loadViewToGrid(marvus::Table::STAT_TABLE, marvus::TableView::STAT_PAYMENT_SUMMARY); break;
+		case ID_ViewEstablishment: loadViewToGrid(marvus::Table::ENUM_TABLE, marvus::TableView::ESTABLISHMENTS_VIEW); break;
+		case ID_ViewCategories: loadViewToGrid(marvus::Table::ENUM_TABLE, marvus::TableView::CATEGORIES_VIEW); break;
+		case ID_ViewMacros: loadViewToGrid(marvus::Table::ENUM_TABLE, marvus::TableView::PAYMENT_MACRO_VIEW); break;
 		default: wxLogMessage("Unknown menu id: %d", event.GetId()); break;
 	}
 
@@ -429,6 +419,9 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	// Views and stats
 	EVT_MENU(ID_TableListView, MainFrame::onViewChanged)
 	EVT_MENU(ID_YearSummary, MainFrame::onViewChanged)
+	EVT_MENU(ID_ViewEstablishment, MainFrame::onViewChanged)
+	EVT_MENU(ID_ViewCategories, MainFrame::onViewChanged)
+	EVT_MENU(ID_ViewMacros, MainFrame::onViewChanged)
 	// Network
 	EVT_MENU(ID_SendFile, MainFrame::onSendFile)
 	EVT_MENU(ID_RecieveFile, MainFrame::onRecieveFile)

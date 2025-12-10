@@ -24,7 +24,7 @@
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "1.0 - Alpha"
+#define _APP_VERSION "1.1 - Alpha"
 
 #ifdef DEBUG
 	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION " (debug)"
@@ -39,10 +39,8 @@ inline const std::string DATABASE_FILE = "marvus.db";
 enum class Table
 {
 	PAYMENTS,
-	ESTABLISHMENTS,
-	CATEGORIES,
-	PAYMENT_MACROS,
-	STAT_GENERAL
+	ENUM_TABLE,
+	STAT_TABLE
 };
 
 enum class TableView
