@@ -24,11 +24,10 @@
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "0.9a"
+#define _APP_VERSION "1.0 - Alpha"
 
 #ifdef DEBUG
-	#define _APP_BETA_VERSION " - beta 1"
-	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION _APP_BETA_VERSION " (debug)"
+	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION " (debug)"
 #else
 	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION
 #endif

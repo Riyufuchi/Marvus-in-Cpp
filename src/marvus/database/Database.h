@@ -60,8 +60,7 @@ class Database
 		bool prepareScriptSQL(const std::string& sql, StatementSQL& statement, const insertVector& data = {});
 		int insertNewData(const insertVector& data, const std::string& insertSQL);
 		tableRowVector obtainTableData(const std::string& selectSQL);
-		tableHeaderAndData obtainTableHeaderAndData(const std::string& viewSQL);
-		tableHeaderAndData obtainFromFilterView(const std::string& viewSQL, const insertVector& data);
+		tableHeaderAndData obtainFromFilterView(const std::string& viewSQL, const insertVector& data = {});
 		// Setters
 		void setPathToSQL_Scripts(std::string path);
 		void setShowErrorFunction(errorFunctionSignature func);

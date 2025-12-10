@@ -163,43 +163,6 @@ tableHeaderAndData Database::obtainFromFilterView(const std::string& viewSQL, co
 	return tableHeaderAndData(header, tableData);
 }
 
-tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL)
-{
-	tableRow header;
-	tableRowVector tableData;
-
-	StatementSQL stmt;
-
-	if (sqlite3_prepare_v2(db, viewSQL.c_str(), -1, stmt, nullptr) != SQLITE_OK)
-	{
-		showError("SQL prepare error: ", sqlite3_errmsg(db));
-		return {};
-	}
-
-	int colCount = sqlite3_column_count(stmt);
-	int i = 0;
-	const char* value = nullptr;
-	while (sqlite3_step(stmt) == SQLITE_ROW)
-	{
-		tableRow rowData;
-		rowData.reserve(colCount); // Optimize vector allocation
-		for (i = 0; i < colCount; i++)
-		{
-			value = reinterpret_cast<const char*>(sqlite3_column_text(stmt, i));
-			rowData.push_back(value ? std::string(value) : "NULL");
-		}
-		tableData.push_back(std::move(rowData));
-	}
-
-	header.reserve(colCount);
-	for (int i = 0; i < colCount; i++)
-	{
-		header.push_back(sqlite3_column_name(stmt, i));
-	}
-
-	return tableHeaderAndData(header, tableData);
-}
-
 bool Database::checkSuccess(int result, int expectedResult)
 {
 	if (result != expectedResult)

@@ -5,13 +5,13 @@ WITH data AS (
 ),
 summary AS (
 	SELECT
-		SUM(payment_real_value) AS total_sum,
+		COUNT(*) AS total_sum,
 		SUM(CASE WHEN payment_real_value > 0 THEN payment_real_value END) AS income_total,
 		SUM(CASE WHEN payment_real_value < 0 THEN payment_real_value END) AS expenses_total
 	FROM data
 )
 SELECT 'Payments' AS 'Metric',
-	ROUND(total_sum, 2) AS 'Total',
+	total_sum AS 'Total',
 	ROUND(total_sum / 12.0, 2) AS 'Year average',
 	ROUND(total_sum / 365.0, 2) AS 'Daily average'
 FROM summary

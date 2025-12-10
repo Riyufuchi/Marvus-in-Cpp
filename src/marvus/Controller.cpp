@@ -82,7 +82,7 @@ tableHeaderAndData Controller::obtainDataFromView(TableView view)
 	auto viewPair = views.find(view);
 	if (viewPair == views.end())
 		return {};
-	return marvusDB.obtainTableHeaderAndData(marvusDB.getScriptSQL(viewPair->second));
+	return marvusDB.obtainFromFilterView(marvusDB.getScriptSQL(viewPair->second));
 }
 
 tableHeaderAndData Controller::obtainDataFromView(TableView view, const insertVector& data)
