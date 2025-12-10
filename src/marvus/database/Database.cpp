@@ -2,7 +2,7 @@
 // File       : Database.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 07, 2025
+// Last edit  : Dec 10, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -154,8 +154,8 @@ tableHeaderAndData Database::obtainFromFilterView(const std::string& viewSQL, co
 		tableData.push_back(std::move(rowData));
 	}
 
-	header.reserve(colCount - 1);
-	for (int i = 1; i < colCount; ++i) // As we don't need ID column header
+	header.reserve(colCount);
+	for (int i = 0; i < colCount; i++)
 	{
 		header.push_back(sqlite3_column_name(stmt, i));
 	}
@@ -191,8 +191,8 @@ tableHeaderAndData Database::obtainTableHeaderAndData(const std::string& viewSQL
 		tableData.push_back(std::move(rowData));
 	}
 
-	header.reserve(colCount - 1);
-	for (int i = 1; i < colCount; ++i) // As we don't need ID column header
+	header.reserve(colCount);
+	for (int i = 0; i < colCount; i++)
 	{
 		header.push_back(sqlite3_column_name(stmt, i));
 	}

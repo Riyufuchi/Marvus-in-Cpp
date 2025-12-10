@@ -20,8 +20,13 @@ CREATE TABLE IF NOT EXISTS PAYMENTS (
 	payment_date DATE NOT NULL,
 	payment_note TEXT DEFAULT '',
 	
-	FOREIGN KEY (establishment_id_key) REFERENCES ESTABLISHMENTS(establishment_id),
-	FOREIGN KEY (category_id_key) REFERENCES CATEGORIES(category_id)
+	FOREIGN KEY (establishment_id_key)
+	REFERENCES ESTABLISHMENTS(establishment_id)
+	ON DELETE RESTRICT,
+	
+	FOREIGN KEY (category_id_key)
+	REFERENCES CATEGORIES(category_id)
+	ON DELETE RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS PAYMENT_MACROS (
@@ -31,8 +36,13 @@ CREATE TABLE IF NOT EXISTS PAYMENT_MACROS (
 	payment_value TEXT NOT NULL,
 	payment_note TEXT DEFAULT '',
 	
-	FOREIGN KEY (establishment_id_key) REFERENCES ESTABLISHMENTS(establishment_id),
-	FOREIGN KEY (category_id_key) REFERENCES CATEGORIES(category_id)
+	FOREIGN KEY (establishment_id_key)
+	REFERENCES ESTABLISHMENTS(establishment_id)
+	ON DELETE RESTRICT,
+	
+	FOREIGN KEY (category_id_key)
+	REFERENCES CATEGORIES(category_id)
+	ON DELETE RESTRICT
 );
 
 -- Trigers

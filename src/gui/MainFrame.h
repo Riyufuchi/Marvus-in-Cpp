@@ -2,7 +2,7 @@
 // File       : MainFrame.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 05, 2025
+// Last edit  : Dec 10, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -47,7 +47,8 @@ enum
 	ID_OpenDB,
 	ID_TableListView,
 	ID_SendFile,
-	ID_RecieveFile
+	ID_RecieveFile,
+	ID_YearSummary
 };
 
 class MainFrame : public wxFrame

@@ -2,7 +2,7 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 07, 2025
+// Last edit  : Dec 10, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -37,13 +37,15 @@ MainFrame::MainFrame(const wxString&, consolelib::argVector& config) : wxFrame(N
 	wxPanel* paymentsTab = new wxPanel(notebook);
 	wxPanel* categoriesTab = new wxPanel(notebook);
 	wxPanel* macrosTab = new wxPanel(notebook);
+	wxPanel* statTab = new wxPanel(notebook);
 	
 	notebook->AddPage(establishmentsTab, "Establishments");
 	notebook->AddPage(categoriesTab, "Categories");
 	notebook->AddPage(paymentsTab, "Payments", true);
 	notebook->AddPage(macrosTab, "Payment macros");
+	notebook->AddPage(statTab, "Statistic");
 
-	// Create a grid and add to tab1
+	// Tab 1
 	wxGrid* tempGrid = FactoryWxW::newGrid(establishmentsTab, wxID_ANY);
 	establishmentsTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
 	grids[marvus::Table::ESTABLISHMENTS] = tempGrid;
@@ -62,6 +64,11 @@ MainFrame::MainFrame(const wxString&, consolelib::argVector& config) : wxFrame(N
 	tempGrid = FactoryWxW::newGrid(macrosTab, wxID_ANY);
 	macrosTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
 	grids[marvus::Table::PAYMENT_MACROS] = tempGrid;
+
+	// Tab 4
+	tempGrid = FactoryWxW::newGrid(statTab, wxID_ANY);
+	statTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
+	grids[marvus::Table::STAT_GENERAL] = tempGrid;
 
 	for (const auto& grid : grids)
 	{
@@ -138,6 +145,7 @@ wxMenuBar* MainFrame::createMenuBar()
 
 	wxMenu* overviews = new wxMenu();
 	overviews->Append(ID_TableListView, "&Table list");
+	overviews->Append(ID_YearSummary, "&Year summary");
 
 	wxMenu* network = new wxMenu();
 	network->Append(ID_SendFile, "&Send data");
@@ -176,6 +184,30 @@ void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& 
 
 	wxGrid& grid = *grids.find(table)->second;
 
+	const bool isColID =  tableData.first[0] == "ID";
+	const int COL_NUMBER = tableData.first.size();
+
+	if (grid.GetNumberCols() > 0)
+		grid.DeleteCols(0, grid.GetNumberCols()); // Remove old cols
+	grid.AppendCols(isColID ? COL_NUMBER - 1 : COL_NUMBER);
+
+	int row = 0;
+	int rowX = 0;
+	if (isColID)
+		row++;
+	for (; row < COL_NUMBER; row++)
+	{
+		grid.SetColLabelValue(rowX, tableData.first[row]);
+		rowX++;
+	}
+
+	grid.SetRowLabelSize(wxGRID_AUTOSIZE);
+	grid.AutoSizeColumns(); // Auto-size column headers
+
+
+	if (grid.GetNumberRows() > 0)
+		grid.DeleteRows(0, grid.GetNumberRows()); // Remove old rows
+
 	if (tableData.second.empty())
 	{
 		wxMessageBox("No data received from the database.", "Table view result", wxOK | wxICON_INFORMATION, this);
@@ -184,31 +216,15 @@ void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& 
 		return;
 	}
 
-	if (grid.GetNumberCols() > 0)
-		grid.DeleteCols(0, grid.GetNumberCols()); // Remove old cols
-	grid.AppendCols(tableData.first.size());
-
-	int rowX = 0;
-	for (const std::string& heading : tableData.first)
-	{
-		grid.SetColLabelValue(rowX, heading);
-		rowX++;
-	}
-
-	grid.SetRowLabelSize(wxGRID_AUTOSIZE);
-	grid.AutoSizeColumns(); // Auto-size column headers
-
-	if (grid.GetNumberRows() > 0)
-		grid.DeleteRows(0, grid.GetNumberRows()); // Remove old rows
 	grid.AppendRows(tableData.second.size());
 
-	int row = 0;
 	rowX = 0;
-	int dataX = 1;
-	const int ROW_SIZE = tableData.second[0].size();
+	row = 0;
+	int dataX;
+	const int OFFSET = isColID ? 1 : 0;
 	for (const marvus::tableRow& rowData : tableData.second)
 	{
-		for (dataX = 1, rowX = 0; dataX < ROW_SIZE; dataX++, rowX++)
+		for (dataX = OFFSET, rowX = 0; dataX < COL_NUMBER; dataX++, rowX++)
 		{
 			grid.SetCellValue(row, rowX, wxString::FromUTF8(rowData[dataX]));
 		}
@@ -226,9 +242,15 @@ void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableView view, marv
 
 // Events
 
-void MainFrame::onViewChanged(wxCommandEvent&)
+void MainFrame::onViewChanged(wxCommandEvent& event)
 {
-	loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableView::PAYMENTS_VIEW);
+	switch (event.GetId())
+	{
+		case ID_TableListView: loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableView::PAYMENTS_VIEW); break;
+		case ID_YearSummary: loadViewToGrid(marvus::Table::STAT_GENERAL, marvus::TableView::STAT_PAYMENT_SUMMARY); break;
+		default: wxLogMessage("Unknown menu id: %d", event.GetId()); break;
+	}
+
 }
 
 void MainFrame::onDateFilterChanged(wxCommandEvent&)
@@ -404,7 +426,10 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_Import, MainFrame::onImport)
 	EVT_MENU(ID_NewDB, MainFrame::onNewDB)
 	EVT_MENU(ID_OpenDB, MainFrame::onLoadDB)
+	// Views and stats
 	EVT_MENU(ID_TableListView, MainFrame::onViewChanged)
+	EVT_MENU(ID_YearSummary, MainFrame::onViewChanged)
+	// Network
 	EVT_MENU(ID_SendFile, MainFrame::onSendFile)
 	EVT_MENU(ID_RecieveFile, MainFrame::onRecieveFile)
 wxEND_EVENT_TABLE()
