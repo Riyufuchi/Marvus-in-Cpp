@@ -19,7 +19,7 @@
 // ConsoleLib
 #include "ArgumentParser.h"
 #include "FileUtils.h"
-#include "Library.h"
+#include "ConsoleLib.h"
 
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
 

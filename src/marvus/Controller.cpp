@@ -124,7 +124,7 @@ std::string Controller::aboutApplication()
 			<< __TIME__ << "\n";
 	aboutStringStream << "C++ version: " << __cplusplus << "\n\n";
 
-	aboutStringStream << consolelib::Library::aboutLibrary();
+	aboutStringStream << consolelib::ConsoleLib::aboutLibrary();
 	return aboutStringStream.str();
 }
 

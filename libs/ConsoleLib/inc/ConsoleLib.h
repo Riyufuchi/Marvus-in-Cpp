@@ -1,5 +1,5 @@
 //==============================================================================
-// File       : Library.h
+// File       : ConsoleLib.h
 // Author     : Riyufuchi
 // Created on : Mar 27, 2024
 // Last edit  : Nov 17, 2025
@@ -14,16 +14,16 @@
 #include <string>
 #include <format>
 
-#define _VERSION "6.9d"
+#define _VERSION "6.9e"
 
 namespace consolelib
 {
-class Library
+class ConsoleLib
 {
 public:
 	static constexpr const char* VERSION = _VERSION;
-	Library();
-	~Library();
+	ConsoleLib();
+	~ConsoleLib();
 	static std::string aboutLibrary();
 };
 } /* namespace consolelib */
