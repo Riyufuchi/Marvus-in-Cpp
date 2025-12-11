@@ -81,12 +81,14 @@ class MainFrame : public wxFrame
 		void onInsertPayment(wxCommandEvent& event);
 		void onRefreshWindow(wxCommandEvent& event);
 		void onDropDatabase(wxCommandEvent& event);
-		void onInsertTestData(wxCommandEvent& event);
 		void onImport(wxCommandEvent& event);
 		void onDateFilterChanged(wxCommandEvent& event);
 		void onViewChanged(wxCommandEvent& event);
 		void onSendFile(wxCommandEvent& event);
 		void onRecieveFile(wxCommandEvent& event);
+		#ifdef DEBUG
+			void onInsertTestData(wxCommandEvent& event);
+		#endif
 		//
 		wxDECLARE_EVENT_TABLE();
 	public:

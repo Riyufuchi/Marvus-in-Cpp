@@ -77,8 +77,13 @@ This project is for learning how to work with wxWidgets and database. It is an u
    ```bash
    git clone https://github.com/Riyufuchi/Marvus-in-Cpp.git
    cd Marvus-in-Cpp
-   # CMake
-   cmake -B build -S .
+   
+   # CMake for Linux, macOS, MinGW, Ninja (single-config)
+   cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
+   cmake --build build
+   
+   # CMake for Visual Studio, Xcode, Ninja Multi-Config
+   cmake -S . -B build
    cmake --build build --config Release
    ```
 

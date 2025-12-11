@@ -139,10 +139,12 @@ wxMenuBar* MainFrame::createMenuBar()
 	tools->Append(ID_ViewEstablishment, "&View Establishments");
 	tools->Append(ID_ViewCategories, "&View Categories");
 	tools->Append(ID_ViewMacros, "&View Macro");
+	tools->Append(ID_DropDB, "&Reset database");
 
-	wxMenu* debug = new wxMenu();
-	debug->Append(ID_DropDB, "&Reset database");
-	debug->Append(ID_InserTestData, "&Insert test data");
+	#ifdef DEBUG
+		wxMenu* debug = new wxMenu();
+		debug->Append(ID_InserTestData, "&Insert test data");
+	#endif
 
 	// Create a menu bar and add menu sections
 	wxMenuBar* menuBar = new wxMenuBar;
@@ -153,7 +155,9 @@ wxMenuBar* MainFrame::createMenuBar()
 	menuBar->Append(network, "&Network");
 	menuBar->Append(window, "&Window");
 	menuBar->Append(helpMenu, "&Help");
-	menuBar->Append(debug, "&Debug");
+	#ifdef DEBUG
+		menuBar->Append(debug, "&Debug");
+	#endif
 	
 	return menuBar;
 }
@@ -302,41 +306,6 @@ void MainFrame::onInsertPayment(wxCommandEvent& event)
 	}
 }
 
-void MainFrame::onInsertTestData(wxCommandEvent& event)
-{
-	marvus::Establishment e { .name = "Gusto's" };
-	marvus::Establishment e1 { .name = "Luigi's" };
-	marvus::Establishment e2 { .name = "Red Rocket" };
-
-	marvus::Category c { .name = "Food" };
-	marvus::Category c1 { .name = "Fuel" };
-	marvus::Category c2 { .name = "Tires" };
-
-	controller.insertEntity(e);
-	controller.insertEntity(e1);
-	controller.insertEntity(e2);
-	controller.insertCategory(c);
-	controller.insertCategory(c1);
-	controller.insertCategory(c2);
-
-	int valueInt = 100;
-	marvus::Payment p {0, 1, 1, "100", "2025-10-10", ""};
-	size_t pos = 5;
-
-	for (int i = 1; i < 13; ++i)
-	{
-		std::ostringstream oss;
-		oss << std::setw(2) << std::setfill('0') << i; // format as 2 digits
-
-		p.value = std::to_string(valueInt + i);
-		p.date.replace(pos, 2, oss.str());
-
-		controller.insertPayment(p);
-	}
-	onDateFilterChanged(event); // Updates grid by current selection
-	onRefreshWindow(event);
-}
-
 void MainFrame::onSendFile(wxCommandEvent&)
 {
 	marvus::FileTransferDialog networkDialog(this, "Send data", [this](const std::string& title, const std::string& message) { displayError(title, message); });
@@ -408,6 +377,43 @@ void MainFrame::onImport(wxCommandEvent& event)
 		wxMessageBox(msg, "Import error", wxICON_ERROR);
 }
 
+#ifdef DEBUG
+void MainFrame::onInsertTestData(wxCommandEvent& event)
+{
+	marvus::Establishment e { .name = "Gusto's" };
+	marvus::Establishment e1 { .name = "Luigi's" };
+	marvus::Establishment e2 { .name = "Red Rocket" };
+
+	marvus::Category c { .name = "Food" };
+	marvus::Category c1 { .name = "Fuel" };
+	marvus::Category c2 { .name = "Tires" };
+
+	controller.insertEntity(e);
+	controller.insertEntity(e1);
+	controller.insertEntity(e2);
+	controller.insertCategory(c);
+	controller.insertCategory(c1);
+	controller.insertCategory(c2);
+
+	int valueInt = 100;
+	marvus::Payment p {0, 1, 1, "100", "2025-10-10", ""};
+	size_t pos = 5;
+
+	for (int i = 1; i < 13; ++i)
+	{
+		std::ostringstream oss;
+		oss << std::setw(2) << std::setfill('0') << i; // format as 2 digits
+
+		p.value = std::to_string(valueInt + i);
+		p.date.replace(pos, 2, oss.str());
+
+		controller.insertPayment(p);
+	}
+	onDateFilterChanged(event); // Updates grid by current selection
+	onRefreshWindow(event);
+}
+#endif
+
 // Event table to link menu actions with functions
 wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_Exit, MainFrame::onExit)
@@ -415,7 +421,6 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_INSERT_PAYMENT, MainFrame::onInsertPayment)
 	EVT_MENU(ID_Refresh, MainFrame::onRefreshWindow)
 	EVT_MENU(ID_DropDB, MainFrame::onDropDatabase)
-	EVT_MENU(ID_InserTestData, MainFrame::onInsertTestData)
 	EVT_MENU(ID_NotImplementedYet, MainFrame::onNotImplemented)
 	EVT_MENU(ID_Import, MainFrame::onImport)
 	EVT_MENU(ID_NewDB, MainFrame::onNewDB)
@@ -428,6 +433,9 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	// Network
 	EVT_MENU(ID_SendFile, MainFrame::onSendFile)
 	EVT_MENU(ID_RecieveFile, MainFrame::onRecieveFile)
+	#ifdef DEBUG
+		EVT_MENU(ID_InserTestData, MainFrame::onInsertTestData)
+	#endif
 wxEND_EVENT_TABLE()
 
 }

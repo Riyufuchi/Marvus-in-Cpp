@@ -8,20 +8,19 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #
-# Default build type
-#
-if(NOT CMAKE_BUILD_TYPE)
-	set(CMAKE_BUILD_TYPE Release CACHE STRING "" FORCE)
-endif()
-
-#
 # Warnings
 #
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 	add_compile_options(-Wall -Wextra -pedantic)
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-	add_compile_definitions(NOMINMAX)
 	add_compile_options(/W4)
+endif()
+
+#
+# Other settings
+#
+if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+	add_compile_definitions(NOMINMAX)
 endif()
 
 #
@@ -29,14 +28,21 @@ endif()
 #
 if (CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
 	set(CMAKE_CXX_FLAGS_RELEASE "-O3")
+	set(CMAKE_C_FLAGS_RELEASE "-O3")
+	#
+	set(CMAKE_CXX_FLAGS_DEBUG "-O0 -g -DDEBUG")
+	set(CMAKE_C_FLAGS_DEBUG "-O0 -g -DDEBUG")
 elseif (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
 	set(CMAKE_CXX_FLAGS_RELEASE "/O2")
+	set(CMAKE_C_FLAGS_RELEASE "/O2")
+	#
+	set(CMAKE_CXX_FLAGS_DEBUG "/Od /Zi /DDEBUG")
+	set(CMAKE_C_FLAGS_DEBUG "/Od /Zi /DDEBUG")
 endif()
 
 #
-# My static libraries
+# ConsoleLib
 #
-
 set(CONSOLE_LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/libs/ConsoleLib)
 
 # Create an IMPORTED target for the .a file

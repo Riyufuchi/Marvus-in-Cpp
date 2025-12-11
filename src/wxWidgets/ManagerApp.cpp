@@ -25,7 +25,9 @@ bool ManagerApp::OnInit()
 	this->args = consolelib::ArgumentParser::analyzeInOrder(argc, argv, areArgs, text);
 	if (!areArgs)
 		return false;
-	SetAppearance(wxApp::Appearance::System);
+	#ifdef _WIN32
+		SetAppearance(wxApp::Appearance::System);
+	#endif
 	this->frame = new MainFrame(args);
 	SetTopWindow(frame);
 	frame->Show(true);
