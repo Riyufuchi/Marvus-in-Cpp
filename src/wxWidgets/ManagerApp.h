@@ -15,7 +15,7 @@
 #include "ArgumentParser.h"
 #include "../wxWidgets/MainFrame.h"
 
-namespace wxw
+namespace wxtools
 {
 class ManagerApp : public wxApp
 {

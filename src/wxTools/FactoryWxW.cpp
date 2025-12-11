@@ -7,9 +7,9 @@
 // Description: KEO-manager
 //==============================================================================
 
-#include "FactoryWxW.h"
+#include "../wxTools/FactoryWxW.h"
 
-namespace wxw
+namespace wxtools
 {
 
 wxBoxSizer* FactoryWxW::newMaxSizer(wxWindow* component)
@@ -55,4 +55,4 @@ wxComboBox* FactoryWxW::newComboBox(wxWindow* parent, const enumVector& data)
 	return cb;
 }
 
-} /* namespace wxw */
+} /* namespace wxtools */

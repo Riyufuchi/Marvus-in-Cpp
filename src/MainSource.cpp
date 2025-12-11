@@ -9,11 +9,11 @@
 
 #include "wxWidgets/ManagerApp.h"
 
-wxIMPLEMENT_APP(wxw::ManagerApp);
+wxIMPLEMENT_APP(wxtools::ManagerApp);
 
 /*int main(int argc, char** argv)
 {
-	wxApp::SetInstance(new wxw::ManagerApp(argc, argv));
+	wxApp::SetInstance(new wxtools::ManagerApp(argc, argv));
 	wxEntryStart(argc, argv);
 	wxTheApp->CallOnInit();
 	wxTheApp->OnRun();

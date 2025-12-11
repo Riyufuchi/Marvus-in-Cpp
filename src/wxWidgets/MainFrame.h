@@ -19,9 +19,6 @@
 #include <wx/textfile.h>
 #include <wx/textdlg.h>
 // Custom wxWidgets tools
-#include "../wxw/FactoryWxW.h"
-#include "../wxw/ToolsWxW.h"
-// Local
 #include "../marvus/Controller.h"
 #include "../marvus/wxw/PaymentDialog.h"
 #include "../marvus/wxw/FileTransferDialog.h"
@@ -29,8 +26,10 @@
 #include "FileUtils.h"
 // Other
 #include "../../assets/icon.xpm"
+#include "../wxTools/FactoryWxW.h"
+#include "../wxTools/ToolsWxW.h"
 
-namespace wxw
+namespace wxtools
 {
 
 enum

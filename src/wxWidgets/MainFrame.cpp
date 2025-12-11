@@ -9,7 +9,7 @@
 
 #include "../wxWidgets/MainFrame.h"
 
-namespace wxw
+namespace wxtools
 {
 
 MainFrame::MainFrame(consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, _MARVUS_VERSION), controller([this](const std::string& title, const std::string& message) { displayError(title, message); })
@@ -43,17 +43,17 @@ MainFrame::MainFrame(consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, _M
 
 	// Tab 1
 	wxGrid* tempGrid = FactoryWxW::newGrid(enumTab, wxID_ANY);
-	enumTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
+	enumTab->SetSizer(wxtools::FactoryWxW::newMaxSizer(tempGrid));
 	grids[marvus::Table::ENUM_TABLE] = tempGrid;
 
 	// Tab 2
 	tempGrid = FactoryWxW::newGrid(paymentsTab, wxID_ANY);
-	paymentsTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
+	paymentsTab->SetSizer(wxtools::FactoryWxW::newMaxSizer(tempGrid));
 	grids[marvus::Table::PAYMENTS] = tempGrid;
 
 	// Tab 3
 	tempGrid = FactoryWxW::newGrid(statTab, wxID_ANY);
-	statTab->SetSizer(wxw::FactoryWxW::newMaxSizer(tempGrid));
+	statTab->SetSizer(wxtools::FactoryWxW::newMaxSizer(tempGrid));
 	grids[marvus::Table::STAT_TABLE] = tempGrid;
 
 	for (const auto& grid : grids)
@@ -200,7 +200,8 @@ void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& 
 
 	if (tableData.second.empty())
 	{
-		wxMessageBox("No data received from the database.", "Table view result", wxOK | wxICON_INFORMATION, this);
+		wxtools::ToolsWxW::informationDialog("Table view result", "No data received from the database.");
+		//wxMessageBox("No data received from the database.", "Table view result", wxOK | wxICON_INFORMATION, this);
 		if (grid.GetNumberRows() > 0)
 			grid.DeleteRows(0, grid.GetNumberRows()); // Remove old rows
 		return;

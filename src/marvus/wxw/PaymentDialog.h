@@ -28,8 +28,8 @@ class PaymentDialog : public keo::DialogKEO
 public:
 	struct InputData
 	{
-		wxw::enumVector establishments;
-		wxw::enumVector categories;
+		wxtools::enumVector establishments;
+		wxtools::enumVector categories;
 		std::string date;
 	};
 private:

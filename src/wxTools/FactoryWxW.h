@@ -7,8 +7,8 @@
 // Description: KEO-manager
 //==============================================================================
 
-#ifndef WXW_FACTORYWXW_H_
-#define WXW_FACTORYWXW_H_
+#ifndef WXTOOLS_FACTORYWXW_H_
+#define WXTOOLS_FACTORYWXW_H_
 
 #include <vector>
 #include <string>
@@ -16,7 +16,7 @@
 #include <wx/wx.h>
 #include <wx/grid.h>
 
-namespace wxw
+namespace wxtools
 {
 
 using enumVector = std::vector<std::vector<std::string>>;
@@ -32,6 +32,6 @@ public:
 	static wxComboBox* newComboBox(wxWindow* parent, const enumVector& data);
 };
 
-} /* namespace wxw */
+} /* namespace wxtools */
 
-#endif /* WXW_FACTORYWXW_H_ */
+#endif /* WXTOOLS_FACTORYWXW_H_ */

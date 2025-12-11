@@ -7,9 +7,9 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "ToolsWxW.h"
+#include "../wxTools/ToolsWxW.h"
 
-namespace wxw
+namespace wxtools
 {
 
 void ToolsWxW::updateFontSizeInGrid(wxGrid* grid, int size)
@@ -18,6 +18,11 @@ void ToolsWxW::updateFontSizeInGrid(wxGrid* grid, int size)
 	font.SetPointSize(size);
 	grid->SetDefaultCellFont(font);
 	grid->ForceRefresh();
+}
+
+void ToolsWxW::informationDialog(const std::string& title, const std::string& text)
+{
+	tinyfd_messageBox(title.c_str(), text.c_str(), "ok", "info", 1);
 }
 
 } /* namespace consolelib */

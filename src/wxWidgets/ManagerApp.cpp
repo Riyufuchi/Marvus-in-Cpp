@@ -9,7 +9,7 @@
 
 #include "../wxWidgets/ManagerApp.h"
 
-namespace wxw
+namespace wxtools
 {
 ManagerApp::ManagerApp() : wxApp(), frame(nullptr), areArgs(false)
 {

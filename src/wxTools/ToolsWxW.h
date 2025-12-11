@@ -7,13 +7,15 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#ifndef WXW_TOOLSWXW_H_
-#define WXW_TOOLSWXW_H_
+#ifndef WXTOOLS_TOOLSWXW_H_
+#define WXTOOLS_TOOLSWXW_H_
 
 #include <wx/wx.h>
 #include <wx/grid.h>
 
-namespace wxw
+#include "../external/gui/tinyfiledialogs.h"
+
+namespace wxtools
 {
 
 class ToolsWxW
@@ -22,8 +24,9 @@ public:
 	ToolsWxW() = default;
 	virtual ~ToolsWxW() = default;
 	static void updateFontSizeInGrid(wxGrid* grid, int size);
+	static void informationDialog(const std::string& title, const std::string& text);
 };
 
 } /* namespace consolelib */
 
-#endif /* WXW_TOOLSWXW_H_ */
+#endif /* WXTOOLS_TOOLSWXW_H_ */
