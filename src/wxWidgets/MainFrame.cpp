@@ -200,8 +200,7 @@ void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& 
 
 	if (tableData.second.empty())
 	{
-		wxtools::ToolsWxW::informationDialog("Table view result", "No data received from the database.");
-		//wxMessageBox("No data received from the database.", "Table view result", wxOK | wxICON_INFORMATION, this);
+		wxMessageBox("No data received from the database.", "Table view result", wxOK | wxICON_INFORMATION, this);
 		if (grid.GetNumberRows() > 0)
 			grid.DeleteRows(0, grid.GetNumberRows()); // Remove old rows
 		return;

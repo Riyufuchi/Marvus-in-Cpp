@@ -20,9 +20,4 @@ void ToolsWxW::updateFontSizeInGrid(wxGrid* grid, int size)
 	grid->ForceRefresh();
 }
 
-void ToolsWxW::informationDialog(const std::string& title, const std::string& text)
-{
-	wxMessageBox(text, title, wxOK | wxICON_INFORMATION, this);
-}
-
 } /* namespace consolelib */

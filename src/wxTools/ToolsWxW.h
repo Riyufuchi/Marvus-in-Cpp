@@ -23,7 +23,6 @@ public:
 	ToolsWxW() = default;
 	virtual ~ToolsWxW() = default;
 	static void updateFontSizeInGrid(wxGrid* grid, int size);
-	static void informationDialog(const std::string& title, const std::string& text);
 };
 
 } /* namespace consolelib */
