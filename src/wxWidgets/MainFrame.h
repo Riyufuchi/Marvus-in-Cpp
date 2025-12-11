@@ -90,7 +90,7 @@ class MainFrame : public wxFrame
 		//
 		wxDECLARE_EVENT_TABLE();
 	public:
-		MainFrame(const wxString& title, consolelib::argVector& config);
+		MainFrame(consolelib::argVector& config);
 		virtual ~MainFrame();
 };
 }
