@@ -2,7 +2,7 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 10, 2025
+// Last edit  : Dec 11, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -105,7 +105,7 @@ void MainFrame::createToolBar()
 	tb->Realize();
 	// Bind events
 	Bind(wxEVT_CHOICE, &MainFrame::onDateFilterChanged, this, monthChoice->GetId());
-	Bind(wxEVT_CHECKBOX, &MainFrame::onDateFilterChanged, this, monthChoice->GetId());
+	Bind(wxEVT_CHECKBOX, &MainFrame::onDateFilterChanged, this, monthFilterCheck->GetId());
 }
 
 wxMenuBar* MainFrame::createMenuBar()
@@ -128,7 +128,6 @@ wxMenuBar* MainFrame::createMenuBar()
 	payment->Append(ID_INSERT_PAYMENT, "&Add Payment");
 
 	wxMenu* overviews = new wxMenu();
-	overviews->Append(ID_TableListView, "&Table list");
 	overviews->Append(ID_YearSummary, "&Year summary");
 
 	wxMenu* network = new wxMenu();
@@ -233,7 +232,6 @@ void MainFrame::onViewChanged(wxCommandEvent& event)
 {
 	switch (event.GetId())
 	{
-		case ID_TableListView: loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableView::PAYMENTS_VIEW); break;
 		case ID_YearSummary: loadViewToGrid(marvus::Table::STAT_TABLE, marvus::TableView::STAT_PAYMENT_SUMMARY); break;
 		case ID_ViewEstablishment: loadViewToGrid(marvus::Table::ENUM_TABLE, marvus::TableView::ESTABLISHMENTS_VIEW); break;
 		case ID_ViewCategories: loadViewToGrid(marvus::Table::ENUM_TABLE, marvus::TableView::CATEGORIES_VIEW); break;
@@ -245,7 +243,13 @@ void MainFrame::onViewChanged(wxCommandEvent& event)
 
 void MainFrame::onDateFilterChanged(wxCommandEvent&)
 {
-	loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableView::PAYMENTS_VIEW_FOR_MONTH, { std::format("{:02}", monthChoice->GetSelection() + 1) });
+	monthChoice->Enable(monthFilterCheck->GetValue());
+	if (monthFilterCheck->GetValue())
+		loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableView::PAYMENTS_VIEW_FOR_MONTH, { std::format("{:02}", monthChoice->GetSelection() + 1) });
+	else
+	{
+		loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableView::PAYMENTS_VIEW);
+	}
 }
 
 void MainFrame::onRefreshWindow(wxCommandEvent&)
@@ -417,7 +421,6 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_NewDB, MainFrame::onNewDB)
 	EVT_MENU(ID_OpenDB, MainFrame::onLoadDB)
 	// Views and stats
-	EVT_MENU(ID_TableListView, MainFrame::onViewChanged)
 	EVT_MENU(ID_YearSummary, MainFrame::onViewChanged)
 	EVT_MENU(ID_ViewEstablishment, MainFrame::onViewChanged)
 	EVT_MENU(ID_ViewCategories, MainFrame::onViewChanged)
