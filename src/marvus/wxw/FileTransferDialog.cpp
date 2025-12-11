@@ -59,14 +59,12 @@ void FileTransferDialog::safeExit()
 }
 
 
-void FileTransferDialog::startServer(unsigned short port, const wxString& output_file)
+void FileTransferDialog::startServer(unsigned short port)
 {
 	stop_flag = false; // reset stop flag
 
-	std::string file = output_file.ToStdString();
-
-	network_thread = std::thread([file, port, this]() {
-		clientServerTool.runFileServer(port, file, stop_flag,
+	network_thread = std::thread([port, this]() {
+		clientServerTool.runFileServer(port, stop_flag,
 		[this](size_t bytes_received, size_t total_bytes) {
 			// Send progress to GUI
 			int percent = static_cast<int>((bytes_received * 100) / total_bytes);

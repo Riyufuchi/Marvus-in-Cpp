@@ -311,21 +311,12 @@ void MainFrame::onInsertPayment(wxCommandEvent& event)
 
 void MainFrame::onSendFile(wxCommandEvent&)
 {
-	marvus::FileTransferDialog networkDialog(this, "Send data", [this](const std::string& title, const std::string& message) { displayError(title, message); });
-	wxString ipAddress = "192.168.0.100";
-	wxTextEntryDialog textDialog(this, "IPv4 address:", "Network setup", ipAddress);
-	if (textDialog.ShowModal() == wxID_OK)
-	{
-		networkDialog.startClient(textDialog.GetValue(), 6969, "data.zip");
-		networkDialog.ShowModal();
-	}
+	controller.sendFileOverNetwork(this);
 }
 
-void MainFrame::onRecieveFile(wxCommandEvent& event)
+void MainFrame::onRecieveFile(wxCommandEvent& )
 {
-	marvus::FileTransferDialog networkDialog(this, "Receive data", [this](const std::string& title, const std::string& message) { displayError(title, message); });
-	networkDialog.startServer(6969, "recievedData.zip");
-	networkDialog.ShowModal();
+	controller.recieveFileFromNetwork(this);
 }
 
 void MainFrame::onLoadDB(wxCommandEvent& event)

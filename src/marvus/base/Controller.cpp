@@ -12,7 +12,7 @@
 namespace marvus
 {
 
-Controller::Controller(errorFunctionSignature errorHandler) : marvusDB(DATABASE_FILE, errorHandler)
+Controller::Controller(errorFunctionSignature errorHandler) : marvusDB(DATABASE_FILE, errorHandler), errorHandler(errorHandler)
 {
 	this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; marvusDB.setPathToSQL_Scripts(vector[0]); };
 

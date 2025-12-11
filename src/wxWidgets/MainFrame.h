@@ -19,7 +19,7 @@
 #include <wx/textfile.h>
 #include <wx/textdlg.h>
 // Custom wxWidgets tools
-#include "../marvus/Controller.h"
+#include "../marvus/wxw/ControllerWxW.h"
 #include "../marvus/wxw/PaymentDialog.h"
 #include "../marvus/wxw/FileTransferDialog.h"
 // ConsoleLib
@@ -62,7 +62,7 @@ class MainFrame : public wxFrame
 		wxChoice* monthChoice;
 		wxCheckBox* monthFilterCheck;
 		// Backend
-		marvus::Controller controller;
+		marvus::ControllerWxW controller;
 		// UI
 		wxMenuBar* createMenuBar();
 		void createToolBar();

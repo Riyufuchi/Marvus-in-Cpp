@@ -10,12 +10,10 @@
 #ifndef MARVUS_CONTROLLER_H_
 #define MARVUS_CONTROLLER_H_
 
-// wxWidgets
-#include <wx/wx.h>
 // Local
-#include "database/MarvusDB.h"
-#include "InlineSQL.h"
-#include "tools/ToolsIO.h"
+#include "../database/MarvusDB.h"
+#include "../InlineSQL.h"
+#include "../tools/ToolsIO.h"
 // ConsoleLib
 #include "ArgumentParser.h"
 #include "FileUtils.h"
@@ -24,7 +22,7 @@
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "1.6 - Alpha"
+#define _APP_VERSION "1.7 - Alpha"
 
 #ifdef DEBUG
 	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION " (debug)"
@@ -55,10 +53,11 @@ enum class TableView
 
 class Controller
 {
-private:
+protected:
 	std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argumentMethods;
 	std::unordered_map<marvus::TableView, std::string> views;
 	MarvusDB marvusDB;
+	errorFunctionSignature errorHandler;
 public:
 	Controller(errorFunctionSignature errorHandler = [](const std::string& title, const std::string& message) { std::cerr << title << ": " << message << "\n"; });
 	virtual ~Controller() = default;

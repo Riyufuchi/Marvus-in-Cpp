@@ -1,8 +1,8 @@
 //==============================================================================
 // File       : NetworkClientServerTool.cpp
 // Author     : riyufuchi
-// Created on : Dec 8, 2025
-// Last edit  : Dec 9, 2025
+// Created on : Dec 08, 2025
+// Last edit  : Dec 11, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -20,18 +20,25 @@ NetworkClientServerTool::~NetworkClientServerTool()
 {
 }
 
-void NetworkClientServerTool::runFileServer(unsigned short port, const std::string& output_file, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback)
+void NetworkClientServerTool::runFileServer(unsigned short port, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback)
 {
 	boost::asio::io_context io_context;
 	boost::asio::ip::tcp::acceptor acceptor(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port));
 	boost::asio::ip::tcp::socket socket(io_context);
 	acceptor.accept(socket);
 
-	std::ofstream out(output_file, std::ios::binary);
-
 	uint64_t network_file_size = 0;
 	read(socket, boost::asio::buffer(&network_file_size, sizeof(network_file_size)));
 	size_t total_file_size =  boost::endian::big_to_native(network_file_size);
+	// Read file name length
+	uint64_t network_length;
+	boost::asio::read(socket, boost::asio::buffer(&network_length, sizeof(network_length)));
+	uint64_t name_length = boost::endian::big_to_native(network_length);
+	// Read the file name
+	std::string file_name(name_length, '\0');
+	boost::asio::read(socket, boost::asio::buffer(file_name));
+
+	std::ofstream out(file_name, std::ios::binary);
 
 	char buffer_data[4096];
 	size_t bytes_received = 0;
@@ -87,8 +94,14 @@ void NetworkClientServerTool::runFileClient(const std::string& server_ip, unsign
 	size_t total_file_size = in.tellg();
 	in.seekg(0);
 
+	// Send file size
 	uint64_t network_file_size = boost::endian::native_to_big(total_file_size);
 	boost::asio::write(socket, boost::asio::buffer(&network_file_size, sizeof(network_file_size)));
+	// Send file name with type
+	std::string file_name = std::filesystem::path(file_path).filename().string();
+	uint64_t name_length = boost::endian::native_to_big((uint64_t)file_name.size());
+	boost::asio::write(socket, boost::asio::buffer(&name_length, sizeof(name_length)));
+	boost::asio::write(socket, boost::asio::buffer(file_name));
 
 	char buffer_data[4096];
 	size_t bytes_sent = 0;

@@ -11,7 +11,7 @@
 #define MARVUS_TOOLS_TOOLSIO_H_
 
 // Local - Marvus
-#include "../Controller.h"
+#include "../base/Controller.h"
 // miniZ
 #include "../../external/miniz.h"
 

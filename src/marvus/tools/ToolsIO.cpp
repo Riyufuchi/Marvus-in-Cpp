@@ -8,7 +8,7 @@
 //==============================================================================
 
 #include "ToolsIO.h"
-#include "../Controller.h"
+#include "../base/Controller.h"
 
 namespace marvus
 {

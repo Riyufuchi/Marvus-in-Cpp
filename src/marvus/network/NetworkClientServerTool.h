@@ -14,6 +14,7 @@
 #include <atomic>
 #include <fstream>
 #include <iostream>
+#include <filesystem>
 // Boost
 #include "boost/asio.hpp"
 #include "boost/endian.hpp"
@@ -32,7 +33,7 @@ private:
 public:
 	NetworkClientServerTool(errorFunctionSignature errorCallback);
 	virtual ~NetworkClientServerTool();
-	void runFileServer(unsigned short port, const std::string& output_file, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback);
+	void runFileServer(unsigned short port, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback);
 	void runFileClient(const std::string& server_ip, unsigned short port, const std::string& file_path, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback);
 };
 
