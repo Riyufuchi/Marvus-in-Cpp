@@ -1,8 +1,8 @@
 //==============================================================================
 // File       : NetworkClientServerTool.h
 // Author     : riyufuchi
-// Created on : Dec 8, 2025
-// Last edit  : Dec 9, 2025
+// Created on : Dec 08, 2025
+// Last edit  : Dec 11, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -33,8 +33,8 @@ private:
 public:
 	NetworkClientServerTool(errorFunctionSignature errorCallback);
 	virtual ~NetworkClientServerTool();
-	void runFileServer(unsigned short port, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback);
-	void runFileClient(const std::string& server_ip, unsigned short port, const std::string& file_path, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback);
+	bool runFileServer(unsigned short port, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback);
+	bool runFileClient(const std::string& server_ip, unsigned short port, const std::string& file_path, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback);
 };
 
 } /* namespace marvus */

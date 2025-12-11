@@ -1,8 +1,8 @@
 //==============================================================================
 // File       : FileTransferDialog.cpp
 // Author     : riyufuchi
-// Created on : Dec 8, 2025
-// Last edit  : Dec 9, 2025
+// Created on : Dec 08, 2025
+// Last edit  : Dec 11, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -58,6 +58,13 @@ void FileTransferDialog::safeExit()
 	Destroy();
 }
 
+void FileTransferDialog::updateProgressBar(size_t bytes_sent, size_t total_bytes)
+{
+	wxThreadEvent event(wxEVT_THREAD, wxID_ANY);
+	event.SetInt(static_cast<int>((bytes_sent * 100) / total_bytes));
+	wxQueueEvent(this, event.Clone());
+}
+
 
 void FileTransferDialog::startServer(unsigned short port)
 {
@@ -65,13 +72,7 @@ void FileTransferDialog::startServer(unsigned short port)
 
 	network_thread = std::thread([port, this]() {
 		clientServerTool.runFileServer(port, stop_flag,
-		[this](size_t bytes_received, size_t total_bytes) {
-			// Send progress to GUI
-			int percent = static_cast<int>((bytes_received * 100) / total_bytes);
-			wxThreadEvent event(wxEVT_THREAD, wxID_ANY);
-			event.SetInt(percent);
-			wxQueueEvent(this, event.Clone());
-		});
+		[this](size_t bytes_sent, size_t total_bytes) { updateProgressBar(bytes_sent, total_bytes); });
 	});
 }
 
@@ -85,14 +86,15 @@ void FileTransferDialog::startClient(const wxString& server_ip, unsigned short p
 
 	network_thread = std::thread([ip, portCopy, file, this]()
 	{
-		clientServerTool.runFileClient(ip, portCopy, file, stop_flag,
-		[this](size_t bytes_sent, size_t total_bytes)
+		if (clientServerTool.runFileClient(ip, portCopy, file, stop_flag,
+		[this](size_t bytes_sent, size_t total_bytes) { updateProgressBar(bytes_sent, total_bytes); }))
 		{
-			int percent = static_cast<int>((bytes_sent * 100) / total_bytes);
-			wxThreadEvent event(wxEVT_THREAD, wxID_ANY);
-			event.SetInt(percent);
-			wxQueueEvent(this, event.Clone());
-		});
+			wxMessageBox("Transfer of file " + file + " succeeded.", "Network success", wxICON_INFORMATION);
+		}
+		else
+		{
+			wxMessageBox("Transfer of file " + file + " failed.", "Network error", wxICON_ERROR);
+		}
 	});
 }
 

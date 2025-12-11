@@ -20,7 +20,7 @@ NetworkClientServerTool::~NetworkClientServerTool()
 {
 }
 
-void NetworkClientServerTool::runFileServer(unsigned short port, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback)
+bool NetworkClientServerTool::runFileServer(unsigned short port, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback)
 {
 	boost::asio::io_context io_context;
 	boost::asio::ip::tcp::acceptor acceptor(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port));
@@ -43,14 +43,13 @@ void NetworkClientServerTool::runFileServer(unsigned short port, std::atomic_boo
 	char buffer_data[4096];
 	size_t bytes_received = 0;
 	boost::system::error_code ec;
+	size_t n;
 
 	while (!stop_flag)
 	{
-		size_t n = socket.read_some(boost::asio::buffer(buffer_data), ec);
-		if (ec == boost::asio::error::eof)
-			break;
-		if (ec)
-			break;
+		n = socket.read_some(boost::asio::buffer(buffer_data), ec);
+		if ((ec == boost::asio::error::eof) || ec)
+			return false;
 
 		out.write(buffer_data, n);
 		bytes_received += n;
@@ -61,9 +60,10 @@ void NetworkClientServerTool::runFileServer(unsigned short port, std::atomic_boo
 
 	if (progress_callback)
 		progress_callback(bytes_received, total_file_size);
+	return true;
 }
 
-void NetworkClientServerTool::runFileClient(const std::string& server_ip, unsigned short port, const std::string& file_path, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback)
+bool NetworkClientServerTool::runFileClient(const std::string& server_ip, unsigned short port, const std::string& file_path, std::atomic_bool& stop_flag, std::function<void(size_t, size_t)> progress_callback)
 {
 	boost::asio::io_context io_context;
 	boost::asio::ip::tcp::socket socket(io_context);
@@ -74,7 +74,7 @@ void NetworkClientServerTool::runFileClient(const std::string& server_ip, unsign
 	if (ec)
 	{
 		errorCallback("Network error", "Invalid IP address '" + server_ip + "': " + ec.message());
-		return;
+		return false;
 	}
 
 	boost::asio::ip::tcp::endpoint ep(addr, port);
@@ -82,14 +82,14 @@ void NetworkClientServerTool::runFileClient(const std::string& server_ip, unsign
 	if (ec)
 	{
 		errorCallback("Network error", "Connect failed: " + ec.message());
-		return;
+		return false;
 	}
 
 	std::ifstream in(file_path, std::ios::binary | std::ios::ate);
 	if(!in)
 	{
 		errorCallback("Network error", "Invalid file for transfer");
-		return;
+		return false;
 	}
 	size_t total_file_size = in.tellg();
 	in.seekg(0);
@@ -105,11 +105,12 @@ void NetworkClientServerTool::runFileClient(const std::string& server_ip, unsign
 
 	char buffer_data[4096];
 	size_t bytes_sent = 0;
+	std::streamsize n;
 
 	while (!stop_flag && !in.eof())
 	{
 		in.read(buffer_data, sizeof(buffer_data));
-		std::streamsize n = in.gcount();
+		n = in.gcount();
 		if (n <= 0)
 			break;
 
@@ -122,6 +123,7 @@ void NetworkClientServerTool::runFileClient(const std::string& server_ip, unsign
 
 	if (progress_callback)
 		progress_callback(bytes_sent, total_file_size);
+	return true;
 }
 
 }/* namespace marvus */

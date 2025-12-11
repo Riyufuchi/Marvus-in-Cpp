@@ -1,8 +1,8 @@
 //==============================================================================
 // File       : FileTransferDialog.h
 // Author     : riyufuchi
-// Created on : Dec 8, 2025
-// Last edit  : Dec 9, 2025
+// Created on : Dec 08, 2025
+// Last edit  : Dec 11, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -31,6 +31,7 @@ private:
 	void OnUpdateProgress(wxThreadEvent& event);
 	void OnClose(wxCloseEvent& event);
 	void safeExit();
+	void updateProgressBar(size_t bytes_sent, size_t total_bytes);
 public:
 	FileTransferDialog(wxWindow* parent, const wxString& title, errorFunctionSignature errorCallback);
 	virtual ~FileTransferDialog();
