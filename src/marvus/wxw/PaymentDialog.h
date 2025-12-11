@@ -2,7 +2,7 @@
 // File       : PaymentDialog.h
 // Author     : riyufuchi
 // Created on : Nov 25, 2025
-// Last edit  : Dec 05, 2025
+// Last edit  : Dec 11, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: KEO-manager
 //==============================================================================
@@ -13,7 +13,7 @@
 #include <wx/datectrl.h>
 #include <wx/dateevt.h>
 
-#include "../../wxw/FactoryWxW.h"
+#include "../../wxTools/FactoryWxW.h"
 
 #include "../database/MarvusDB.h"
 
