@@ -2,7 +2,7 @@
 // File       : ToolsWxW.cpp
 // Author     : riyufuchi
 // Created on : Nov 30, 2025
-// Last edit  : Nov 30, 2025
+// Last edit  : Dec 11, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -22,7 +22,7 @@ void ToolsWxW::updateFontSizeInGrid(wxGrid* grid, int size)
 
 void ToolsWxW::informationDialog(const std::string& title, const std::string& text)
 {
-	tinyfd_messageBox(title.c_str(), text.c_str(), "ok", "info", 1);
+	wxMessageBox(text, title, wxOK | wxICON_INFORMATION, this);
 }
 
 } /* namespace consolelib */

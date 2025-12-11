@@ -2,7 +2,7 @@
 // File       : ToolsWxW.h
 // Author     : riyufuchi
 // Created on : Nov 30, 2025
-// Last edit  : Nov 30, 2025
+// Last edit  : Nov 11, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -12,8 +12,7 @@
 
 #include <wx/wx.h>
 #include <wx/grid.h>
-
-#include "../external/gui/tinyfiledialogs.h"
+#include <wx/textdlg.h>
 
 namespace wxtools
 {

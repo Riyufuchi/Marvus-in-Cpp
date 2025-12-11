@@ -280,7 +280,9 @@ void MainFrame::onExit(wxCommandEvent&)
 void MainFrame::onAbout(wxCommandEvent&)
 {
 	wxMessageBox(marvus::Controller::aboutApplication(), "About", wxOK | wxICON_INFORMATION, this);
-	wxMessageBox(wxVERSION_STRING, "About", wxOK | wxICON_INFORMATION, this);
+	#ifdef DEBUG
+		wxMessageBox(wxVERSION_STRING, "About wxWidgets", wxOK | wxICON_INFORMATION, this);
+	#endif
 }
 
 void MainFrame::onInsertPayment(wxCommandEvent& event)
