@@ -37,9 +37,12 @@ MainFrame::MainFrame(consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, _M
 	wxPanel* paymentsTab = new wxPanel(notebook);
 	wxPanel* statTab = new wxPanel(notebook);
 	
+	financeGraphPanel = new marvus::FinanceGraphPanel(notebook);
+
 	notebook->AddPage(enumTab, "Enum table");
 	notebook->AddPage(paymentsTab, "Payments", true);
 	notebook->AddPage(statTab, "Statistic");
+	notebook->AddPage(financeGraphPanel, "Finance graph");
 
 	// Tab 1
 	wxGrid* tempGrid = FactoryWxW::newGrid(enumTab, wxID_ANY);
@@ -128,6 +131,7 @@ wxMenuBar* MainFrame::createMenuBar()
 
 	wxMenu* overviews = new wxMenu();
 	overviews->Append(ID_YearSummary, "&Year summary");
+	overviews->Append(ID_DrawGraph, "&Graph");
 
 	wxMenu* network = new wxMenu();
 	network->Append(ID_SendFile, "&Send data");
@@ -376,6 +380,11 @@ void MainFrame::onImport(wxCommandEvent& event)
 		wxMessageBox(msg, "Import error", wxICON_ERROR);
 }
 
+void MainFrame::onShowGraph(wxCommandEvent& event)
+{
+	financeGraphPanel->refreshData(controller);
+}
+
 #ifdef DEBUG
 void MainFrame::onInsertTestData(wxCommandEvent& event)
 {
@@ -429,6 +438,7 @@ wxBEGIN_EVENT_TABLE(MainFrame, wxFrame)
 	EVT_MENU(ID_ViewEstablishment, MainFrame::onViewChanged)
 	EVT_MENU(ID_ViewCategories, MainFrame::onViewChanged)
 	EVT_MENU(ID_ViewMacros, MainFrame::onViewChanged)
+	EVT_MENU(ID_DrawGraph, MainFrame::onShowGraph)
 	// Network
 	EVT_MENU(ID_SendFile, MainFrame::onSendFile)
 	EVT_MENU(ID_RecieveFile, MainFrame::onRecieveFile)

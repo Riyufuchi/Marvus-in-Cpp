@@ -25,6 +25,7 @@
 #include "../marvus/wxWidgets/ControllerWxW.h"
 #include "../marvus/wxWidgets/dialogs/FileTransferDialog.h"
 #include "../marvus/wxWidgets/dialogs/PaymentDialog.h"
+#include "../marvus/wxWidgets/panels/FinanceGraphPanel.h"
 #include "../wxTools/FactoryWxW.h"
 #include "../wxTools/ToolsWxW.h"
 
@@ -48,7 +49,8 @@ enum
 	ID_YearSummary,
 	ID_ViewEstablishment,
 	ID_ViewCategories,
-	ID_ViewMacros
+	ID_ViewMacros,
+	ID_DrawGraph
 };
 
 class MainFrame : public wxFrame
@@ -60,6 +62,7 @@ class MainFrame : public wxFrame
 		wxNotebook* notebook; // Tabbed pane
 		wxChoice* monthChoice;
 		wxCheckBox* monthFilterCheck;
+		marvus::FinanceGraphPanel* financeGraphPanel;
 		// Backend
 		marvus::ControllerWxW controller;
 		// UI
@@ -71,19 +74,21 @@ class MainFrame : public wxFrame
 		//
 		void displayError(const std::string& title, const std::string& message);
 		// Events
-		void onNewDB(wxCommandEvent& event);
-		void onLoadDB(wxCommandEvent& event);
 		void onExit(wxCommandEvent& event);
 		void onAbout(wxCommandEvent& event);
 		void onNotImplemented(wxCommandEvent& event);
 		void onInsertPayment(wxCommandEvent& event);
 		void onRefreshWindow(wxCommandEvent& event);
 		void onDropDatabase(wxCommandEvent& event);
-		void onImport(wxCommandEvent& event);
 		void onDateFilterChanged(wxCommandEvent& event);
 		void onViewChanged(wxCommandEvent& event);
 		void onSendFile(wxCommandEvent& event);
 		void onRecieveFile(wxCommandEvent& event);
+		void onShowGraph(wxCommandEvent& event);
+		// Database file IO
+		void onNewDB(wxCommandEvent& event);
+		void onLoadDB(wxCommandEvent& event);
+		void onImport(wxCommandEvent& event);
 		#ifdef DEBUG
 			void onInsertTestData(wxCommandEvent& event);
 		#endif

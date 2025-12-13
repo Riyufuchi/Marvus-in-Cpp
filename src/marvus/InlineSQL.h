@@ -30,6 +30,7 @@ public:
 	static inline const std::string SELECT_PAYMENTS_WHERE_MONTH = SQL_SELECT_FOLDER + "payment_select_where_month.sql";
 	static inline const std::string SELECT_PAYMENT_MACROS = SQL_SELECT_FOLDER + "payment_macro_select.sql";
 	static inline const std::string SELECT_PAYMENT_SUMMARY = SQL_SELECT_FOLDER + "payment_summary_select.sql";
+	static inline const std::string SELECT_DAILY_TOTAL = SQL_SELECT_FOLDER + "select_daily_total.sql";
 	// VIEWS
 	static inline const std::string INITIALIZE_VIEWS = SQL_VIEWS_FOLDER + "init_views.sql";
 	// INSERTS
@@ -39,6 +40,7 @@ public:
 	static inline const std::string INSERT_PAYMENT_MACRO = SQL_INSERT_FOLDER + "insert_payment_macro.sql";
 	// STATS VIEWS
 	static inline const std::string STAT_YEAR_SUMMARY = SQL_STATS_FOLDER + "payment_summary.sql";
+	static inline const std::string STAT_DAILY_TOTAL = SQL_STATS_FOLDER + "daily_total.sql";
 	// DATABASE TOOLS
 	static inline const std::string DROP_DATABASE = SQL_TOOLS_FOLDER + "drop_db.sql";
 	static inline const std::string INITIALIZE_DATABASE_SQL = SQL_TOOLS_FOLDER + "initialize_database.sql";

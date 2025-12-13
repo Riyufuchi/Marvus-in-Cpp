@@ -22,6 +22,7 @@ Controller::Controller(errorFunctionSignature errorHandler) : marvusDB(DATABASE_
 	views[TableView::PAYMENTS_VIEW_FOR_MONTH] = InlineSQL::SELECT_PAYMENTS_WHERE_MONTH;
 	views[TableView::PAYMENT_MACRO_VIEW] = InlineSQL::SELECT_PAYMENT_MACROS;
 	views[TableView::STAT_PAYMENT_SUMMARY] = InlineSQL::SELECT_PAYMENT_SUMMARY;
+	views[TableView::STAT_DAILY_TOTAL] = InlineSQL::SELECT_DAILY_TOTAL;
 }
 
 void Controller::configure(consolelib::argVector& config)
@@ -46,6 +47,7 @@ bool Controller::initDB(std::string& errorMsg)
 	std::vector<std::string> views;
 	views.emplace_back(InlineSQL::INITIALIZE_VIEWS);
 	views.emplace_back(InlineSQL::STAT_YEAR_SUMMARY);
+	views.emplace_back(InlineSQL::STAT_DAILY_TOTAL);
 
 	for (const std::string& view : views)
 	{

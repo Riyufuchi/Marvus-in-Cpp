@@ -22,7 +22,7 @@
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "1.9 - Alpha"
+#define _APP_VERSION "0.1 - Beta"
 
 #ifdef DEBUG
 	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION " (debug)"
@@ -38,7 +38,8 @@ enum class Table
 {
 	PAYMENTS,
 	ENUM_TABLE,
-	STAT_TABLE
+	STAT_TABLE,
+	GRAPH
 };
 
 enum class TableView
@@ -48,7 +49,8 @@ enum class TableView
 	CATEGORIES_VIEW,
 	PAYMENTS_VIEW_FOR_MONTH,
 	PAYMENT_MACRO_VIEW,
-	STAT_PAYMENT_SUMMARY
+	STAT_PAYMENT_SUMMARY,
+	STAT_DAILY_TOTAL
 };
 
 class Controller
