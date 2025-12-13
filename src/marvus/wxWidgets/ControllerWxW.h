@@ -7,14 +7,13 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#ifndef MARVUS_WXW_CONTROLLERWXW_H_
-#define MARVUS_WXW_CONTROLLERWXW_H_
+#ifndef MARVUS_WXWIDGETS_CONTROLLERWXW_H_
+#define MARVUS_WXWIDGETS_CONTROLLERWXW_H_
 
 #include <wx/wx.h>
 
-#include "FileTransferDialog.h"
-
 #include "../base/Controller.h"
+#include "../wxWidgets/dialogs/FileTransferDialog.h"
 
 namespace marvus
 {
@@ -30,4 +29,4 @@ public:
 
 } /* namespace marvus */
 
-#endif /* MARVUS_WXW_CONTROLLERWXW_H_ */
+#endif /* MARVUS_WXWIDGETS_CONTROLLERWXW_H_ */

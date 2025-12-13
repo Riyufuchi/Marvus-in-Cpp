@@ -15,7 +15,7 @@
 
 #include <wx/wx.h>
 
-#include "../network/NetworkClientServerTool.h"
+#include "../../network/NetworkClientServerTool.h"
 
 namespace marvus
 {

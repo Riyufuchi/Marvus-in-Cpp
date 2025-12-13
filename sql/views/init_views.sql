@@ -26,7 +26,7 @@ DROP VIEW IF EXISTS PAYMENT_VIEW;
 CREATE VIEW PAYMENT_VIEW AS
 SELECT
 	p.payment_id AS 'ID',
-	e.establishment_name AS 'Entity',
+	e.establishment_name AS 'Establishment',
 	c.category_name AS 'Category',
 	p.payment_value AS 'Value',
 	strftime('%d.%m.%Y', p.payment_date) AS 'Date',
@@ -43,7 +43,7 @@ DROP VIEW IF EXISTS PAYMENT_MACRO_VIEW;
 CREATE VIEW PAYMENT_MACRO_VIEW AS
 SELECT
 	pm.macro_id AS 'ID',
-	e.establishment_name AS 'Entity',
+	e.establishment_name AS 'Establishment',
 	c.category_name AS 'Category',
 	pm.payment_value AS 'Value',
 	pm.payment_note AS 'Note'

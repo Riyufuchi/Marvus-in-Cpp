@@ -2,7 +2,7 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 11, 2025
+// Last edit  : Dec 13, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -63,7 +63,6 @@ MainFrame::MainFrame(consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, _M
 	// Layout the notebook
 	SetSizerAndFit(FactoryWxW::newMaxSizer(notebook));
 	// Attempt to load data
-	selectedViewForTable[marvus::Table::ENUM_TABLE] = {marvus::TableView::PAYMENT_MACRO_VIEW, {}};
 	monthChoice->SetSelection(0);
 	wxCommandEvent e;
 	onDateFilterChanged(e);
@@ -227,6 +226,12 @@ void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& 
 void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableView view, marvus::insertVector data)
 {
 	selectedViewForTable[table] = {view, data};
+	switch (table)
+	{
+		case marvus::Table::ENUM_TABLE: notebook->SetSelection(0); break;
+		case marvus::Table::PAYMENTS: notebook->SetSelection(1); break;
+		case marvus::Table::STAT_TABLE: notebook->SetSelection(2); break;
+	}
 	fillGrid(table, controller.obtainDataFromView(view, data));
 }
 

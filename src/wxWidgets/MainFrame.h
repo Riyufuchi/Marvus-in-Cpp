@@ -19,13 +19,12 @@
 #include <wx/textfile.h>
 #include <wx/textdlg.h>
 // Custom wxWidgets tools
-#include "../marvus/wxw/ControllerWxW.h"
-#include "../marvus/wxw/PaymentDialog.h"
-#include "../marvus/wxw/FileTransferDialog.h"
-// ConsoleLib
 #include "FileUtils.h"
 // Other
 #include "../../assets/icon.xpm"
+#include "../marvus/wxWidgets/ControllerWxW.h"
+#include "../marvus/wxWidgets/dialogs/FileTransferDialog.h"
+#include "../marvus/wxWidgets/dialogs/PaymentDialog.h"
 #include "../wxTools/FactoryWxW.h"
 #include "../wxTools/ToolsWxW.h"
 
