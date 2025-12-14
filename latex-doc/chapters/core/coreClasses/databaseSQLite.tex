@@ -1,0 +1,29 @@
+%!TeX root =  ../../../Marvus-in-Cpp.tex
+
+\section{DatabaseSQLite}
+
+This is a class that works on it own and it encapsulates the SQLite C API. It is not thread safe and MarvusDB inherits from it and that is why it is not included in the UML Figure~\ref{fig:controllerUML}.
+
+\subsection{MarvusDB}
+
+This class inherits from the DatabaseSQLite class and adds functions that are specific for this application, like function for inserting payment into the databse.
+
+\subsection{Public API}
+
+This subsection describes some functions that needs to be explained. 
+
+\subsubsection*{bool initializeDatabase();}
+
+This function loads scripts from provided path and executes \textit{"initialize\_database.sql"} whish is your script that creates tables, triggers and etc..
+
+\subsubsection*{bool executeFileSQL(...);}
+
+This function can execute multiple SQL statements. It is mainly used for executing entire SQL files, and it expects the file's contents to be provided to it, as it does not load any files on its own.
+
+\subsubsection*{bool initializeViews();}
+
+This functions looks for loaded files and executes those, that contains “view” in their name.
+
+\subsubsection*{bool reconnect(const std::string\& databaseFile);}
+
+This function allow to switch and load different database file and thus switch database files at runtime.

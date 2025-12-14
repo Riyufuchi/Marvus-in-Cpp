@@ -171,6 +171,9 @@ void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& 
 
 	wxGrid& grid = *grids.find(table)->second;
 
+	if (tableData.first.empty()) // No header data in the vector
+		return;
+
 	const bool isColID =  tableData.first[0] == "ID";
 	const int COL_NUMBER = tableData.first.size();
 
