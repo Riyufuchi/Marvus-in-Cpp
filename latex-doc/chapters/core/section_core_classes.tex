@@ -1,14 +1,5 @@
 %!TeX root =  ../../Marvus-in-Cpp.tex
 
-\section{UML}
-
-\begin{figure}[H]
-	\centering
-	\includegraphics[width=\textwidth]{images/controller-uml.png}
-    	\caption{Controller relations UML}
-   	\label{fig:controllerUML}
-\end{figure}
-
 \section{Controller}
 
 The Controller class is core of this application, it encapsulate the database controller. It is a separate unit from \wxw so it could be reused for Qt GUI based application for example.
@@ -21,18 +12,18 @@ This is a class that works on it own and it encapsulates the SQLite C API. It is
 
 This subsection describes some functions that needs to be explained. 
 
-\subsubsection{bool initializeDatabase();}
+\subsubsection*{bool initializeDatabase();}
 
 This function loads scripts from provided path and executes \textit{"initialize\_database.sql"} whish is your script that creates tables, triggers and etc..
 
-\subsubsection{bool executeFileSQL(...);}
+\subsubsection*{bool executeFileSQL(...);}
 
 This function can execute multiple SQL statements. It is mainly used for executing entire SQL files, and it expects the file's contents to be provided to it, as it does not load any files on its own.
 
-\subsubsection{bool initializeViews();}
+\subsubsection*{bool initializeViews();}
 
 This functions looks for loaded files and executes those, that contains “view” in their name.
 
-\subsubsection{bool reconnect(const std::string\& databaseFile);}
+\subsubsection*{bool reconnect(const std::string\& databaseFile);}
 
 This function allow to switch and load different database file and thus switch database files at runtime.
