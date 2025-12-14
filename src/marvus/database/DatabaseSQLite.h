@@ -1,8 +1,8 @@
 //==============================================================================
-// File       : Database.h
+// File       : DatabaseSQLite.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 07, 2025
+// Last edit  : Dec 14, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -35,7 +35,7 @@ using tableHeaderAndData = std::pair<tableRow, tableRowVector>;
 
 using errorFunctionSignature = std::function<void(const std::string&, const std::string&)>;
 
-class Database
+class DatabaseSQLite
 {
 	protected:
 		consolelib::ScriptMap sqlScriptFiles;
@@ -49,10 +49,12 @@ class Database
 		int rowCallback(void* data, int argc, char** argv, char** azColName); // Callback function to handle each row of the result
 		int bindValuesToSQL(const insertVector& data, StatementSQL& stmtSQL);
 	public:
-		Database(std::string databaseFile, errorFunctionSignature showError);
-		Database(std::string databaseFile, std::string sqlScripts, errorFunctionSignature showError);
-		virtual ~Database();
+		DatabaseSQLite(errorFunctionSignature showError);
+		DatabaseSQLite(std::string sqlScripts, errorFunctionSignature showError);
+		virtual ~DatabaseSQLite();
 		// Functions
+		bool isConnected() const;
+		bool createNewDatabaseFile(const std::string& databaseFilePath);
 		bool initializeViews();
 		bool initializeDatabase();
 		bool reconnect(const std::string& databaseFile);
@@ -61,6 +63,7 @@ class Database
 		int insertNewData(const insertVector& data, const std::string& insertSQL);
 		tableRowVector obtainTableData(const std::string& selectSQL);
 		tableHeaderAndData obtainFromFilterView(const std::string& viewSQL, const insertVector& data = {});
+
 		// Setters
 		void setPathToSQL_Scripts(std::string path);
 		void setShowErrorFunction(errorFunctionSignature func);

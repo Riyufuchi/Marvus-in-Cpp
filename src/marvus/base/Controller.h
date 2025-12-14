@@ -2,7 +2,7 @@
 // File       : Controller.h
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 11, 2025
+// Last edit  : Dec 14, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -14,6 +14,7 @@
 #include "../database/MarvusDB.h"
 #include "../InlineSQL.h"
 #include "../tools/ToolsIO.h"
+#include "../tools/ConfigJSON.h"
 // ConsoleLib
 #include "ArgumentParser.h"
 #include "FileUtils.h"
@@ -22,7 +23,7 @@
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "0.1 - Beta"
+#define _APP_VERSION "0.2 - Beta"
 
 #ifdef DEBUG
 	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION " (debug)"
@@ -58,6 +59,7 @@ class Controller
 protected:
 	std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argumentMethods;
 	std::unordered_map<marvus::TableView, std::string> views;
+	ConfigJSON configuration;
 	MarvusDB marvusDB;
 	errorFunctionSignature errorHandler;
 public:
@@ -68,6 +70,8 @@ public:
 	bool initDB(std::string& errorMsg);
 	void dropDB();
 	bool connectToDB(const std::string& name);
+	bool createNewDatabase(const std::string& name);
+	bool isDatabaseConnected() const;
 	// Database interaction
 	bool insertEntity(const Establishment& e);
 	bool insertCategory(const Category& c);

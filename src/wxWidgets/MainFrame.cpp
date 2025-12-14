@@ -2,7 +2,7 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 13, 2025
+// Last edit  : Dec 14, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -18,15 +18,6 @@ MainFrame::MainFrame(consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, _M
 	SetIcon(icon);
 
 	controller.configure(config);
-
-	std::string message;
-
-	if (controller.initDB(message))
-	{
-		wxMessageBox(message, "Database Error", wxOK | wxICON_ERROR, this);
-		Close(true);
-		return;
-	}
 
 	SetMenuBar(createMenuBar()); // Set the menu bar for this frame
 	createToolBar();
@@ -66,10 +57,12 @@ MainFrame::MainFrame(consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, _M
 	// Layout the notebook
 	SetSizerAndFit(FactoryWxW::newMaxSizer(notebook));
 	// Attempt to load data
-	monthChoice->SetSelection(0);
-	wxCommandEvent e;
-	onDateFilterChanged(e);
-	onRefreshWindow(e);
+	if (controller.isDatabaseConnected())
+	{
+		wxCommandEvent e;
+		onDateFilterChanged(e);
+		onRefreshWindow(e);
+	}
 	SetSize(800, 600);
 }
 
@@ -103,6 +96,7 @@ void MainFrame::createToolBar()
 
 	monthChoice = new wxChoice(tb, wxID_ANY, wxDefaultPosition, wxDefaultSize, months);
 	tb->AddControl(monthChoice);
+	monthChoice->SetSelection(0);
 	//
 	tb->Realize();
 	// Bind events
@@ -229,13 +223,14 @@ void MainFrame::fillGrid(marvus::Table table, const marvus::tableHeaderAndData& 
 
 void MainFrame::loadViewToGrid(marvus::Table table, marvus::TableView view, marvus::insertVector data)
 {
-	selectedViewForTable[table] = {view, data};
 	switch (table)
 	{
 		case marvus::Table::ENUM_TABLE: notebook->SetSelection(0); break;
 		case marvus::Table::PAYMENTS: notebook->SetSelection(1); break;
 		case marvus::Table::STAT_TABLE: notebook->SetSelection(2); break;
+		default: return;
 	}
+	selectedViewForTable[table] = {view, data};
 	fillGrid(table, controller.obtainDataFromView(view, data));
 }
 
@@ -257,6 +252,8 @@ void MainFrame::onViewChanged(wxCommandEvent& event)
 void MainFrame::onDateFilterChanged(wxCommandEvent&)
 {
 	monthChoice->Enable(monthFilterCheck->GetValue());
+	if (!controller.isDatabaseConnected())
+		return;
 	if (monthFilterCheck->GetValue())
 		loadViewToGrid(marvus::Table::PAYMENTS, marvus::TableView::PAYMENTS_VIEW_FOR_MONTH, { std::format("{:02}", monthChoice->GetSelection() + 1) });
 	else
@@ -333,7 +330,13 @@ void MainFrame::onLoadDB(wxCommandEvent& event)
 	wxFileDialog openFileDialog(this, "Select a database file", "", "", "Database |*.db", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 	if (openFileDialog.ShowModal() == wxID_CANCEL)
 		return;
-	controller.connectToDB(openFileDialog.GetPath().ToStdString());
+	std::string msg;
+	if (controller.connectToDB(openFileDialog.GetPath().ToStdString()))
+		if (controller.initDB(msg))
+		{
+			displayError("Database initialization error", msg);
+			return;
+		}
 	onRefreshWindow(event);
 }
 
@@ -343,11 +346,11 @@ void MainFrame::onNewDB(wxCommandEvent& event)
 	wxTextEntryDialog dialog(this, "Database name:", "New database", defaultValue);
 	if (dialog.ShowModal() == wxID_OK)
 	{
-		controller.connectToDB(dialog.GetValue().ToStdString());
+		controller.createNewDatabase(dialog.GetValue().ToStdString());
 		std::string msg;
 		if (controller.initDB(msg))
 		{
-			displayError("New DB creation", msg);
+			displayError("Database initialization error", msg);
 			return;
 		}
 		onRefreshWindow(event);

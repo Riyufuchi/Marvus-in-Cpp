@@ -2,7 +2,7 @@
 // File       : MarvusDB.cpp
 // Author     : riyufuchi
 // Created on : Nov 25, 2025
-// Last edit  : Dec 07, 2025
+// Last edit  : Dec 14, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -12,11 +12,7 @@
 namespace marvus
 {
 
-MarvusDB::MarvusDB(errorFunctionSignature errorHandler) : MarvusDB("database.db", errorHandler)
-{
-}
-
-MarvusDB::MarvusDB(std::string database, errorFunctionSignature errorHandler) : Database(database, InlineSQL::SQL_ROOT_FOLDER, errorHandler)
+MarvusDB::MarvusDB(errorFunctionSignature errorHandler) : DatabaseSQLite(InlineSQL::SQL_ROOT_FOLDER, errorHandler)
 {
 }
 

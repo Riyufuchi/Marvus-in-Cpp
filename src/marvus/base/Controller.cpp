@@ -2,7 +2,7 @@
 // File       : Controller.cpp
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 11, 2025
+// Last edit  : Dec 14, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -12,7 +12,7 @@
 namespace marvus
 {
 
-Controller::Controller(errorFunctionSignature errorHandler) : marvusDB(DATABASE_FILE, errorHandler), errorHandler(errorHandler)
+Controller::Controller(errorFunctionSignature errorHandler) : marvusDB(errorHandler), errorHandler(errorHandler)
 {
 	this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; marvusDB.setPathToSQL_Scripts(vector[0]); };
 
@@ -66,9 +66,9 @@ bool Controller::connectToDB(const std::string& name)
 	std::filesystem::path databaseFile(name);
 	if (databaseFile.extension() != ".db")
 	{
-		return marvusDB.reconnect(databaseFile.generic_string() + ".db");
+		return !marvusDB.reconnect(databaseFile.generic_string() + ".db");
 	}
-	return marvusDB.reconnect(databaseFile.generic_string());
+	return !marvusDB.reconnect(databaseFile.generic_string());
 }
 
 void Controller::dropDB()
@@ -115,6 +115,21 @@ bool Controller::exportToZIP(const std::string& path, std::string& errorMessage)
 void Controller::setShowErrorFunction(errorFunctionSignature func)
 {
 	marvusDB.setShowErrorFunction(func);
+}
+
+bool Controller::createNewDatabase(const std::string& name)
+{
+	std::filesystem::path databaseFile(name);
+	if (databaseFile.extension() != ".db")
+	{
+		return !marvusDB.createNewDatabaseFile(databaseFile.generic_string() + ".db");
+	}
+	return !marvusDB.createNewDatabaseFile(databaseFile.generic_string());
+}
+
+bool Controller::isDatabaseConnected() const
+{
+	return marvusDB.isConnected();
 }
 
 std::string Controller::aboutApplication()

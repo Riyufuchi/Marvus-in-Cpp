@@ -2,7 +2,7 @@
 // File       : MarvusDB.h
 // Author     : riyufuchi
 // Created on : Nov 25, 2025
-// Last edit  : Dec 07, 2025
+// Last edit  : Dec 14, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -10,9 +10,8 @@
 #ifndef MARVUS_MARVUSDB_H_
 #define MARVUS_MARVUSDB_H_
 
-#include "Database.h"
-
 #include "../InlineSQL.h"
+#include "DatabaseSQLite.h"
 
 namespace marvus
 {
@@ -48,11 +47,10 @@ struct PaymentMacro
 	std::string note { "" };
 };
 
-class MarvusDB : public Database
+class MarvusDB : public DatabaseSQLite
 {
 public:
 	MarvusDB(errorFunctionSignature errorHandler);
-	MarvusDB(std::string database, errorFunctionSignature errorHandler);
 	virtual ~MarvusDB() = default;
 	bool insertEstablishment(const Establishment& establishment);
 	bool insertCategory(const Category& category);

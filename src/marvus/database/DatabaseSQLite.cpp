@@ -1,34 +1,33 @@
 //==============================================================================
-// File       : Database.cpp
+// File       : DatabaseSQLite.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 10, 2025
+// Last edit  : Dec 14, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "Database.h"
+#include "DatabaseSQLite.h"
 
 namespace marvus
 {
-Database::Database(std::string databaseFile, errorFunctionSignature showError) : Database(databaseFile, "", showError)
+DatabaseSQLite::DatabaseSQLite(errorFunctionSignature showError) : DatabaseSQLite("", showError)
 {
 }
 
-Database::Database(std::string databaseFile, std::string sqlScriptsPath, errorFunctionSignature showError) : sqlScriptsPath(sqlScriptsPath), c_ErrorMessage(nullptr),
+DatabaseSQLite::DatabaseSQLite(std::string sqlScriptsPath, errorFunctionSignature showError) : db(nullptr), sqlScriptsPath(sqlScriptsPath), c_ErrorMessage(nullptr),
 		showError(showError)
 {
-	int result = sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr);
-	checkSuccess(result);
+
 }
 
-Database::~Database()
+DatabaseSQLite::~DatabaseSQLite()
 {
 	if (db)
 		sqlite3_close(db);
 }
 
-int Database::rowCallback(void* /*data*/, int argc, char** argv, char** /*azColName*/)
+int DatabaseSQLite::rowCallback(void* /*data*/, int argc, char** argv, char** /*azColName*/)
 {
 	tableRow rowData;
 	rowData.reserve(argc); // Optimize vector allocation
@@ -39,7 +38,7 @@ int Database::rowCallback(void* /*data*/, int argc, char** argv, char** /*azColN
 	return 0; // Continue processing
 }
 
-int Database::bindValuesToSQL(const insertVector& data, StatementSQL& stmtSQL)
+int DatabaseSQLite::bindValuesToSQL(const insertVector& data, StatementSQL& stmtSQL)
 {
 	int x = 1;
 	static int result;
@@ -87,7 +86,7 @@ int Database::bindValuesToSQL(const insertVector& data, StatementSQL& stmtSQL)
 	return 1;
 }
 
-int Database::insertNewData(const insertVector& data, const std::string& insertSQL)
+int DatabaseSQLite::insertNewData(const insertVector& data, const std::string& insertSQL)
 {
 	static int result;
 	if (insertSQL == "")
@@ -112,12 +111,12 @@ int Database::insertNewData(const insertVector& data, const std::string& insertS
 	return sqlite3_last_insert_rowid(db);
 }
 
-tableRowVector Database::obtainTableData(const std::string& selectSQL)
+tableRowVector DatabaseSQLite::obtainTableData(const std::string& selectSQL)
 {
 	tableData.clear();
 	static int result = sqlite3_exec(db, selectSQL.c_str(),
 		[](void* data, int argc, char** argv, char** azColName) -> int {
-			return static_cast<Database*>(data)->rowCallback(data, argc, argv, azColName);
+			return static_cast<DatabaseSQLite*>(data)->rowCallback(data, argc, argv, azColName);
 		},
 		this, &c_ErrorMessage);
 	if (checkSuccess(result))
@@ -125,7 +124,7 @@ tableRowVector Database::obtainTableData(const std::string& selectSQL)
 	return tableData;
 }
 
-tableHeaderAndData Database::obtainFromFilterView(const std::string& viewSQL, const insertVector& data)
+tableHeaderAndData DatabaseSQLite::obtainFromFilterView(const std::string& viewSQL, const insertVector& data)
 {
 	tableRow header;
 	tableRowVector tableData;
@@ -163,7 +162,7 @@ tableHeaderAndData Database::obtainFromFilterView(const std::string& viewSQL, co
 	return tableHeaderAndData(header, tableData);
 }
 
-bool Database::checkSuccess(int result, int expectedResult)
+bool DatabaseSQLite::checkSuccess(int result, int expectedResult)
 {
 	if (result != expectedResult)
 	{
@@ -173,15 +172,22 @@ bool Database::checkSuccess(int result, int expectedResult)
 	return false;
 }
 
-bool Database::reconnect(const std::string& databaseFile)
+bool DatabaseSQLite::createNewDatabaseFile(const std::string& databaseFilePath)
+{
+	return checkSuccess(sqlite3_open_v2(databaseFilePath.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr));
+}
+
+bool DatabaseSQLite::reconnect(const std::string& databaseFile)
 {
 	if (db)
 		sqlite3_close(db);
-	return checkSuccess(sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr));
+	return checkSuccess(sqlite3_open_v2(databaseFile.c_str(), &db,  SQLITE_OPEN_READWRITE, nullptr));
 }
 
-bool Database::initializeViews()
+bool DatabaseSQLite::initializeViews()
 {
+	if (!db)
+		return false;
 	for (const auto& [scriptFile, fileContent] : sqlScriptFiles.getScriptMap())
 		if (scriptFile.find("view") != std::string::npos)
 			if (!executeFileSQL(fileContent))
@@ -189,14 +195,16 @@ bool Database::initializeViews()
 	return true;
 }
 
-bool Database::initializeDatabase()
+bool DatabaseSQLite::initializeDatabase()
 {
+	if (!db)
+		return false;
 	if (!sqlScriptFiles.loadScriptsRecursive(sqlScriptsPath))
 		return false;
 	return executeFileSQL(sqlScriptFiles.getScript(InlineSQL::INITIALIZE_DATABASE_SQL));
 }
 
-bool Database::executeFileSQL(const std::string& sqlScript)
+bool DatabaseSQLite::executeFileSQL(const std::string& sqlScript)
 {
 	int rc = sqlite3_exec(db, sqlScript.c_str(), nullptr, nullptr, &c_ErrorMessage);
 	if (rc != SQLITE_OK)
@@ -208,7 +216,7 @@ bool Database::executeFileSQL(const std::string& sqlScript)
 	return true;
 }
 
-bool Database::prepareScriptSQL(const std::string& sql, StatementSQL& statement, const insertVector& data)
+bool DatabaseSQLite::prepareScriptSQL(const std::string& sql, StatementSQL& statement, const insertVector& data)
 {
 	if (checkSuccess(sqlite3_prepare_v2(db, sql.c_str(), -1, statement, nullptr)))
 	{
@@ -223,19 +231,24 @@ bool Database::prepareScriptSQL(const std::string& sql, StatementSQL& statement,
 	return true;
 }
 
-void Database::setPathToSQL_Scripts(std::string path)
+void DatabaseSQLite::setPathToSQL_Scripts(std::string path)
 {
 	this->sqlScriptsPath = path;
 }
 
-void Database::setShowErrorFunction(errorFunctionSignature func)
+void DatabaseSQLite::setShowErrorFunction(errorFunctionSignature func)
 {
 	showError = func;
 }
 
-const std::string& Database::getScriptSQL(const std::string& scrpiptFileName)
+const std::string& DatabaseSQLite::getScriptSQL(const std::string& scrpiptFileName)
 {
 	return sqlScriptFiles.getScript(scrpiptFileName);
+}
+
+bool DatabaseSQLite::isConnected() const
+{
+	return db;
 }
 
 }
