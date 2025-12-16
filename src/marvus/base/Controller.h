@@ -23,7 +23,7 @@
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "0.4 - Beta"
+#define _APP_VERSION "0.5 - Beta"
 
 #ifdef DEBUG
 	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION " (debug)"
@@ -33,7 +33,6 @@
 
 namespace marvus
 {
-inline const std::string DATABASE_FILE = "marvus.db";
 
 enum class Table
 {

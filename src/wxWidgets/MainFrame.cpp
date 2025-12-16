@@ -126,7 +126,9 @@ wxMenuBar* MainFrame::createMenuBar()
 
 	wxMenu* overviews = new wxMenu();
 	overviews->Append(ID_YearSummary, "&Year summary");
-	overviews->Append(ID_DrawGraph, "&Graph");
+
+	wxMenu* graphs = new wxMenu();
+	graphs->Append(ID_DrawGraph, "&Graph");
 
 	wxMenu* network = new wxMenu();
 	network->Append(ID_SendFile, "&Send data");
@@ -149,6 +151,7 @@ wxMenuBar* MainFrame::createMenuBar()
 	menuBar->Append(fileMenu, "&File");
 	menuBar->Append(payment, "&Payment");
 	menuBar->Append(overviews, "&Overview mode");
+	menuBar->Append(graphs, "&Graphs");
 	menuBar->Append(tools, "&Tools");
 	menuBar->Append(network, "&Network");
 	menuBar->Append(window, "&Window");
@@ -389,6 +392,7 @@ void MainFrame::onImport(wxCommandEvent& event)
 
 void MainFrame::onShowGraph(wxCommandEvent&)
 {
+	notebook->SetSelection(3);
 	financeGraphPanel->refreshData(controller.obtainDataFromView(marvus::TableView::STAT_DAILY_TOTAL).second);
 }
 
