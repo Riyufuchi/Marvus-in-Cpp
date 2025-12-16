@@ -2,7 +2,7 @@
 // File       : ControllerWxW.cpp
 // Author     : riyufuchi
 // Created on : Dec 11, 2025
-// Last edit  : Dec 11, 2025
+// Last edit  : Dec 15, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -23,7 +23,7 @@ ControllerWxW::~ControllerWxW()
 void ControllerWxW::sendFileOverNetwork(wxWindow* parent)
 {
 	FileTransferDialog networkDialog(parent, "Send data", errorHandler);
-	wxString ipAddress = "192.168.0.100";
+	wxString ipAddress = configFile.getServerIPv4();
 	wxTextEntryDialog textDialog(parent, "IPv4 address:", "Network setup", ipAddress);
 
 	wxString filters =
@@ -40,7 +40,7 @@ void ControllerWxW::sendFileOverNetwork(wxWindow* parent)
 
 	if (textDialog.ShowModal() == wxID_OK)
 	{
-		networkDialog.startClient(textDialog.GetValue(), 6969, path.ToStdString());
+	networkDialog.startClient(textDialog.GetValue(), configFile.getPort(), path.ToStdString());
 		networkDialog.ShowModal();
 	}
 }
@@ -48,7 +48,7 @@ void ControllerWxW::sendFileOverNetwork(wxWindow* parent)
 void ControllerWxW::recieveFileFromNetwork(wxWindow* parent)
 {
 	marvus::FileTransferDialog networkDialog(parent, "Receive data", errorHandler);
-	networkDialog.startServer(6969);
+	networkDialog.startServer(configFile.getPort());
 	networkDialog.ShowModal();
 }
 

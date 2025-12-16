@@ -21,6 +21,9 @@ CMakeCache.txt
 CMakeFiles
 CMakeFiles/
 
+# QtCreator
+*.user
+
 # Eclipse
 .cproject
 .autotools

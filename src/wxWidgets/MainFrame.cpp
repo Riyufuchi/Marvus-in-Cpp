@@ -2,7 +2,7 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 14, 2025
+// Last edit  : Dec 15, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -57,6 +57,7 @@ MainFrame::MainFrame(consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, _M
 	// Layout the notebook
 	SetSizerAndFit(FactoryWxW::newMaxSizer(notebook));
 	// Attempt to load data
+	controller.autoloadDatabase();
 	if (controller.isDatabaseConnected())
 	{
 		wxCommandEvent e;
@@ -409,19 +410,28 @@ void MainFrame::onInsertTestData(wxCommandEvent& event)
 	controller.insertCategory(c1);
 	controller.insertCategory(c2);
 
-	int valueInt = 100;
 	marvus::Payment p {0, 1, 1, "100", "2025-10-10", ""};
 	size_t pos = 5;
+
+	std::random_device r;
+	std::default_random_engine randomEngine(r());
+	std::uniform_real_distribution<double> uniform_dist(-5000.0, 10000.0);
+	std::uniform_int_distribution<int> id_randomizer(1, 3);
 
 	for (int i = 1; i < 13; ++i)
 	{
 		std::ostringstream oss;
 		oss << std::setw(2) << std::setfill('0') << i; // format as 2 digits
-
-		p.value = std::to_string(valueInt + i);
 		p.date.replace(pos, 2, oss.str());
 
-		controller.insertPayment(p);
+		for (int x = 0; x < 3; x++)
+		{
+			p.value = std::to_string(uniform_dist(randomEngine));
+			p.ent_key = id_randomizer(randomEngine);
+			p.category_key = id_randomizer(randomEngine);
+
+			controller.insertPayment(p);
+		}
 	}
 	onDateFilterChanged(event); // Updates grid by current selection
 	onRefreshWindow(event);

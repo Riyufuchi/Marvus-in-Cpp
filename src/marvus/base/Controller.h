@@ -2,7 +2,7 @@
 // File       : Controller.h
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 14, 2025
+// Last edit  : Dec 15, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -23,7 +23,7 @@
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "0.2 - Beta"
+#define _APP_VERSION "0.3 - Beta"
 
 #ifdef DEBUG
 	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION " (debug)"
@@ -59,7 +59,7 @@ class Controller
 protected:
 	std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argumentMethods;
 	std::unordered_map<marvus::TableView, std::string> views;
-	ConfigJSON configuration;
+	ConfigJSON configFile;
 	MarvusDB marvusDB;
 	errorFunctionSignature errorHandler;
 public:
@@ -69,6 +69,7 @@ public:
 	// Database file IO
 	bool initDB(std::string& errorMsg);
 	void dropDB();
+    void autoloadDatabase();
 	bool connectToDB(const std::string& name);
 	bool createNewDatabase(const std::string& name);
 	bool isDatabaseConnected() const;

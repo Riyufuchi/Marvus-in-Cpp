@@ -2,7 +2,7 @@
 // File       : Controller.cpp
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 14, 2025
+// Last edit  : Dec 15, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -76,6 +76,19 @@ void Controller::dropDB()
 	marvusDB.executeFileSQL(marvusDB.getScriptSQL(InlineSQL::DROP_DATABASE));
 	marvusDB.initializeDatabase();
 	marvusDB.initializeViews();
+}
+
+void Controller::autoloadDatabase()
+{
+	if (!configFile.getAutoloadDB())
+		return;
+	std::string msg;
+	if (connectToDB(configFile.getDatabaseFilePath()))
+		if (initDB(msg))
+		{
+			errorHandler("Database initialization error", msg);
+			return;
+		}
 }
 
 tableHeaderAndData Controller::obtainDataFromView(TableView view, const insertVector& data)
