@@ -387,9 +387,9 @@ void MainFrame::onImport(wxCommandEvent& event)
 		wxMessageBox(msg, "Import error", wxICON_ERROR);
 }
 
-void MainFrame::onShowGraph(wxCommandEvent& event)
+void MainFrame::onShowGraph(wxCommandEvent&)
 {
-	financeGraphPanel->refreshData(controller);
+	financeGraphPanel->refreshData(controller.obtainDataFromView(marvus::TableView::STAT_DAILY_TOTAL).second);
 }
 
 #ifdef DEBUG
