@@ -1,5 +1,5 @@
 //==============================================================================
-// File       : ToolsWxW.h
+// File       : ToolsWxW.cpp
 // Author     : riyufuchi
 // Created on : Nov 30, 2025
 // Last edit  : Dec 23, 2025
@@ -7,15 +7,17 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#ifndef WXTOOLS_TOOLS_WX_H_
-#define WXTOOLS_TOOLS_WX_H_
-
-#include <wx/wx.h>
-#include <wx/grid.h>
-#include <wx/textdlg.h>
+#include "../wx_tools/tools_wx.h"
 
 namespace wxtools
 {
-void updateFontSizeInGrid(wxGrid* grid, int size);
+
+void updateFontSizeInGrid(wxGrid* grid, int size)
+{
+	wxFont font = grid->GetDefaultCellFont();
+	font.SetPointSize(size);
+	grid->SetDefaultCellFont(font);
+	grid->ForceRefresh();
 }
-#endif
+
+}

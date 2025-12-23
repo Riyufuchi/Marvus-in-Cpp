@@ -14,7 +14,7 @@
 
 #include "ArgumentParser.h"
 
-#include "main_frame.h"
+#include "../wx_widgets/main_frame.h"
 
 namespace wxtools
 {

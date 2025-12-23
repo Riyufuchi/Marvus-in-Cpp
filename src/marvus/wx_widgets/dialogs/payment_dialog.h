@@ -17,8 +17,8 @@
 
 #include "DataUtils.h"
 
-#include "../../../wxTools/factory_wx.h"
-#include "../../../wxWidgets/base/dialog_base.h"
+#include "../../../wx_tools/factory_wx.h"
+#include "../../../wx_widgets/base/dialog_base.h"
 
 namespace marvus
 {

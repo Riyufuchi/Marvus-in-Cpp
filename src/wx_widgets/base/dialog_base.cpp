@@ -7,7 +7,7 @@
 // Description: KEO-manager
 //==============================================================================
 
-#include "dialog_base.h"
+#include "../../wx_widgets/base/dialog_base.h"
 
 namespace keo
 {

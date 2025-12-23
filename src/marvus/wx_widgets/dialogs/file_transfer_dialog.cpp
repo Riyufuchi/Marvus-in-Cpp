@@ -7,7 +7,7 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "../../wxWidgets/dialogs/file_transfer_dialog.h"
+#include "../../wx_widgets/dialogs/file_transfer_dialog.h"
 
 namespace marvus
 {

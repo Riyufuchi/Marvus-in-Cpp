@@ -7,8 +7,8 @@
 // Description: KEO-manager
 //==============================================================================
 
-#ifndef WXTOOLS_FACTORY_WX_H_
-#define WXTOOLS_FACTORY_WX_H_
+#ifndef WX_TOOLS_FACTORY_WX_H_
+#define WX_TOOLS_FACTORY_WX_H_
 
 #include <vector>
 #include <string>

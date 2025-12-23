@@ -7,8 +7,8 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#ifndef MARVUS_WXWIDGETS_PANELS_FINANCE_GRAPH_PANEL_H_
-#define MARVUS_WXWIDGETS_PANELS_FINANCE_GRAPH_PANEL_H_
+#ifndef MARVUS_WX_WIDGETS_PANELS_FINANCE_GRAPH_PANEL_H_
+#define MARVUS_WX_WIDGETS_PANELS_FINANCE_GRAPH_PANEL_H_
 
 #include <wx/wx.h>
 #include <wx/panel.h>
@@ -46,4 +46,4 @@ public:
 
 } /* namespace marvus */
 
-#endif /* MARVUS_WXWIDGETS_PANELS_FINANCE_GRAPH_PANEL_H_ */
+#endif /* MARVUS_WX_WIDGETS_PANELS_FINANCE_GRAPH_PANEL_H_ */

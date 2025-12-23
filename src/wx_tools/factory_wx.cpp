@@ -7,7 +7,7 @@
 // Description: KEO-manager
 //==============================================================================
 
-#include "factory_wx.h"
+#include "../wx_tools/factory_wx.h"
 
 namespace wxtools::factory_wx
 {

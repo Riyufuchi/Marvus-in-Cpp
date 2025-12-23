@@ -7,7 +7,7 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "finance_graph_panel.h"
+#include "../../wx_widgets/panels/finance_graph_panel.h"
 
 namespace marvus
 {
