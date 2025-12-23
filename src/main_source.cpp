@@ -7,7 +7,7 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "wxWidgets/ManagerApp.h"
+#include "wxWidgets/application_manager.h"
 
 wxIMPLEMENT_APP(wxtools::ManagerApp);
 

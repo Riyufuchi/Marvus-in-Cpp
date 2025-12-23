@@ -23,10 +23,10 @@
 #include "FileUtils.h"
 // Other
 #include "../../assets/icon.xpm"
-#include "../marvus/wxWidgets/ControllerWxW.h"
-#include "../marvus/wxWidgets/dialogs/FileTransferDialog.h"
-#include "../marvus/wxWidgets/dialogs/PaymentDialog.h"
-#include "../marvus/wxWidgets/panels/FinanceGraphPanel.h"
+#include "../marvus/wxWidgets/controller_wx.h"
+#include "../marvus/wxWidgets/dialogs/file_transfer_dialog.h"
+#include "../marvus/wxWidgets/dialogs/payment_dialog.h"
+#include "../marvus/wxWidgets/panels/finance_graph_panel.h"
 #include "../wxTools/factory_wx.h"
 #include "../wxTools/tools_wx.h"
 

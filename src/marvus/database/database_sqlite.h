@@ -15,8 +15,8 @@
 #include <functional>
 
 // Local - Marvus
-#include "StatementSQL.h"
-#include "../InlineSQL.h"
+#include "statement_sql.h"
+#include "../inline_sql.h"
 // SQLite
 #include "../../external/sqlite/sqlite3.h"
 // ConsoleLib

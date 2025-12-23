@@ -21,7 +21,8 @@
 #include "boost/system.hpp"
 #include "boost/version.hpp"
 // Local - Marvus
-#include "../database/DatabaseSQLite.h"
+
+#include "../database/database_sqlite.h"
 
 namespace marvus
 {

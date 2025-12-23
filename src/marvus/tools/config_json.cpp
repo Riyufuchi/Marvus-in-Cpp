@@ -7,7 +7,7 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "ConfigJSON.h"
+#include "config_json.h"
 
 namespace marvus
 {

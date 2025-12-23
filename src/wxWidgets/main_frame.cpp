@@ -7,7 +7,7 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "../wxWidgets/MainFrame.h"
+#include "../wxWidgets/main_frame.h"
 
 namespace wxtools
 {

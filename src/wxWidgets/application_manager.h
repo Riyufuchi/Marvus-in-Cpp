@@ -13,7 +13,8 @@
 #include <wx/wx.h>
 
 #include "ArgumentParser.h"
-#include "../wxWidgets/MainFrame.h"
+
+#include "main_frame.h"
 
 namespace wxtools
 {

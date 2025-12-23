@@ -7,7 +7,7 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "MarvusDB.h"
+#include "marvus_db.h"
 
 namespace marvus
 {

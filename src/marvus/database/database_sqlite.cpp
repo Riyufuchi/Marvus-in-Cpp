@@ -7,7 +7,7 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "DatabaseSQLite.h"
+#include "database_sqlite.h"
 
 namespace marvus
 {

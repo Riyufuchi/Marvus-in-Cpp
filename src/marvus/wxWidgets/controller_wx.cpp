@@ -7,7 +7,7 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "ControllerWxW.h"
+#include "controller_wx.h"
 
 namespace marvus
 {

@@ -11,14 +11,14 @@
 #define MARVUS_CONTROLLER_H_
 
 // Local
-#include "../database/MarvusDB.h"
-#include "../InlineSQL.h"
-#include "../tools/ToolsIO.h"
-#include "../tools/ConfigJSON.h"
+#include "../database/marvus_db.h"
+#include "../tools/io_tools.h"
+#include "../tools/config_json.h"
 // ConsoleLib
 #include "ArgumentParser.h"
 #include "FileUtils.h"
 #include "ConsoleLib.h"
+#include "../inline_sql.h"
 
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
 

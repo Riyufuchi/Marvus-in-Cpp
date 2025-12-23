@@ -7,8 +7,8 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#ifndef MARVUS_INLINESQL_H_
-#define MARVUS_INLINESQL_H_
+#ifndef MARVUS_INLINE_SQL_H_
+#define MARVUS_INLINE_SQL_H_
 
 #include <string>
 
@@ -50,4 +50,4 @@ public:
 
 } /* namespace marvus */
 
-#endif /* MARVUS_INLINESQL_H_ */
+#endif /* MARVUS_INLINE_SQL_H_ */

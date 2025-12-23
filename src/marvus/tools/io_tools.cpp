@@ -7,8 +7,9 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "ToolsIO.h"
-#include "../base/Controller.h"
+#include "io_tools.h"
+
+#include "../base/controller.h"
 
 namespace marvus
 {

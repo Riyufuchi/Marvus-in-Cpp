@@ -10,8 +10,8 @@
 #ifndef MARVUS_MARVUSDB_H_
 #define MARVUS_MARVUSDB_H_
 
-#include "../InlineSQL.h"
-#include "DatabaseSQLite.h"
+#include "../inline_sql.h"
+#include "database_sqlite.h"
 
 namespace marvus
 {

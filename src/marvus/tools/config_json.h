@@ -7,8 +7,8 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#ifndef MARVUS_TOOLS_CONFIGJSON_H_
-#define MARVUS_TOOLS_CONFIGJSON_H_
+#ifndef MARVUS_TOOLS_CONFIG_JSON_H_
+#define MARVUS_TOOLS_CONFIG_JSON_H_
 
 #include <string>
 #include <filesystem>
@@ -45,4 +45,4 @@ public:
 
 } /* namespace marvus */
 
-#endif /* MARVUS_TOOLS_CONFIGJSON_H_ */
+#endif /* MARVUS_TOOLS_CONFIG_JSON_H_ */
