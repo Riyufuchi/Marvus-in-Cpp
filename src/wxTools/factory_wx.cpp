@@ -2,31 +2,31 @@
 // File       : FactoryWxW.cpp
 // Author     : riyufuchi
 // Created on : Apr 01, 2025
-// Last edit  : Dec 05, 2025
+// Last edit  : Dec 23, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: KEO-manager
 //==============================================================================
 
-#include "../wxTools/FactoryWxW.h"
+#include "factory_wx.h"
 
-namespace wxtools
+namespace wxtools::factory_wx
 {
 
-wxBoxSizer* FactoryWxW::newMaxSizer(wxWindow* component)
+wxBoxSizer* newMaxSizer(wxWindow* component)
 {
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	sizer->Add(component, 1, wxEXPAND | wxALL, 0);
 	return sizer;
 }
 
-wxGrid* FactoryWxW::newGrid(wxWindow* parent, wxWindowID id)
+wxGrid* newGrid(wxWindow* parent, wxWindowID id)
 {
 	wxGrid* grid = new wxGrid(parent, id, wxPoint(0, 0), wxSize(400, 300));
 	grid->CreateGrid(0, 0);
 	return grid;
 }
 
-wxGrid* FactoryWxW::newGrid(wxWindow* parent, wxWindowID id, const std::vector<std::string>& header)
+wxGrid* newGrid(wxWindow* parent, wxWindowID id, const std::vector<std::string>& header)
 {
 	wxGrid* grid = new wxGrid(parent, id, wxPoint(0, 0), wxSize(400, 300));
 	grid->CreateGrid(0, header.size());
@@ -39,7 +39,7 @@ wxGrid* FactoryWxW::newGrid(wxWindow* parent, wxWindowID id, const std::vector<s
 	return grid;
 }
 
-wxComboBox* FactoryWxW::newComboBox(wxWindow* parent, const enumVector& data)
+wxComboBox* newComboBox(wxWindow* parent, const enumVector& data)
 {
 	wxArrayString wxPlayerNames;
 	if (data.empty()) // This insures that empty CB will not crash the application

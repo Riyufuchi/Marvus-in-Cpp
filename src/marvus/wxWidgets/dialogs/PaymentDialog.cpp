@@ -17,12 +17,12 @@ PaymentDialog::PaymentDialog(wxWindow* parent, const InputData& inputData) : keo
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 	wxFlexGridSizer* gridSizer = new wxFlexGridSizer(2, 5, 5);
 
-	establishmentComboBox = wxtools::FactoryWxW::newComboBox(this, inputData.establishments);
+	establishmentComboBox = wxtools::factory_wx::newComboBox(this, inputData.establishments);
 
 	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Establishment:"), 0, wxTOP | wxLEFT, 5);
 	gridSizer->Add(establishmentComboBox, 0, wxEXPAND | wxALL, 5);
 
-	categoryComboBox = wxtools::FactoryWxW::newComboBox(this, inputData.categories);
+	categoryComboBox = wxtools::factory_wx::newComboBox(this, inputData.categories);
 
 	gridSizer->Add(new wxStaticText(this, wxID_ANY, "Category:"), 0, wxTOP | wxLEFT, 5);
 	gridSizer->Add(categoryComboBox, 0, wxEXPAND | wxALL, 5);

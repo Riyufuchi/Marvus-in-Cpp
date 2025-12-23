@@ -2,7 +2,7 @@
 // File       : MainFrame.h
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 11, 2025
+// Last edit  : Dec 23, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -27,8 +27,8 @@
 #include "../marvus/wxWidgets/dialogs/FileTransferDialog.h"
 #include "../marvus/wxWidgets/dialogs/PaymentDialog.h"
 #include "../marvus/wxWidgets/panels/FinanceGraphPanel.h"
-#include "../wxTools/FactoryWxW.h"
-#include "../wxTools/ToolsWxW.h"
+#include "../wxTools/factory_wx.h"
+#include "../wxTools/tools_wx.h"
 
 namespace wxtools
 {

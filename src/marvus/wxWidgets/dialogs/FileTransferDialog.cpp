@@ -43,7 +43,7 @@ void FileTransferDialog::OnUpdateProgress(wxThreadEvent& event)
 	status_text_->SetLabel(message);
 }
 
-void FileTransferDialog::OnClose(wxCloseEvent& event)
+void FileTransferDialog::OnClose(wxCloseEvent&)
 {
 	safeExit();
 }

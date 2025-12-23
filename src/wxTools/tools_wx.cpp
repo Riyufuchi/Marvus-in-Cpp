@@ -2,17 +2,17 @@
 // File       : ToolsWxW.cpp
 // Author     : riyufuchi
 // Created on : Nov 30, 2025
-// Last edit  : Dec 11, 2025
+// Last edit  : Dec 23, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "../wxTools/ToolsWxW.h"
+#include "tools_wx.h"
 
 namespace wxtools
 {
 
-void ToolsWxW::updateFontSizeInGrid(wxGrid* grid, int size)
+void updateFontSizeInGrid(wxGrid* grid, int size)
 {
 	wxFont font = grid->GetDefaultCellFont();
 	font.SetPointSize(size);
@@ -20,4 +20,4 @@ void ToolsWxW::updateFontSizeInGrid(wxGrid* grid, int size)
 	grid->ForceRefresh();
 }
 
-} /* namespace consolelib */
+}

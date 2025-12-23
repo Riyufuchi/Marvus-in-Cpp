@@ -36,26 +36,26 @@ MainFrame::MainFrame(consolelib::argVector& config) : wxFrame(NULL, wxID_ANY, _M
 	notebook->AddPage(financeGraphPanel, "Finance graph");
 
 	// Tab 1
-	wxGrid* tempGrid = FactoryWxW::newGrid(enumTab, wxID_ANY);
-	enumTab->SetSizer(wxtools::FactoryWxW::newMaxSizer(tempGrid));
+	wxGrid* tempGrid = factory_wx::newGrid(enumTab, wxID_ANY);
+	enumTab->SetSizer(wxtools::factory_wx::newMaxSizer(tempGrid));
 	grids[marvus::Table::ENUM_TABLE] = tempGrid;
 
 	// Tab 2
-	tempGrid = FactoryWxW::newGrid(paymentsTab, wxID_ANY);
-	paymentsTab->SetSizer(wxtools::FactoryWxW::newMaxSizer(tempGrid));
+	tempGrid = factory_wx::newGrid(paymentsTab, wxID_ANY);
+	paymentsTab->SetSizer(wxtools::factory_wx::newMaxSizer(tempGrid));
 	grids[marvus::Table::PAYMENTS] = tempGrid;
 
 	// Tab 3
-	tempGrid = FactoryWxW::newGrid(statTab, wxID_ANY);
-	statTab->SetSizer(wxtools::FactoryWxW::newMaxSizer(tempGrid));
+	tempGrid = factory_wx::newGrid(statTab, wxID_ANY);
+	statTab->SetSizer(wxtools::factory_wx::newMaxSizer(tempGrid));
 	grids[marvus::Table::STAT_TABLE] = tempGrid;
 
 	for (const auto& grid : grids)
 	{
-		ToolsWxW::updateFontSizeInGrid(grid.second, 10);
+		updateFontSizeInGrid(grid.second, 10);
 	}
 	// Layout the notebook
-	SetSizerAndFit(FactoryWxW::newMaxSizer(notebook));
+	SetSizerAndFit(factory_wx::newMaxSizer(notebook));
 	// Attempt to load data
 	controller.autoloadDatabase();
 	if (controller.isDatabaseConnected())

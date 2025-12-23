@@ -13,11 +13,11 @@
 #include <wx/datectrl.h>
 #include <wx/dateevt.h>
 
-#include "../../../wxTools/FactoryWxW.h"
-
 #include "../../database/MarvusDB.h"
 
 #include "DataUtils.h"
+
+#include "../../../wxTools/factory_wx.h"
 #include "../../../wxWidgets/base/DialogKEO.h"
 
 namespace marvus
