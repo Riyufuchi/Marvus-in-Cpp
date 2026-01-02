@@ -15,7 +15,8 @@
 
 #include <wx/wx.h>
 
-#include "../../network/NetworkClientServerTool.h"
+#include "../../network/file_transfer/file_client.h"
+#include "../../network/file_transfer/file_server.h"
 
 namespace marvus
 {
@@ -27,13 +28,14 @@ private:
 	std::atomic_bool stop_flag{false};
 	wxGauge* progress_bar_;
 	wxStaticText* status_text_;
-	NetworkClientServerTool clientServerTool;
+	errorFunctionSignature error_callback;
+	NetworkBase* network_operation;
 	void OnUpdateProgress(wxThreadEvent& event);
 	void OnClose(wxCloseEvent& event);
 	void safeExit();
 	void updateProgressBar(size_t bytes_sent, size_t total_bytes);
 public:
-	FileTransferDialog(wxWindow* parent, const wxString& title, errorFunctionSignature errorCallback);
+	FileTransferDialog(wxWindow* parent, const wxString& title, errorFunctionSignature& error_callback);
 	virtual ~FileTransferDialog();
 	void startServer(unsigned short port);
 	void startClient(const wxString& server_ip, unsigned short port, const wxString& file_path);

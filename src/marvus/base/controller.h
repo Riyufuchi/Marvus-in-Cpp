@@ -2,7 +2,7 @@
 // File       : Controller.h
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 16, 2025
+// Last edit  : Jan 01, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -20,10 +20,10 @@
 #include "ConsoleLib.h"
 #include "../inline_sql.h"
 
-#define _COPYRIGHT_HEADER "Riyufuchi (c) 2025\n"
+#define _COPYRIGHT_HEADER "Riyufuchi (c) 2025 - 2026\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "0.5 - Beta"
+#define _APP_VERSION "0.6 - Beta"
 
 #ifdef DEBUG
 	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION " (debug)"

@@ -12,7 +12,8 @@
 namespace marvus
 {
 
-FileTransferDialog::FileTransferDialog(wxWindow* parent, const wxString& title, errorFunctionSignature errorCallback) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(300, 300)), clientServerTool(errorCallback)
+FileTransferDialog::FileTransferDialog(wxWindow* parent, const wxString& title, errorFunctionSignature& error_callback) : wxDialog(parent, wxID_ANY, title, wxDefaultPosition, wxSize(300, 300)),
+	error_callback(error_callback), network_operation(nullptr)
 {
 	wxBoxSizer* sizer = new wxBoxSizer(wxVERTICAL);
 
@@ -51,9 +52,9 @@ void FileTransferDialog::OnClose(wxCloseEvent&)
 void FileTransferDialog::safeExit()
 {
 	stop_flag = true; // signal thread to stop
-	if (network_thread.joinable())
+	if (network_operation)
 	{
-		network_thread.join(); // wait for thread to finish
+		delete network_operation;
 	}
 	Destroy();
 }
@@ -70,10 +71,14 @@ void FileTransferDialog::startServer(unsigned short port)
 {
 	stop_flag = false; // reset stop flag
 
-	network_thread = std::thread([port, this]() {
+	network_operation = new FileServer([this](size_t bytes_sent, size_t total_bytes) { updateProgressBar(bytes_sent, total_bytes); }, port,  error_callback);
+	if (network_operation)
+		network_operation->start();
+	/*network_thread = std::thread([port, this]()
+	{
 		clientServerTool.runFileServer(port, stop_flag,
 		[this](size_t bytes_sent, size_t total_bytes) { updateProgressBar(bytes_sent, total_bytes); });
-	});
+	});*/
 }
 
 void FileTransferDialog::startClient(const wxString& server_ip, unsigned short port, const wxString& file_path)
@@ -84,7 +89,7 @@ void FileTransferDialog::startClient(const wxString& server_ip, unsigned short p
 	std::string file = file_path.ToStdString();
 	unsigned short portCopy = port;
 
-	network_thread = std::thread([ip, portCopy, file, this]()
+	/*network_thread = std::thread([ip, portCopy, file, this]()
 	{
 		if (clientServerTool.runFileClient(ip, portCopy, file, stop_flag,
 		[this](size_t bytes_sent, size_t total_bytes) { updateProgressBar(bytes_sent, total_bytes); }))
@@ -95,7 +100,7 @@ void FileTransferDialog::startClient(const wxString& server_ip, unsigned short p
 		{
 			wxMessageBox("Transfer of file " + file + " failed.", "Network error", wxICON_ERROR);
 		}
-	});
+	});*/
 }
 
 } /* namespace marvus */
