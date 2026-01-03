@@ -2,7 +2,7 @@
 // File       : MainFrame.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Dec 15, 2025
+// Last edit  : Jan 03, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -329,7 +329,7 @@ void MainFrame::onSendFile(wxCommandEvent&)
 
 void MainFrame::onRecieveFile(wxCommandEvent& )
 {
-	controller.recieveFileFromNetwork(this);
+	controller.recieve_file_from_network(this);
 }
 
 void MainFrame::onLoadDB(wxCommandEvent& event)

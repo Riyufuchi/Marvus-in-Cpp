@@ -1,3 +1,10 @@
+//==============================================================================
+// File       : MainFrame.h
+// Author     : riyufuchi
+// Created on : Dec 29, 2025
+// Last edit  : Jan 03, 2026
+//==============================================================================
+
 #ifndef NETWORK_BASE_H
 #define NETWORK_BASE_H
 
@@ -15,7 +22,7 @@ namespace marvus
 class NetworkBase
 {
 private:
-	std::jthread networkThread;
+	std::jthread network_thread;
 	void internal_run(std::stop_token st);
 protected:
 	boost::system::error_code ec;

@@ -1,3 +1,10 @@
+//==============================================================================
+// File       : file_server.cpp
+// Author     : Riyufuchi
+// Created on : Dec 29, 2025
+// Last edit  : Jan 03, 2026
+//==============================================================================
+
 #include "file_server.h"
 
 namespace marvus
@@ -8,10 +15,9 @@ FileServer::FileServer(const std::function<void(size_t, size_t)>& progress_callb
 
 FileServer::~FileServer()
 {
-	io_context.stop();
 }
 
-void FileServer::recieve_file()
+void FileServer::recieve_file(std::stop_token st)
 {
 	boost::asio::ip::tcp::acceptor acceptor(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port));
 	boost::asio::ip::tcp::socket socket(io_context);
@@ -35,7 +41,7 @@ void FileServer::recieve_file()
 	boost::system::error_code ec;
 	size_t n;
 
-	while (bytes_received < total_file_size)
+	while (bytes_received < total_file_size && !st.stop_requested())
 	{
 		n = socket.read_some(boost::asio::buffer(buffer_data), ec);
 		if ((ec == boost::asio::error::eof) || ec)
@@ -50,12 +56,17 @@ void FileServer::recieve_file()
 
 	if (progress_callback)
 		progress_callback(bytes_received, total_file_size);
+
+	if (bytes_received != total_file_size)
+	{
+		std::filesystem::remove(file_name);
+	}
 }
 
 void FileServer::run(std::stop_token st)
 {
 	while (!st.stop_requested())
-		recieve_file();
+		recieve_file(st);
 
 }
 

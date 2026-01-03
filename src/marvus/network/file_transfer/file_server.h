@@ -1,3 +1,10 @@
+//==============================================================================
+// File       : file_server.h
+// Author     : Riyufuchi
+// Created on : Dec 29, 2025
+// Last edit  : Jan 03, 2026
+//==============================================================================
+
 #ifndef FILE_SERVER_H
 #define FILE_SERVER_H
 
@@ -9,7 +16,7 @@ class FileServer : public NetworkBase
 {
 private:
 	std::function<void(size_t, size_t)> progress_callback;
-	void recieve_file();
+	void recieve_file(std::stop_token st);
 public:
 	FileServer(const std::function<void(size_t, size_t)>& progress_callback, unsigned short port, errorFunctionSignature& efs);
 	~FileServer();

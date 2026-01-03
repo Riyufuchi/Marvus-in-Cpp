@@ -2,7 +2,7 @@
 // File       : ControllerWxW.cpp
 // Author     : riyufuchi
 // Created on : Dec 11, 2025
-// Last edit  : Dec 15, 2025
+// Last edit  : Jan 03, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -12,8 +12,9 @@
 namespace marvus
 {
 
-ControllerWxW::ControllerWxW(errorFunctionSignature errorHandler) : Controller(errorHandler)
+ControllerWxW::ControllerWxW(const errorFunctionSignature& errorHandler) : Controller(errorHandler)
 {
+	this->is_network_running = false;
 }
 
 ControllerWxW::~ControllerWxW()
@@ -45,11 +46,23 @@ void ControllerWxW::sendFileOverNetwork(wxWindow* parent)
 	}
 }
 
-void ControllerWxW::recieveFileFromNetwork(wxWindow* parent)
+void ControllerWxW::recieve_file_from_network(wxWindow* parent)
 {
-	marvus::FileTransferDialog networkDialog(parent, "Receive data", errorHandler);
-	networkDialog.startServer(configFile.getPort());
-	networkDialog.ShowModal();
+	if (is_network_running)
+		return;
+
+	is_network_running = true;
+
+	auto* network_dialog = new FileTransferDialog(parent, "Receive data", errorHandler);
+
+	network_dialog->Bind(wxEVT_CLOSE_WINDOW, [this, network_dialog](wxCloseEvent&)
+	{
+		network_dialog->safe_network_exit();
+		network_dialog->Destroy();
+		is_network_running = false;
+	});
+
+	network_dialog->Show();
 }
 
 } /* namespace marvus */
