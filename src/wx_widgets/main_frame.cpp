@@ -324,7 +324,7 @@ void MainFrame::onInsertPayment(wxCommandEvent& event)
 
 void MainFrame::onSendFile(wxCommandEvent&)
 {
-	controller.sendFileOverNetwork(this);
+	controller.send_file_over_network(this);
 }
 
 void MainFrame::onRecieveFile(wxCommandEvent& )

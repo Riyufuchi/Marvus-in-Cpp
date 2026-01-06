@@ -21,29 +21,40 @@ ControllerWxW::~ControllerWxW()
 {
 }
 
-void ControllerWxW::sendFileOverNetwork(wxWindow* parent)
+void ControllerWxW::send_file_over_network(wxWindow* parent)
 {
-	FileTransferDialog networkDialog(parent, "Send data", errorHandler);
-	wxString ipAddress = configFile.getServerIPv4();
-	wxTextEntryDialog textDialog(parent, "IPv4 address:", "Network setup", ipAddress);
+	if (is_network_running)
+		return;
+
+	is_network_running = true;
 
 	wxString filters =
 		"Data files (*.zip;*.db)|*.zip;*.db|"
 		"All files (*.*)|*.*";
 
-	wxFileDialog openFileDialog(parent, "Select a zip file",
+	wxFileDialog open_file_dialog(parent, "Select a zip file",
 		"", "", filters, wxFD_OPEN | wxFD_FILE_MUST_EXIST);
 
-	if (openFileDialog.ShowModal() == wxID_CANCEL)
+	if (open_file_dialog.ShowModal() == wxID_CANCEL)
 		return;
 
-	wxString path = openFileDialog.GetPath();
+	wxString path_wxstr = open_file_dialog.GetPath();
 
-	if (textDialog.ShowModal() == wxID_OK)
+	wxString ip_address_wxstr = configFile.getServerIPv4();
+	wxTextEntryDialog text_dialog(parent, "IPv4 address:", "Network setup", ip_address_wxstr);
+	if (text_dialog.ShowModal() != wxID_OK)
+		return;
+
+	auto* network_dialog = new FileTransferDialog(parent, "Send data", errorHandler);
+	network_dialog->Bind(wxEVT_CLOSE_WINDOW, [this, network_dialog](wxCloseEvent&)
 	{
-	networkDialog.startClient(textDialog.GetValue(), configFile.getPort(), path.ToStdString());
-		networkDialog.ShowModal();
-	}
+		network_dialog->safe_network_exit();
+		network_dialog->Destroy();
+		is_network_running = false;
+	});
+	network_dialog->start_client(text_dialog.GetValue(), configFile.getPort(), path_wxstr.ToStdString());
+	network_dialog->Show();
+
 }
 
 void ControllerWxW::recieve_file_from_network(wxWindow* parent)
@@ -54,15 +65,23 @@ void ControllerWxW::recieve_file_from_network(wxWindow* parent)
 	is_network_running = true;
 
 	auto* network_dialog = new FileTransferDialog(parent, "Receive data", errorHandler);
+	network_dialog->start_server(configFile.getPort());
 
-	network_dialog->Bind(wxEVT_CLOSE_WINDOW, [this, network_dialog](wxCloseEvent&)
+	network_dialog->Bind(wxEVT_CLOSE_WINDOW, [network_dialog](wxCloseEvent&)
 	{
-		network_dialog->safe_network_exit();
-		network_dialog->Destroy();
-		is_network_running = false;
+		std::thread([network_dialog]
+		{
+			network_dialog->safe_network_exit();
+			network_dialog->Destroy();
+		}).detach();
 	});
 
 	network_dialog->Show();
+
+	/*network_dialog->CallAfter([network_dialog]
+	{
+		network_dialog->Destroy();
+	});*/
 }
 
 } /* namespace marvus */

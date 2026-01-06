@@ -8,12 +8,27 @@
 
 namespace marvus
 {
-NetworkBase::NetworkBase(unsigned short port, errorFunctionSignature& efs) : socket(io_context), port(port), error_callback(efs)
+NetworkBase::NetworkBase(unsigned short port, errorFunctionSignature& efs) : socket(io_context), acceptor(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)), port(port), error_callback(efs)
 {}
 
 NetworkBase::~NetworkBase()
 {
-	io_context.stop();
+	stop();
+}
+
+void NetworkBase::stop()
+{
+	if (network_thread.joinable())
+	{
+		network_thread.request_stop();
+		acceptor.cancel(ec);
+		acceptor.close(ec);
+		socket.cancel(ec);
+		socket.shutdown(boost::asio::ip::tcp::socket::shutdown_both, ec);
+		socket.close(ec);
+		io_context.stop();
+		network_thread.join();
+	}
 }
 
 void NetworkBase::start()

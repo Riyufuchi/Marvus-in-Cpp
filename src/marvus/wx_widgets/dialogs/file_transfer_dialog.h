@@ -36,7 +36,7 @@ public:
 	virtual ~FileTransferDialog();
 	void safe_network_exit();
 	void start_server(unsigned short port);
-	void startClient(const wxString& server_ip, unsigned short port, const wxString& file_path);
+	void start_client(const wxString& server_ip, unsigned short port, const wxString& file_path);
 };
 
 } /* namespace marvus */

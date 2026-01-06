@@ -1,6 +1,6 @@
 //==============================================================================
-// File       : MainFrame.h
-// Author     : riyufuchi
+// File       : network_base.h
+// Author     : Riyufuchi
 // Created on : Dec 29, 2025
 // Last edit  : Jan 03, 2026
 //==============================================================================
@@ -25,9 +25,10 @@ private:
 	std::jthread network_thread;
 	void internal_run(std::stop_token st);
 protected:
-	boost::system::error_code ec;
 	boost::asio::io_context io_context;
 	boost::asio::ip::tcp::socket socket;
+	boost::asio::ip::tcp::acceptor acceptor;
+	boost::system::error_code ec;
 	unsigned short port;
 	errorFunctionSignature error_callback;
 	virtual void run(std::stop_token st) = 0;
@@ -35,6 +36,7 @@ public:
 	NetworkBase(unsigned short port, errorFunctionSignature& efs);
 	virtual ~NetworkBase();
 	void start();
+	void stop();
 };
 }
 #endif // NETWORK_BASE_H

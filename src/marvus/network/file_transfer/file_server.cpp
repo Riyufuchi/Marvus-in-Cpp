@@ -19,8 +19,6 @@ FileServer::~FileServer()
 
 void FileServer::recieve_file(std::stop_token st)
 {
-	boost::asio::ip::tcp::acceptor acceptor(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port));
-	boost::asio::ip::tcp::socket socket(io_context);
 	acceptor.accept(socket);
 
 	uint64_t network_file_size = 0;
@@ -38,14 +36,13 @@ void FileServer::recieve_file(std::stop_token st)
 
 	char buffer_data[4096];
 	size_t bytes_received = 0;
-	boost::system::error_code ec;
 	size_t n;
 
 	while (bytes_received < total_file_size && !st.stop_requested())
 	{
 		n = socket.read_some(boost::asio::buffer(buffer_data), ec);
-		if ((ec == boost::asio::error::eof) || ec)
-			return;
+		if ((ec == boost::asio::error::eof) || ec == boost::asio::error::operation_aborted || ec)
+			break;
 
 		out.write(buffer_data, n);
 		bytes_received += n;
@@ -59,15 +56,14 @@ void FileServer::recieve_file(std::stop_token st)
 
 	if (bytes_received != total_file_size)
 	{
+		out.close();
 		std::filesystem::remove(file_name);
 	}
 }
 
 void FileServer::run(std::stop_token st)
 {
-	while (!st.stop_requested())
-		recieve_file(st);
-
+	recieve_file(st);
 }
 
 }

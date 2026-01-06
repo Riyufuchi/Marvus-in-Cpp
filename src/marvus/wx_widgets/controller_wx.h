@@ -11,6 +11,9 @@
 #define MARVUS_WX_WIDGETS_CONTROLLER_WX_H_
 
 #include <wx/wx.h>
+#include <wx/app.h>
+#include <wx/event.h>
+#include <wx/thread.h>
 // STL
 #include <thread>
 // Local
@@ -28,7 +31,7 @@ public:
 	ControllerWxW(const errorFunctionSignature& errorHandler);
 	virtual ~ControllerWxW();
 	void recieve_file_from_network(wxWindow* parent);
-	void sendFileOverNetwork(wxWindow* parent);
+	void send_file_over_network(wxWindow* parent);
 };
 
 } /* namespace marvus */

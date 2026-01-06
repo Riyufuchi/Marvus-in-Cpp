@@ -10,11 +10,11 @@
 namespace marvus
 {
 
-FileClient::FileClient(const std::string& server_ip, unsigned short port, const std::string& file_path, std::function<void(size_t, size_t)>& progress_callback, errorFunctionSignature& efs) : NetworkBase(port, efs),
+FileClient::FileClient(const std::string& server_ip, unsigned short port, const std::string& file_path, const std::function<void(size_t, size_t)>& progress_callback, errorFunctionSignature& efs) : NetworkBase(port, efs),
 	server_ip(server_ip), file_path(file_path), progress_callback(progress_callback)
 {}
 
-void FileClient::send_file()
+void FileClient::send_file(std::stop_token st)
 {
 	auto addr = boost::asio::ip::make_address(server_ip, ec);
 	if (ec)
@@ -53,7 +53,7 @@ void FileClient::send_file()
 	size_t bytes_sent = 0;
 	std::streamsize n;
 
-	while (!in.eof())
+	while (!in.eof() && !st.stop_requested())
 	{
 		in.read(buffer_data, sizeof(buffer_data));
 		n = in.gcount();
@@ -73,7 +73,7 @@ void FileClient::send_file()
 
 void FileClient::run(std::stop_token st)
 {
-	send_file();
+	send_file(st);
 }
 
 }

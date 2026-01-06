@@ -47,6 +47,7 @@ void FileTransferDialog::safe_network_exit()
 {
 	if (network_operation)
 	{
+		network_operation->stop();
 		delete network_operation;
 		network_operation = nullptr;
 	}
@@ -67,11 +68,11 @@ void FileTransferDialog::start_server(unsigned short port)
 		network_operation->start();
 }
 
-void FileTransferDialog::startClient(const wxString& server_ip, unsigned short port, const wxString& file_path)
+void FileTransferDialog::start_client(const wxString& server_ip, unsigned short port, const wxString& file_path)
 {
-	std::string ip = server_ip.ToStdString();
-	std::string file = file_path.ToStdString();
-	unsigned short portCopy = port;
+	network_operation = new FileClient(server_ip.ToStdString(), port, file_path.ToStdString(), [this](size_t bytes_sent, size_t total_bytes) { updateProgressBar(bytes_sent, total_bytes); }, error_callback);
+	if (network_operation)
+		network_operation->start();
 }
 
 } /* namespace marvus */
