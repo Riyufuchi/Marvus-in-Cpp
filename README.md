@@ -16,7 +16,7 @@ This project is for learning how to work with wxWidgets and database. It is an u
 
 | Name | Used for | Included in this repository |
 | :------: | :----------: | :---: |
-| [wxWidgets](https://www.wxwidgets.org/) | GUI | ✅ (For Windows only) |
+| [wxWidgets](https://www.wxwidgets.org/) | GUI | ✅ |
 | [SQLite](https://www.sqlite.org/) | Database | ✅ |
 | [ConsoleLib](https://github.com/Riyufuchi/ConsoleLib) | Console & utils stuff | ✅ |
 | [Miniz](https://github.com/richgel999/miniz) | Zip file | ✅ |
