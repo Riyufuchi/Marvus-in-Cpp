@@ -16,7 +16,7 @@ This project is for learning how to work with wxWidgets and database. It is an u
 
 | Name | Used for | Included in this repository |
 | :------: | :----------: | :---: |
-| [wxWidgets](https://www.wxwidgets.org/) | GUI | ✅ |
+| [GTK 4](https://www.gtk.org/) | GUI | ❌ |
 | [SQLite](https://www.sqlite.org/) | Database | ✅ |
 | [ConsoleLib](https://github.com/Riyufuchi/ConsoleLib) | Console & utils stuff | ✅ |
 | [Miniz](https://github.com/richgel999/miniz) | Zip file | ✅ |
@@ -57,14 +57,15 @@ This project is for learning how to work with wxWidgets and database. It is an u
 
 ### Libraries
 
-#### wxWidgets
+#### GTK 4
 
    ```bash
    # On Debian based systems
-   sudo apt install libwxgtk3.2-dev
+   sudo apt install libgtk-4-dev
+   
    
    # On Windows
-   # Just extract the zip file in libs folder.
+   # Build process not prepared yet.
    ```
 
 #### Boost

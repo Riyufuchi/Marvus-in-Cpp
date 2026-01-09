@@ -7,19 +7,16 @@
 // Description: Marvus-in-Cpp
 //==============================================================================
 
-#include "wx_widgets/application_manager.h"
+#include "gui/main_window.h"
 
-wxIMPLEMENT_APP(wxtools::ManagerApp);
-
-/*int main(int argc, char** argv)
+int main(int argc, char** argv)
 {
-	wxApp::SetInstance(new wxtools::ManagerApp(argc, argv));
-	wxEntryStart(argc, argv);
-	wxTheApp->CallOnInit();
-	wxTheApp->OnRun();
-	wxTheApp->OnExit();
-	wxEntryCleanup();
-}*/
+	marvus::MainWindow main_window;
+	if (main_window.analyze_arguments(argc, argv))
+		main_window.configure();
+	return main_window.run_application(argc, argv);
+}
+
 
 
 

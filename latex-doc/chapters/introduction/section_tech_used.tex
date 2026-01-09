@@ -2,8 +2,10 @@
 
 \section{Technologies Used}
 
-\subsection{wxWidgets}
-This project is written mainly in C++ and utilize \gls{wxwidgets} for the \gls{gui}.  \gls{wxwidgets} is cross-platform and utilize naive GUI libraries for each supported platform.
+\subsection{GTK 4}
+This project is written mainly in C++ and utilize \gls{gtk} for the \gls{gui}.  \gls{gtk} is cross-platform and it has a modern linux-like look, but that is alright as I work on this project on linux.
+
+\input{chapters/introduction/subsubsection_why_gtk_4.tex}
 
 \subsection{SQLite}
 This project use SQLite for simplicity as main focus is on C++ and GUI. So this application will not produce accurate statistics as SQLite do not support accurate decimal data type and use only double. I will compare results from this application with results from my Java application that uses BigDecimal for accurate decimal calculations.

@@ -15,8 +15,7 @@ DatabaseSQLite::DatabaseSQLite(errorFunctionSignature showError) : DatabaseSQLit
 {
 }
 
-DatabaseSQLite::DatabaseSQLite(std::string sqlScriptsPath, errorFunctionSignature showError) : db(nullptr), sqlScriptsPath(sqlScriptsPath), c_ErrorMessage(nullptr),
-		showError(showError)
+DatabaseSQLite::DatabaseSQLite(std::string sqlScriptsPath, errorFunctionSignature showError) : db(nullptr), sqlScriptsPath(sqlScriptsPath), c_ErrorMessage(nullptr), showError(showError)
 {
 
 }

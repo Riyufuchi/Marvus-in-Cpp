@@ -75,9 +75,15 @@ if (WIN32)
 	# Include wxWidgets headers
 	include_directories(${wxWidgets_INCLUDE_DIRS})
 else()
-	find_package(wxWidgets REQUIRED COMPONENTS core base)
-	include(${wxWidgets_USE_FILE})
-endif() 
+	#find_package(wxWidgets REQUIRED COMPONENTS core base)
+	#include(${wxWidgets_USE_FILE})
+endif()
+
+#
+# GTK
+#
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(GTK REQUIRED gtk4)
 
 #
 # Boost
@@ -126,8 +132,14 @@ endif()
 target_include_directories(Marvus PRIVATE ${CONSOLE_LIB_DIR}/inc)
 target_include_directories(Marvus PRIVATE ${boost_INCLUDE_DIRS})
 
+target_include_directories(Marvus PRIVATE ${GTK_INCLUDE_DIRS})
+target_link_directories(Marvus PRIVATE ${GTK_LIBRARY_DIRS})
+target_link_libraries(Marvus PRIVATE ${GTK_LIBRARIES})
+target_compile_options(Marvus PRIVATE ${GTK_CFLAGS_OTHER})
+
+
 target_link_libraries(Marvus PRIVATE ConsoleLib)
-target_link_libraries(Marvus PRIVATE ${wxWidgets_LIBRARIES})
+#target_link_libraries(Marvus PRIVATE ${wxWidgets_LIBRARIES})
 set(Boost_USE_STATIC_LIBS ON)
 set(Boost_USE_MULTITHREADED ON)
 set(Boost_USE_STATIC_RUNTIME ON)
