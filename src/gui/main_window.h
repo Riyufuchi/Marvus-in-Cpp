@@ -19,6 +19,8 @@ class MainWindow : public gtk::ApplicationGTK
 private:
 	Controller controller;
 	void create_menu_bar(GtkApplication* app);
+	void create_tool_bar(GtkWidget* root_box);
+	void create_notebook(GtkWidget* root_box);
 	// Menu bar events
 	static void on_quit_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data);
 public:

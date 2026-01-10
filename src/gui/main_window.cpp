@@ -56,6 +56,39 @@ void MainWindow::create_menu_bar(GtkApplication* app)
 	g_action_map_add_action(G_ACTION_MAP(app), G_ACTION(quit_action));
 }
 
+void MainWindow::create_tool_bar(GtkWidget* root_box)
+{
+	gtk_window_set_child(GTK_WINDOW(window), root_box);
+
+	GtkWidget* action_bar = gtk_action_bar_new();
+	gtk_box_append(GTK_BOX(root_box), action_bar);
+
+	GtkWidget* check = gtk_check_button_new_with_label("Month filter");
+
+	const char* items[] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "November", "December", nullptr };
+	GtkStringList* model = gtk_string_list_new(items);
+
+	GtkWidget* dropdown = gtk_drop_down_new(G_LIST_MODEL(model), nullptr);
+
+	gtk_action_bar_pack_start(GTK_ACTION_BAR(action_bar), check);
+	gtk_action_bar_pack_start(GTK_ACTION_BAR(action_bar), dropdown);
+}
+
+void MainWindow::create_notebook(GtkWidget* root_box)
+{
+	GtkWidget* notebook = gtk_notebook_new();
+	gtk_box_append(GTK_BOX(root_box), notebook);
+
+	GtkWidget* tab_label = gtk_label_new("Data");
+	GtkWidget* tab_content = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+
+	GtkWidget* tab_label_graph = gtk_label_new("Graph");
+	GtkWidget* tab_graph = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), tab_content, tab_label);
+	gtk_notebook_append_page(GTK_NOTEBOOK(notebook), tab_graph, tab_label_graph);
+}
+
 void MainWindow::create_window(GtkApplication* app)
 {
 	// Main window
@@ -64,6 +97,9 @@ void MainWindow::create_window(GtkApplication* app)
 	gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
 	// Other UI
 	create_menu_bar(app);
+	GtkWidget* root_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);
+	create_tool_bar(root_box);
+	create_notebook(root_box);
 	// Finalize
 	gtk_window_present(GTK_WINDOW(window));
 }
