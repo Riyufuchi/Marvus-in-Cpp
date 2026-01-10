@@ -10,11 +10,32 @@ namespace marvus
 {
 
 marvus::MainWindow::MainWindow() : gtk::ApplicationGTK("com.riyufuchi.marvus")
-{}
+{
+	this->main_grid_view = nullptr;
+	controller.autoloadDatabase();
+}
+
+void MainWindow::fill_data_grid_view_event()
+{
+	main_grid_view->clear_grid_view();
+	tableHeaderAndData data;
+	if (gtk_check_button_get_active(GTK_CHECK_BUTTON(check_month_filter)))
+		data = controller.obtainDataFromView(marvus::TableView::PAYMENTS_VIEW_FOR_MONTH, { std::format("{:02}", gtk_drop_down_get_selected(GTK_DROP_DOWN(dropdown_month_filter)) + 1) });
+	else
+		data = controller.obtainDataFromView(marvus::TableView::PAYMENTS_VIEW);
+	main_grid_view->add_columns(data.first);
+	main_grid_view->add_rows(data.second);
+}
 
 void MainWindow::on_quit_activated(GSimpleAction*, GVariant*, gpointer user_data)
 {
 	g_application_quit(G_APPLICATION(user_data));
+}
+
+void MainWindow::on_update_grid_view(GSimpleAction*, GVariant*, gpointer user_data)
+{
+	MainWindow* window = static_cast<MainWindow*>(user_data);
+	window->fill_data_grid_view_event();
 }
 
 void MainWindow::create_menu_bar(GtkApplication* app)
@@ -63,15 +84,25 @@ void MainWindow::create_tool_bar(GtkWidget* root_box)
 	GtkWidget* action_bar = gtk_action_bar_new();
 	gtk_box_append(GTK_BOX(root_box), action_bar);
 
-	GtkWidget* check = gtk_check_button_new_with_label("Month filter");
+	check_month_filter = gtk_check_button_new_with_label("Month filter");
+
+	g_signal_connect(check_month_filter, "toggled", G_CALLBACK(+[](GtkToggleButton*, gpointer user_data)
+	{
+		MainWindow* window = static_cast<MainWindow*>(user_data);
+		window->fill_data_grid_view_event();
+	}), this);
 
 	const char* items[] = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "November", "December", nullptr };
 	GtkStringList* model = gtk_string_list_new(items);
 
-	GtkWidget* dropdown = gtk_drop_down_new(G_LIST_MODEL(model), nullptr);
+	dropdown_month_filter = gtk_drop_down_new(G_LIST_MODEL(model), nullptr);
 
-	gtk_action_bar_pack_start(GTK_ACTION_BAR(action_bar), check);
-	gtk_action_bar_pack_start(GTK_ACTION_BAR(action_bar), dropdown);
+	g_signal_connect(dropdown_month_filter, "notify::selected", G_CALLBACK(MainWindow::on_update_grid_view), this);
+
+	gtk_drop_down_set_selected(GTK_DROP_DOWN(dropdown_month_filter), 0);
+
+	gtk_action_bar_pack_start(GTK_ACTION_BAR(action_bar), check_month_filter);
+	gtk_action_bar_pack_start(GTK_ACTION_BAR(action_bar), dropdown_month_filter);
 }
 
 void MainWindow::create_notebook(GtkWidget* root_box)
@@ -80,7 +111,12 @@ void MainWindow::create_notebook(GtkWidget* root_box)
 	gtk_box_append(GTK_BOX(root_box), notebook);
 
 	GtkWidget* tab_label = gtk_label_new("Data");
-	GtkWidget* tab_content = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
+	GtkWidget* tab_content = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+
+	main_grid_view = new gtk::GridViewSimpleGtk();
+	gtk_widget_set_hexpand(main_grid_view->get_widget(), TRUE);
+	gtk_widget_set_vexpand(main_grid_view->get_widget(), TRUE);
+	gtk_box_append(GTK_BOX(tab_content), main_grid_view->get_widget());
 
 	GtkWidget* tab_label_graph = gtk_label_new("Graph");
 	GtkWidget* tab_graph = gtk_box_new(GTK_ORIENTATION_VERTICAL, 6);
