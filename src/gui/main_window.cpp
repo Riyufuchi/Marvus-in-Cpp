@@ -9,7 +9,7 @@
 namespace marvus
 {
 
-marvus::MainWindow::MainWindow() : gtk::ApplicationGTK("com.riyufuchi.marvus")
+marvus::MainWindow::MainWindow() : gtk::ApplicationGTK("com.riyufuchi.marvus"), controller([&](const std::string& message, const std::string& title) { show_error_dialog(message, title); })
 {
 	this->main_grid_view = nullptr;
 	controller.load_and_init_database();
@@ -35,7 +35,6 @@ void MainWindow::on_quit_activated(GSimpleAction*, GVariant*, gpointer user_data
 void MainWindow::on_update_grid_view(GSimpleAction*, GVariant*, gpointer user_data)
 {
 	MainWindow* window = static_cast<MainWindow*>(user_data);
-	window->show_error_dialog("Sorry for not correct implementation of table view.");
 	window->fill_data_grid_view_event();
 }
 
@@ -143,23 +142,14 @@ void MainWindow::create_window(GtkApplication* app)
 
 void MainWindow::show_error_dialog(const std::string& error_message, const std::string& error_title)
 {
-	// 1. Create the dialog with the primary title/message
 	GtkAlertDialog* dialog = gtk_alert_dialog_new("%s", error_title.c_str());
 
-	// 2. Set the secondary detail text
 	gtk_alert_dialog_set_detail(dialog, error_message.c_str());
-
-	// 3. Ensure it is modal (true by default, but safe to set)
 	gtk_alert_dialog_set_modal(dialog, TRUE);
-
-	// 4. Show the dialog.
-	// 'parent' must be a GtkWindow* (e.g., your MainWindow's widget)
 	gtk_alert_dialog_show(dialog, GTK_WINDOW(window));
 
-	// 5. Clean up the dialog object reference
 	g_object_unref(dialog);
 }
-
 
 }
 
