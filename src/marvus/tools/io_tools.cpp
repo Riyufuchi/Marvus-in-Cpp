@@ -1,8 +1,8 @@
 //==============================================================================
 // File       : ToolsIO.cpp
 // Author     : riyufuchi
-// Created on : Dec 7, 2025
-// Last edit  : Dec 7, 2025
+// Created on : Dec 07, 2025
+// Last edit  : Jan 11, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -22,7 +22,7 @@ ToolsIO::~ToolsIO()
 {
 }
 
-bool ToolsIO::importEnties(const std::string& source)
+bool ToolsIO::import_enties(const std::string& source)
 {
 	marvus::Establishment est;
 
@@ -30,13 +30,13 @@ bool ToolsIO::importEnties(const std::string& source)
 
 	while (std::getline(ss, est.name))
 	{
-		if (!controller.insertEntity(est))  // convert each line to UTF-8
+		if (!controller.insert_entity(est))  // convert each line to UTF-8
 			return false;
 	}
 	return true;
 }
 
-bool ToolsIO::importCategories(const std::string& source)
+bool ToolsIO::import_categories(const std::string& source)
 {
 	Category cat;
 
@@ -44,16 +44,16 @@ bool ToolsIO::importCategories(const std::string& source)
 
 	while (std::getline(ss, cat.name))
 	{
-		if (!controller.insertCategory(cat))
+		if (!controller.insert_category(cat))
 			return false;
 	}
 	return true;
 }
 
-bool ToolsIO::importMacros(const std::string& source)
+bool ToolsIO::import_macros(const std::string& source)
 {
 	std::vector<std::string> parsedCSV;
-	auto findData = entMap.find("0");
+	auto findData = entity_map.find("0");
 	std::vector<std::string> parsedDate;
 
 	PaymentMacro payment;
@@ -64,41 +64,41 @@ bool ToolsIO::importMacros(const std::string& source)
 	while (std::getline(ss, line))
 	{
 		parsedCSV = consolelib::FileUtils::splitCSV(line, ';', 5);
-		findData = entMap.find(parsedCSV[0]);
-		if (findData != entMap.end())
+		findData = entity_map.find(parsedCSV[0]);
+		if (findData != entity_map.end())
 			payment.ent_key = findData->second;
 		else
 			continue;
-		findData = catMap.find(parsedCSV[1]);
-		if (findData != catMap.end())
+		findData = category_map.find(parsedCSV[1]);
+		if (findData != category_map.end())
 			payment.category_key = findData->second;
 		else
 			continue;
 		payment.value = parsedCSV[2];
 		payment.note = parsedCSV[4];
-		if (!controller.insertPaymentMacro(payment))
+		if (!controller.insert_payment_macro(payment))
 			return false;
 	}
 	return true;
 }
 
-bool ToolsIO::importData(const std::string& source)
+bool ToolsIO::import_data(const std::string& source)
 {
-	ents = controller.obtainDataFromView(TableView::ESTABLISHMENTS_VIEW);
-	cats = controller.obtainDataFromView(TableView::CATEGORIES_VIEW);
+	ents = controller.obtain_data_from_view(TableView::ESTABLISHMENTS_VIEW);
+	cats = controller.obtain_data_from_view(TableView::CATEGORIES_VIEW);
 
 	for (const marvus::tableRow& row : ents.second)
 	{
-		entMap[row[1]] = std::stoi(row[0]);
+		entity_map[row[1]] = std::stoi(row[0]);
 	}
 
 	for (const marvus::tableRow& row : cats.second)
 	{
-		catMap[row[1]] = std::stoi(row[0]);
+		category_map[row[1]] = std::stoi(row[0]);
 	}
 
 	std::vector<std::string> parsedCSV;
-	auto findData = entMap.find("0");
+	auto findData = entity_map.find("0");
 	std::vector<std::string> parsedDate;
 
 	Payment payment;
@@ -109,13 +109,13 @@ bool ToolsIO::importData(const std::string& source)
 	while (std::getline(ss, line))
 	{
 		parsedCSV = consolelib::FileUtils::splitCSV(line, ';', 6);
-		findData = entMap.find(parsedCSV[0]);
-		if (findData != entMap.end())
+		findData = entity_map.find(parsedCSV[0]);
+		if (findData != entity_map.end())
 			payment.ent_key = findData->second;
 		else
 			continue;
-		findData = catMap.find(parsedCSV[1]);
-		if (findData != catMap.end())
+		findData = category_map.find(parsedCSV[1]);
+		if (findData != category_map.end())
 			payment.category_key = findData->second;
 		else
 			continue;
@@ -124,20 +124,20 @@ bool ToolsIO::importData(const std::string& source)
 		parsedDate = consolelib::FileUtils::splitCSV(parsedCSV[4], '.', 3);
 		payment.date = parsedDate[2] + "-" + parsedDate[1] + "-" + parsedDate[0];
 		payment.note = parsedCSV[5];
-		if (!controller.insertPayment(payment))  // convert each line to UTF-8
+		if (!controller.insert_payment(payment))  // convert each line to UTF-8
 			return false;
 	}
 	return true;
 }
 
-bool ToolsIO::importDataFromZip(const std::string& path, std::string& errorMessage)
+bool ToolsIO::import_from_zip(const std::string& path, std::string& erro_message)
 {
 	mz_zip_archive zip;
 	mz_zip_zero_struct(&zip);
 
 	if (!mz_zip_reader_init_file(&zip, path.c_str(), 0))
 	{
-		errorMessage = "Failed to open ZIP\n";
+		erro_message = "Failed to open ZIP\n";
 		return false;
 	}
 
@@ -145,7 +145,7 @@ bool ToolsIO::importDataFromZip(const std::string& path, std::string& errorMessa
 
 	if (fileCount != 4)
 	{
-		errorMessage = "Import need 4 filed (entities.csv, categories.csv, data.csv, macros.csv)\n";
+		erro_message = "Import need 4 filed (entities.csv, categories.csv, data.csv, macros.csv)\n";
 		return false;
 	}
 
@@ -175,7 +175,7 @@ bool ToolsIO::importDataFromZip(const std::string& path, std::string& errorMessa
 		else
 		{
 			mz_free(data);
-			errorMessage = "Unknown file [" + std::string(stat.m_filename) + "] expected: entities.csv, categories.csv, data.csv\n";
+			erro_message = "Unknown file [" + std::string(stat.m_filename) + "] expected: entities.csv, categories.csv, data.csv\n";
 			return false;
 		}
 
@@ -184,9 +184,9 @@ bool ToolsIO::importDataFromZip(const std::string& path, std::string& errorMessa
 
 	mz_zip_reader_end(&zip);
 
-	if (importEnties(entities) && importCategories(categories))
-		if (importData(dataFile))
-			return importMacros(macros);
+	if (import_enties(entities) && import_categories(categories))
+		if (import_data(dataFile))
+			return import_macros(macros);
 	return false;
 }
 

@@ -2,7 +2,7 @@
 // File       : network_base.h
 // Author     : Riyufuchi
 // Created on : Dec 29, 2025
-// Last edit  : Jan 03, 2026
+// Last edit  : Jan 11, 2026
 //==============================================================================
 
 #ifndef NETWORK_BASE_H
@@ -30,10 +30,10 @@ protected:
 	boost::asio::ip::tcp::acceptor acceptor;
 	boost::system::error_code ec;
 	unsigned short port;
-	errorFunctionSignature error_callback;
+	ShowErrorFunction error_callback;
 	virtual void run(std::stop_token st) = 0;
 public:
-	NetworkBase(unsigned short port, errorFunctionSignature& efs);
+	NetworkBase(unsigned short port, const ShowErrorFunction& efs);
 	virtual ~NetworkBase();
 	void start();
 	void stop();

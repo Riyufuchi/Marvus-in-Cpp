@@ -2,7 +2,7 @@
 // File       : file_server.cpp
 // Author     : Riyufuchi
 // Created on : Dec 29, 2025
-// Last edit  : Jan 03, 2026
+// Last edit  : Jan 11, 2026
 //==============================================================================
 
 #include "file_server.h"
@@ -10,7 +10,7 @@
 namespace marvus
 {
 
-FileServer::FileServer(const std::function<void(size_t, size_t)>& progress_callback, unsigned short port, errorFunctionSignature& efs) : NetworkBase(port, efs), progress_callback(progress_callback)
+FileServer::FileServer(const std::function<void(size_t, size_t)>& progress_callback, unsigned short port, const ShowErrorFunction& efs) : NetworkBase(port, efs), progress_callback(progress_callback)
 {}
 
 FileServer::~FileServer()

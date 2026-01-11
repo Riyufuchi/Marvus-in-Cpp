@@ -1,8 +1,8 @@
 //==============================================================================
 // File       : ToolsIO.h
 // Author     : riyufuchi
-// Created on : Dec 7, 2025
-// Last edit  : Dec 7, 2025
+// Created on : Dec 07, 2025
+// Last edit  : Jan 11, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -26,16 +26,16 @@ private:
 	Controller& controller;
 	tableHeaderAndData ents;
 	tableHeaderAndData cats;
-	std::unordered_map<std::string, int> entMap;
-	std::unordered_map<std::string, int> catMap;
-	bool importEnties(const std::string& source);
-	bool importCategories(const std::string& source);
-	bool importData(const std::string& source);
-	bool importMacros(const std::string& source);
+	std::unordered_map<std::string, int> entity_map;
+	std::unordered_map<std::string, int> category_map;
+	bool import_enties(const std::string& source);
+	bool import_categories(const std::string& source);
+	bool import_data(const std::string& source);
+	bool import_macros(const std::string& source);
 public:
 	ToolsIO(Controller& controller);
 	virtual ~ToolsIO();
-	bool importDataFromZip(const std::string& path, std::string& errorMessage);
+	bool import_from_zip(const std::string& path, std::string& error_message);
 };
 
 } /* namespace sdl */

@@ -1,7 +1,7 @@
 //==============================================================================
 // Author     : riyufuchi
 // Created on : 2026-01-08
-// Last edit  : 2026-01-09
+// Last edit  : 2026-01-11
 // Copyright  : Copyright (c) 2026, riyufuchi
 //==============================================================================
 #include "main_window.h"
@@ -12,7 +12,7 @@ namespace marvus
 marvus::MainWindow::MainWindow() : gtk::ApplicationGTK("com.riyufuchi.marvus")
 {
 	this->main_grid_view = nullptr;
-	controller.autoloadDatabase();
+	controller.load_and_init_database();
 }
 
 void MainWindow::fill_data_grid_view_event()
@@ -20,9 +20,9 @@ void MainWindow::fill_data_grid_view_event()
 	main_grid_view->clear_grid_view();
 	tableHeaderAndData data;
 	if (gtk_check_button_get_active(GTK_CHECK_BUTTON(check_month_filter)))
-		data = controller.obtainDataFromView(marvus::TableView::PAYMENTS_VIEW_FOR_MONTH, { std::format("{:02}", gtk_drop_down_get_selected(GTK_DROP_DOWN(dropdown_month_filter)) + 1) });
+		data = controller.obtain_data_from_view(marvus::TableView::PAYMENTS_VIEW_FOR_MONTH, { std::format("{:02}", gtk_drop_down_get_selected(GTK_DROP_DOWN(dropdown_month_filter)) + 1) });
 	else
-		data = controller.obtainDataFromView(marvus::TableView::PAYMENTS_VIEW);
+		data = controller.obtain_data_from_view(marvus::TableView::PAYMENTS_VIEW);
 	main_grid_view->add_columns(data.first);
 	main_grid_view->add_rows(data.second);
 }
@@ -35,6 +35,7 @@ void MainWindow::on_quit_activated(GSimpleAction*, GVariant*, gpointer user_data
 void MainWindow::on_update_grid_view(GSimpleAction*, GVariant*, gpointer user_data)
 {
 	MainWindow* window = static_cast<MainWindow*>(user_data);
+	window->show_error_dialog("Sorry for not correct implementation of table view.");
 	window->fill_data_grid_view_event();
 }
 
@@ -139,6 +140,26 @@ void MainWindow::create_window(GtkApplication* app)
 	// Finalize
 	gtk_window_present(GTK_WINDOW(window));
 }
+
+void MainWindow::show_error_dialog(const std::string& error_message, const std::string& error_title)
+{
+	// 1. Create the dialog with the primary title/message
+	GtkAlertDialog* dialog = gtk_alert_dialog_new("%s", error_title.c_str());
+
+	// 2. Set the secondary detail text
+	gtk_alert_dialog_set_detail(dialog, error_message.c_str());
+
+	// 3. Ensure it is modal (true by default, but safe to set)
+	gtk_alert_dialog_set_modal(dialog, TRUE);
+
+	// 4. Show the dialog.
+	// 'parent' must be a GtkWindow* (e.g., your MainWindow's widget)
+	gtk_alert_dialog_show(dialog, GTK_WINDOW(window));
+
+	// 5. Clean up the dialog object reference
+	g_object_unref(dialog);
+}
+
 
 }
 

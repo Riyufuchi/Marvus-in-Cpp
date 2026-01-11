@@ -2,7 +2,7 @@
 // File       : file_server.h
 // Author     : Riyufuchi
 // Created on : Dec 29, 2025
-// Last edit  : Jan 03, 2026
+// Last edit  : Jan 11, 2026
 //==============================================================================
 
 #ifndef FILE_SERVER_H
@@ -18,7 +18,7 @@ private:
 	std::function<void(size_t, size_t)> progress_callback;
 	void recieve_file(std::stop_token st);
 public:
-	FileServer(const std::function<void(size_t, size_t)>& progress_callback, unsigned short port, errorFunctionSignature& efs);
+	FileServer(const std::function<void(size_t, size_t)>& progress_callback, unsigned short port, const ShowErrorFunction& efs);
 	~FileServer();
 	// NetworkBase interface
 protected:

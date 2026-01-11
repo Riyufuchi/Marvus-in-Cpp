@@ -2,7 +2,7 @@
 // File       : Controller.cpp
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Dec 16, 2025
+// Last edit  : Jan 11, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -12,35 +12,35 @@
 namespace marvus
 {
 
-Controller::Controller(errorFunctionSignature errorHandler) : marvusDB(errorHandler), errorHandler(errorHandler)
+Controller::Controller(const ShowErrorFunction& show_error_function) : marvus_database(show_error_function), show_error_function(show_error_function)
 {
-	this->argumentMethods["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; marvusDB.setPathToSQL_Scripts(vector[0]); };
+	this->argument_functions_map["--sqlPath"] = [&] (const std::vector<std::string>& vector) { if (vector.empty()) return; marvus_database.set_path_to_sql_scripts_files(vector[0]); };
 
-	views[TableView::ESTABLISHMENTS_VIEW] = InlineSQL::SELECT_ESTABLISHMENTS;
-	views[TableView::CATEGORIES_VIEW] = InlineSQL::SELECT_CATEGORIES;
-	views[TableView::PAYMENTS_VIEW] = InlineSQL::SELECT_PAYMENTS;
-	views[TableView::PAYMENTS_VIEW_FOR_MONTH] = InlineSQL::SELECT_PAYMENTS_WHERE_MONTH;
-	views[TableView::PAYMENT_MACRO_VIEW] = InlineSQL::SELECT_PAYMENT_MACROS;
-	views[TableView::STAT_PAYMENT_SUMMARY] = InlineSQL::SELECT_PAYMENT_SUMMARY;
-	views[TableView::STAT_DAILY_TOTAL] = InlineSQL::SELECT_DAILY_TOTAL;
+	table_views_map[TableView::ESTABLISHMENTS_VIEW] = InlineSQL::SELECT_ESTABLISHMENTS;
+	table_views_map[TableView::CATEGORIES_VIEW] = InlineSQL::SELECT_CATEGORIES;
+	table_views_map[TableView::PAYMENTS_VIEW] = InlineSQL::SELECT_PAYMENTS;
+	table_views_map[TableView::PAYMENTS_VIEW_FOR_MONTH] = InlineSQL::SELECT_PAYMENTS_WHERE_MONTH;
+	table_views_map[TableView::PAYMENT_MACRO_VIEW] = InlineSQL::SELECT_PAYMENT_MACROS;
+	table_views_map[TableView::STAT_PAYMENT_SUMMARY] = InlineSQL::SELECT_PAYMENT_SUMMARY;
+	table_views_map[TableView::STAT_DAILY_TOTAL] = InlineSQL::SELECT_DAILY_TOTAL;
 }
 
 void Controller::configure(consolelib::argVector& config)
 {
-	auto it = argumentMethods.find("");
+	auto it = argument_functions_map.find("");
 	for (const consolelib::argVectorItem& argument : config)
 	{
-		it = argumentMethods.find(argument.first);
-		if (it != argumentMethods.end())
+		it = argument_functions_map.find(argument.first);
+		if (it != argument_functions_map.end())
 			it->second(argument.second);
 	}
 }
 
-bool Controller::initDB(std::string& errorMsg)
+bool Controller::initialize_database(std::string& error_message)
 {
-	if (!marvusDB.initializeDatabase())
+	if (!marvus_database.initialize_database())
 	{
-		errorMsg = "Database initialization failed.\nExiting program!";
+		error_message = "Database initialization failed.\nExiting program!";
 		return true;
 	}
 
@@ -51,9 +51,9 @@ bool Controller::initDB(std::string& errorMsg)
 
 	for (const std::string& view : views)
 	{
-		if (!marvusDB.executeFileSQL(marvusDB.getScriptSQL(view)))
+		if (!marvus_database.execute_sql_from_file(marvus_database.get_sql_script(view)))
 		{
-			errorMsg = "View " + view + " initialization failed.\nExiting program!";
+			error_message = "View " + view + " initialization failed.\nExiting program!";
 			return true;
 		}
 	}
@@ -61,105 +61,105 @@ bool Controller::initDB(std::string& errorMsg)
 	return false;
 }
 
-bool Controller::connectToDB(const std::string& name)
+bool Controller::connect_to_database(const std::string& name)
 {
-	std::filesystem::path databaseFile(name);
-	if (databaseFile.extension() != ".db")
+	std::filesystem::path database_file(name);
+	if (database_file.extension() != ".db")
 	{
-		return !marvusDB.reconnect(databaseFile.generic_string() + ".db");
+		return !marvus_database.reconnect(database_file.generic_string() + ".db");
 	}
-	return !marvusDB.reconnect(databaseFile.generic_string());
+	return !marvus_database.reconnect(database_file.generic_string());
 }
 
-void Controller::dropDB()
+void Controller::drop_database()
 {
-	marvusDB.executeFileSQL(marvusDB.getScriptSQL(InlineSQL::DROP_DATABASE));
-	marvusDB.initializeDatabase();
-	marvusDB.initializeViews();
+	marvus_database.execute_sql_from_file(marvus_database.get_sql_script(InlineSQL::DROP_DATABASE));
+	marvus_database.initialize_database();
+	marvus_database.initialize_views();
 }
 
-void Controller::autoloadDatabase()
+void Controller::load_and_init_database()
 {
-	if (!configFile.getAutoloadDB())
+	if (!config_json_file.get_auto_load_database())
 		return;
 	std::string msg;
-	if (connectToDB(configFile.getDatabaseFilePath()))
-		if (initDB(msg))
+	if (connect_to_database(config_json_file.get_database_file_path()))
+		if (initialize_database(msg))
 		{
-			errorHandler("Database initialization error", msg);
+			show_error_function(msg, "Database initialization error");
 			return;
 		}
 }
 
-tableHeaderAndData Controller::obtainDataFromView(TableView view, const insertVector& data)
+tableHeaderAndData Controller::obtain_data_from_view(TableView view, const insertVector& data)
 {
-	auto viewPair = views.find(view);
-	if (viewPair == views.end())
+	auto viewPair = table_views_map.find(view);
+	if (viewPair == table_views_map.end())
 		return {};
-	return marvusDB.obtainFromFilterView(marvusDB.getScriptSQL(viewPair->second), data);
+	return marvus_database.obtain_data_from_filtered_view(marvus_database.get_sql_script(viewPair->second), data);
 }
 
-bool Controller::insertEntity(const Establishment& e)
+bool Controller::insert_entity(const Establishment& e)
 {
-	return marvusDB.insertEstablishment(e);
+	return marvus_database.insert_establishment(e);
 }
 
-bool Controller::insertCategory(const Category& c)
+bool Controller::insert_category(const Category& c)
 {
-	return marvusDB.insertCategory(c);
+	return marvus_database.insert_category(c);
 }
 
-bool Controller::insertPayment(const Payment& p)
+bool Controller::insert_payment(const Payment& p)
 {
-	return marvusDB.insertPayment(p);
+	return marvus_database.insert_payment(p);
 }
 
-bool Controller::importFromZIP(const std::string& path, std::string& errorMessage)
+bool Controller::import_from_zip(const std::string& path, std::string& error_message)
 {
 	ToolsIO io(*this);
-	return io.importDataFromZip(path, errorMessage);
+	return io.import_from_zip(path, error_message);
 }
 
-bool Controller::exportToZIP(const std::string& path, std::string& errorMessage)
+bool Controller::export_to_zip(const std::string& , std::string& )
 {
 	return false;
 }
 
-void Controller::setShowErrorFunction(errorFunctionSignature func)
+void Controller::set_show_error_function(const ShowErrorFunction& show_error_function)
 {
-	marvusDB.setShowErrorFunction(func);
+	marvus_database.set_show_error_function(show_error_function);
 }
 
-bool Controller::createNewDatabase(const std::string& name)
+bool Controller::create_new_database(const std::string& name)
 {
-	std::filesystem::path databaseFile(name);
-	if (databaseFile.extension() != ".db")
+	std::filesystem::path database_file(name);
+	if (database_file.extension() != ".db")
 	{
-		return !marvusDB.createNewDatabaseFile(databaseFile.generic_string() + ".db");
+		return !marvus_database.create_new_database_file(database_file.generic_string() + ".db");
 	}
-	return !marvusDB.createNewDatabaseFile(databaseFile.generic_string());
+	return !marvus_database.create_new_database_file(database_file.generic_string());
 }
 
-bool Controller::isDatabaseConnected() const
+bool Controller::is_database_connected() const
 {
-	return marvusDB.isConnected();
+	return marvus_database.is_connected();
 }
 
-std::string Controller::aboutApplication()
+std::string Controller::obtain_about_application_string()
 {
-	std::stringstream aboutStringStream;
-	aboutStringStream << _MARVUS_VERSION << "\n\n";
-	aboutStringStream << _COPYRIGHT_HEADER;
-	aboutStringStream << "This version was compiled on: " << __DATE__ << " " << __TIME__ << "\n";
-	aboutStringStream << "C++ version: " << __cplusplus << "\n\n";
+	std::stringstream about_string_stream;
+	about_string_stream << _MARVUS_VERSION << "\n\n";
+	about_string_stream << _COPYRIGHT_HEADER;
+	about_string_stream << "This version was compiled on: " << __DATE__ << " " << __TIME__ << "\n";
+	about_string_stream << "C++ version: " << __cplusplus << "\n\n";
 
-	aboutStringStream << consolelib::ConsoleLib::aboutLibrary();
-	return aboutStringStream.str();
+	about_string_stream << consolelib::ConsoleLib::aboutLibrary();
+	return about_string_stream.str();
 }
 
-bool Controller::insertPaymentMacro(const PaymentMacro& pm)
+bool Controller::insert_payment_macro(const PaymentMacro& pm)
 {
-	return marvusDB.insertPaymentMacro(pm);
+	return marvus_database.insert_payment_macro(pm);
 }
 
 } /* namespace marvus */

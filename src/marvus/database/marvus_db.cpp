@@ -2,7 +2,7 @@
 // File       : MarvusDB.cpp
 // Author     : riyufuchi
 // Created on : Nov 25, 2025
-// Last edit  : Dec 14, 2025
+// Last edit  : Jan 11, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -12,25 +12,25 @@
 namespace marvus
 {
 
-MarvusDB::MarvusDB(errorFunctionSignature errorHandler) : DatabaseSQLite(InlineSQL::SQL_ROOT_FOLDER, errorHandler)
+MarvusDB::MarvusDB(const ShowErrorFunction& show_error_function) : DatabaseSQLite(InlineSQL::SQL_ROOT_FOLDER, show_error_function)
 {
 }
 
-bool MarvusDB::insertEstablishment(const Establishment& establishment)
+bool MarvusDB::insert_establishment(const Establishment& establishment)
 {
-	static const std::string SQL_INSERT = MarvusDB::sqlScriptFiles.getScript(InlineSQL::INSERT_ESTABLISHMENT);
-	return insertNewData({ establishment.name }, SQL_INSERT);
+	static const std::string SQL_INSERT = MarvusDB::sql_script_files_map.getScript(InlineSQL::INSERT_ESTABLISHMENT);
+	return insert_new_row({ establishment.name }, SQL_INSERT);
 }
 
-bool MarvusDB::insertCategory(const Category& category)
+bool MarvusDB::insert_category(const Category& category)
 {
-	static const std::string SQL_INSERT = MarvusDB::sqlScriptFiles.getScript(InlineSQL::INSERT_CATEGORY);
-	return insertNewData({ category.name }, SQL_INSERT);
+	static const std::string SQL_INSERT = MarvusDB::sql_script_files_map.getScript(InlineSQL::INSERT_CATEGORY);
+	return insert_new_row({ category.name }, SQL_INSERT);
 }
 
-bool MarvusDB::insertPayment(const Payment& payment)
+bool MarvusDB::insert_payment(const Payment& payment)
 {
-	static const std::string SQL_INSERT_PAYMENT = MarvusDB::sqlScriptFiles.getScript(InlineSQL::INSERT_PAYMENT);
+	static const std::string SQL_INSERT_PAYMENT = MarvusDB::sql_script_files_map.getScript(InlineSQL::INSERT_PAYMENT);
 	insertVector data;
 	data.emplace_back(payment.ent_key);
 	data.emplace_back(payment.category_key);
@@ -38,19 +38,19 @@ bool MarvusDB::insertPayment(const Payment& payment)
 	data.emplace_back(payment.date);
 	data.emplace_back(payment.note);
 
-	return insertNewData(data, SQL_INSERT_PAYMENT);
+	return insert_new_row(data, SQL_INSERT_PAYMENT);
 }
 
-bool MarvusDB::insertPaymentMacro(const PaymentMacro& paymentMacro)
+bool MarvusDB::insert_payment_macro(const PaymentMacro& payment_macro)
 {
-	static const std::string SQL_INSERT_PAYMENT_MACRO = MarvusDB::sqlScriptFiles.getScript(InlineSQL::INSERT_PAYMENT_MACRO);
+	static const std::string SQL_INSERT_PAYMENT_MACRO = MarvusDB::sql_script_files_map.getScript(InlineSQL::INSERT_PAYMENT_MACRO);
 	insertVector data;
-	data.emplace_back(paymentMacro.ent_key);
-	data.emplace_back(paymentMacro.category_key);
-	data.emplace_back(paymentMacro.value);
-	data.emplace_back(paymentMacro.note);
+	data.emplace_back(payment_macro.ent_key);
+	data.emplace_back(payment_macro.category_key);
+	data.emplace_back(payment_macro.value);
+	data.emplace_back(payment_macro.note);
 
-	return insertNewData(data, SQL_INSERT_PAYMENT_MACRO);
+	return insert_new_row(data, SQL_INSERT_PAYMENT_MACRO);
 }
 
 } /* namespace marvus */

@@ -2,13 +2,13 @@
 // File       : network_base.cpp
 // Author     : Riyufuchi
 // Created on : Dec 29, 2025
-// Last edit  : Jan 03, 2026
+// Last edit  : Jan 11, 2026
 //==============================================================================
 #include "network_base.h"
 
 namespace marvus
 {
-NetworkBase::NetworkBase(unsigned short port, errorFunctionSignature& efs) : socket(io_context), acceptor(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)), port(port), error_callback(efs)
+NetworkBase::NetworkBase(unsigned short port, const ShowErrorFunction& efs) : socket(io_context), acceptor(io_context, boost::asio::ip::tcp::endpoint(boost::asio::ip::tcp::v4(), port)), port(port), error_callback(efs)
 {}
 
 NetworkBase::~NetworkBase()

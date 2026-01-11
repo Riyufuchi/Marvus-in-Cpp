@@ -2,7 +2,7 @@
 // File       : ConfigJSON.cpp
 // Author     : riyufuchi
 // Created on : Dec 14, 2025
-// Last edit  : Dec 15, 2025
+// Last edit  : Jan 11, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -19,42 +19,42 @@ ConfigJSON::ConfigJSON() : ConfigJSON(DEFAULT_FILE)
 ConfigJSON::ConfigJSON(const std::string& path)
 {
 	if (std::filesystem::exists(path))
-		boost::property_tree::read_json(path, propTree);
+		boost::property_tree::read_json(path, property_tree);
 	else
-		writeDefualtConfig();
+		write_defualt_config();
 }
 
 ConfigJSON::~ConfigJSON()
 {
 }
 
-void ConfigJSON::writeDefualtConfig()
+void ConfigJSON::write_defualt_config()
 {
-	propTree.put(NETWORK_PORT, 6969);
-	propTree.put(NETWORK_IPv4, "192.168.0.170");
-	propTree.put(PATH_TO_DB, "marvus.db");
-	propTree.put(AUTOLOAD_DB, true);
-	boost::property_tree::write_json(DEFAULT_FILE, propTree);
+	property_tree.put(NETWORK_PORT, 6969);
+	property_tree.put(NETWORK_IPv4, "192.168.0.170");
+	property_tree.put(PATH_TO_DB, "marvus.db");
+	property_tree.put(AUTOLOAD_DB, true);
+	boost::property_tree::write_json(DEFAULT_FILE, property_tree);
 }
 
-bool ConfigJSON::getAutoloadDB() const
+bool ConfigJSON::get_auto_load_database() const
 {
-	return propTree.get<bool>(AUTOLOAD_DB);
+	return property_tree.get<bool>(AUTOLOAD_DB);
 }
 
-std::string ConfigJSON::getServerIPv4() const
+std::string ConfigJSON::get_server_ipv4() const
 {
-	return propTree.get<std::string>(NETWORK_IPv4);
+	return property_tree.get<std::string>(NETWORK_IPv4);
 }
 
-int ConfigJSON::getPort() const
+int ConfigJSON::get_port() const
 {
-	return propTree.get<int>(NETWORK_PORT);
+	return property_tree.get<int>(NETWORK_PORT);
 }
 
-std::string ConfigJSON::getDatabaseFilePath() const
+std::string ConfigJSON::get_database_file_path() const
 {
-	return propTree.get<std::string>(PATH_TO_DB);
+	return property_tree.get<std::string>(PATH_TO_DB);
 }
 
 } /* namespace marvus */

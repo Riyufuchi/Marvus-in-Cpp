@@ -2,7 +2,7 @@
 // File       : ConfigJSON.h
 // Author     : riyufuchi
 // Created on : Dec 14, 2025
-// Last edit  : Dec 15, 2025
+// Last edit  : Jan 11, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -28,8 +28,8 @@ class ConfigJSON
 	static inline const std::string NETWORK_PORT = "network.port";
 	static inline const std::string NETWORK_IPv4 = "network.ipv4";
 private:
-	boost::property_tree::ptree propTree;
-	void writeDefualtConfig();
+	boost::property_tree::ptree property_tree;
+	void write_defualt_config();
 public:
 	ConfigJSON();
 	explicit ConfigJSON(const std::string& path);
@@ -37,10 +37,10 @@ public:
 	// Setters
 
 	// Getters
-	int getPort() const;
-	bool getAutoloadDB() const;
-	std::string getDatabaseFilePath() const;
-	std::string getServerIPv4() const;
+	int get_port() const;
+	bool get_auto_load_database() const;
+	std::string get_database_file_path() const;
+	std::string get_server_ipv4() const;
 };
 
 } /* namespace marvus */

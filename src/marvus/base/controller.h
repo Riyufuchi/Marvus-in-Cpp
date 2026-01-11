@@ -2,7 +2,7 @@
 // File       : Controller.h
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Jan 03, 2026
+// Last edit  : Jan 11, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -23,7 +23,7 @@
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025 - 2026\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "0.3 - Alpha"
+#define _APP_VERSION "0.4 - Alpha"
 
 #ifdef DEBUG
 	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION " (debug)"
@@ -56,34 +56,34 @@ enum class TableView
 class Controller
 {
 protected:
-	std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argumentMethods;
-	std::unordered_map<marvus::TableView, std::string> views;
-	ConfigJSON configFile;
-	MarvusDB marvusDB;
-	errorFunctionSignature errorHandler;
+	std::unordered_map<std::string, std::function<void(const std::vector<std::string>&)>> argument_functions_map;
+	std::unordered_map<marvus::TableView, std::string> table_views_map;
+	ConfigJSON config_json_file;
+	MarvusDB marvus_database;
+	ShowErrorFunction show_error_function;
 public:
-	Controller(errorFunctionSignature errorHandler = [](const std::string& title, const std::string& message) { std::cerr << title << ": " << message << "\n"; });
+	Controller(const ShowErrorFunction& show_error_function = [](const std::string& message, const std::string& title) { std::cerr << title << ": " << message << "\n"; });
 	virtual ~Controller() = default;
 	void configure(consolelib::argVector& config);
 	// Database file IO
-	bool initDB(std::string& errorMsg);
-	void dropDB();
-	void autoloadDatabase();
-	bool connectToDB(const std::string& name);
-	bool createNewDatabase(const std::string& name);
-	bool isDatabaseConnected() const;
+	bool initialize_database(std::string& error_message);
+	void drop_database();
+	void load_and_init_database();
+	bool connect_to_database(const std::string& name);
+	bool create_new_database(const std::string& name);
+	bool is_database_connected() const;
 	// Database interaction
-	bool insertEntity(const Establishment& e);
-	bool insertCategory(const Category& c);
-	bool insertPayment(const Payment& p);
-	bool insertPaymentMacro(const PaymentMacro& pm);
-	tableHeaderAndData obtainDataFromView(TableView view, const insertVector& data = {});
+	bool insert_entity(const Establishment& e);
+	bool insert_category(const Category& c);
+	bool insert_payment(const Payment& p);
+	bool insert_payment_macro(const PaymentMacro& pm);
+	tableHeaderAndData obtain_data_from_view(TableView view, const insertVector& data = {});
 	// Other IO
-	void setShowErrorFunction(errorFunctionSignature func);
-	bool importFromZIP(const std::string& path, std::string& errorMessage);
-	bool exportToZIP(const std::string& path, std::string& errorMessage);
+	void set_show_error_function(const ShowErrorFunction& show_error_function);
+	bool import_from_zip(const std::string& path, std::string& error_message);
+	bool export_to_zip(const std::string& path, std::string& error_message);
 	// Static
-	static std::string aboutApplication();
+	static std::string obtain_about_application_string();
 };
 
 } /* namespace marvus */

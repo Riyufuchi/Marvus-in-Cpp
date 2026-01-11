@@ -2,7 +2,7 @@
 // File       : file_slient.cpp
 // Author     : Riyufuchi
 // Created on : Dec 29, 2025
-// Last edit  : Dec 29, 2025
+// Last edit  : Jan 11, 2026
 //==============================================================================
 
 #include "file_client.h"
@@ -10,7 +10,7 @@
 namespace marvus
 {
 
-FileClient::FileClient(const std::string& server_ip, unsigned short port, const std::string& file_path, const std::function<void(size_t, size_t)>& progress_callback, errorFunctionSignature& efs) : NetworkBase(port, efs),
+FileClient::FileClient(const std::string& server_ip, unsigned short port, const std::string& file_path, const std::function<void(size_t, size_t)>& progress_callback, const ShowErrorFunction& efs) : NetworkBase(port, efs),
 	server_ip(server_ip), file_path(file_path), progress_callback(progress_callback)
 {}
 

@@ -2,7 +2,7 @@
 // File       : MarvusDB.h
 // Author     : riyufuchi
 // Created on : Nov 25, 2025
-// Last edit  : Dec 14, 2025
+// Last edit  : Jan 11, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -50,12 +50,12 @@ struct PaymentMacro
 class MarvusDB : public DatabaseSQLite
 {
 public:
-	MarvusDB(errorFunctionSignature errorHandler);
+	MarvusDB(const ShowErrorFunction& show_error_function);
 	virtual ~MarvusDB() = default;
-	bool insertEstablishment(const Establishment& establishment);
-	bool insertCategory(const Category& category);
-	bool insertPayment(const Payment& payment);
-	bool insertPaymentMacro(const PaymentMacro& paymentMacro);
+	bool insert_establishment(const Establishment& establishment);
+	bool insert_category(const Category& category);
+	bool insert_payment(const Payment& payment);
+	bool insert_payment_macro(const PaymentMacro& payment_macro);
 };
 
 } /* namespace marvus */
