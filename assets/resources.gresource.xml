@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/com/riyufuchi/marvus/icons">
+    <file>hicolor/index.theme</file>
+    <file>hicolor/48x48/apps/marvus.png</file>
+  </gresource>
+</gresources>
+

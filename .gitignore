@@ -13,6 +13,7 @@ libs/boost_1_89_0/windows
 
 # Utils
 *.drawio
+*.bkp
 
 # CMake
 *.cmake

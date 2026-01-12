@@ -1,0 +1,9 @@
+[Icon Theme]
+Name=Marvus
+Comment=Marvus Icons
+Directories=48x48/apps
+
+[48x48/apps]
+Size=48
+Type=Fixed
+Context=Applications

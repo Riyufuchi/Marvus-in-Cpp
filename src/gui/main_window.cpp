@@ -127,10 +127,14 @@ void MainWindow::create_notebook(GtkWidget* root_box)
 
 void MainWindow::create_window(GtkApplication* app)
 {
+	g_resources_register(marvus_get_resource());
 	// Main window
 	window = gtk_application_window_new(app);
 	set_window_title(std::string(_MARVUS_VERSION));
 	gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
+
+	update_icon_to_custom(window);
+
 	// Other UI
 	create_menu_bar(app);
 	GtkWidget* root_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 0);

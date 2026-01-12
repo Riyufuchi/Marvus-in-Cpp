@@ -12,6 +12,7 @@
 #include "../tools_gtk/grid_view_simple_gtk.h"
 // Local - Marvus
 #include "../marvus/base/controller.h"
+#include "marvus_icon_helper.hpp"
 
 namespace marvus
 {

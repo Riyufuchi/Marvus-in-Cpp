@@ -60,26 +60,6 @@ else()
 endif()
 
 #
-# WxWidgets
-#
-
-if (WIN32)
-	set(wx_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/libs/wxWidgets)
-
-	set(wxWidgets_INCLUDE_DIRS ${wx_ROOT})
-	set(wxWidgets_LIB_DIR ${wx_ROOT}/vc_x64_lib)
-
-	# Collect ALL .lib files
-	file(GLOB wxWidgets_LIBRARIES "${wxWidgets_LIB_DIR}/*.lib")
-
-	# Include wxWidgets headers
-	include_directories(${wxWidgets_INCLUDE_DIRS})
-else()
-	#find_package(wxWidgets REQUIRED COMPONENTS core base)
-	#include(${wxWidgets_USE_FILE})
-endif()
-
-#
 # GTK
 #
 find_package(PkgConfig REQUIRED)
@@ -109,26 +89,29 @@ file(GLOB_RECURSE APP_SOURCES
 	${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp
 )
 
+find_program(GLIB_COMPILE_RESOURCES glib-compile-resources REQUIRED)
 
-if (WIN32)
-	add_executable(Marvus WIN32
-		${APP_SOURCES} 
-		src/MainSource.cpp
-)
+set(RESOURCE_XML ${CMAKE_CURRENT_SOURCE_DIR}/assets/resources.gresource.xml)
+set(RESOURCE_C   ${CMAKE_CURRENT_BINARY_DIR}/resources.c)
 
-	# Link manifest
-	set_target_properties(Marvus PROPERTIES
-		WIN32_EXECUTABLE TRUE
-	LINK_FLAGS "/MANIFESTUAC:\"level='asInvoker' uiAccess='false'\""
-	# Optional: explicitly specify manifest file
-	RESOURCE app.manifest
-    )
-else()
-	add_executable(Marvus ${APP_SOURCES})
-endif() 
+add_custom_command(
+    OUTPUT ${RESOURCE_C}
+    COMMAND ${GLIB_COMPILE_RESOURCES}
+	    --generate-source
+	    --target=${RESOURCE_C}
+	    --c-name marvus
+	    --sourcedir=${CMAKE_CURRENT_SOURCE_DIR}/assets
+	    ${RESOURCE_XML}
+    DEPENDS ${RESOURCE_XML}
+	    ${CMAKE_CURRENT_SOURCE_DIR}/assets/hicolor/48x48/apps/marvus.png)
+
+add_executable(Marvus ${APP_SOURCES} ${RESOURCE_C})
 
 
 # Link everything
+
+target_sources(Marvus PRIVATE ${RESOURCE_C})
+
 target_include_directories(Marvus PRIVATE ${CONSOLE_LIB_DIR}/inc)
 target_include_directories(Marvus PRIVATE ${boost_INCLUDE_DIRS})
 
