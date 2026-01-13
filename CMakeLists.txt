@@ -56,11 +56,7 @@ pkg_check_modules(GTK REQUIRED gtk4)
 #
 set(boost_ROOT ${CMAKE_CURRENT_SOURCE_DIR}/libs/boost_1_89_0)
 set(boost_INCLUDE_DIRS ${boost_ROOT})
-if (WIN32)
-
-else()
-	include_directories(${boost_INCLUDE_DIRS})
-endif()
+include_directories(${boost_INCLUDE_DIRS})
 
 #
 # Marvus-in-Cpp
@@ -97,6 +93,9 @@ target_sources(Marvus PRIVATE ${RESOURCE_C})
 
 target_include_directories(Marvus PRIVATE ${CONSOLE_LIB_DIR}/inc)
 target_include_directories(Marvus PRIVATE ${boost_INCLUDE_DIRS})
+if (WIN32)
+	target_link_libraries(Marvus PRIVATE ws2_32)
+endif()
 target_include_directories(Marvus PRIVATE ${GTK_INCLUDE_DIRS})
 target_link_directories(Marvus PRIVATE ${GTK_LIBRARY_DIRS})
 target_link_libraries(Marvus PRIVATE ${GTK_LIBRARIES})
