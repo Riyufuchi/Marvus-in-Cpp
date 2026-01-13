@@ -2,7 +2,7 @@
 // Name        : WindowsConsole
 // Author      : Riyufuchi
 // Created on  : Feb 28, 2024
-// Last Edit   : Dec 01, 2025
+// Last Edit   : Dec 22, 2025
 //============================================================================
 
 #ifdef _WIN32
@@ -13,7 +13,7 @@
 #include <windows.h>
 #include <io.h>
 
-#include "UnixConsole.h"
+#include "unix_console.h"
 
 namespace consolelib
 {

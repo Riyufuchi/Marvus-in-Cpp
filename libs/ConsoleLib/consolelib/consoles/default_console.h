@@ -2,7 +2,7 @@
 // File       : DefaultConsole.h
 // Author     : Riyufuchi
 // Created on : Feb 19, 2024
-// Last edit  : Nov 24, 2025
+// Last edit  : Dec 22, 2025
 // Copyright  : Copyright (c) 2024, Riyufuchi
 // Description: consolelib
 //==============================================================================
@@ -13,7 +13,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "IConsole.hpp"
+#include "iconsole.hpp"
 
 namespace consolelib
 {

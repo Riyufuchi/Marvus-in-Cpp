@@ -2,7 +2,7 @@
 // File       : RealNumber.h
 // Author     : riyufuchi
 // Created on : Jun 16, 2025
-// Last edit  : Nov 20, 2025
+// Last edit  : Dec 22, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: consolelib
 //==============================================================================

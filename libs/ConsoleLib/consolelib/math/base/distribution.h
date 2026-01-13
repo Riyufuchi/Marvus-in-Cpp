@@ -2,7 +2,7 @@
 // File       : OtherUtils.hpp
 // Author     : riyufuchi
 // Created on : Oct 25, 2024
-// Last edit  : Nov 20, 2025
+// Last edit  : Dec 22, 2025
 // Copyright  : Copyright (c) 2024, riyufuchi
 // Description: consoleart
 //==============================================================================
@@ -15,7 +15,7 @@
 
 namespace consolelib
 {
-using u_bigInt = long double; // unsigned long long; - temporary solution as precision errors might occur
+using u_bigInt = long double; // temporary solution as precision errors might occur
 using bigDouble = long double;
 
 class Distribution

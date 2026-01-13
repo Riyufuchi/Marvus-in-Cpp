@@ -2,7 +2,7 @@
 // File       : ToolsIO.cpp
 // Author     : riyufuchi
 // Created on : Dec 07, 2025
-// Last edit  : Jan 11, 2026
+// Last edit  : Jan 13, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -63,7 +63,7 @@ bool ToolsIO::import_macros(const std::string& source)
 
 	while (std::getline(ss, line))
 	{
-		parsedCSV = consolelib::FileUtils::splitCSV(line, ';', 5);
+		parsedCSV = consolelib::file_tools::splitCSV(line, ';', 5);
 		findData = entity_map.find(parsedCSV[0]);
 		if (findData != entity_map.end())
 			payment.ent_key = findData->second;
@@ -108,7 +108,7 @@ bool ToolsIO::import_data(const std::string& source)
 
 	while (std::getline(ss, line))
 	{
-		parsedCSV = consolelib::FileUtils::splitCSV(line, ';', 6);
+		parsedCSV = consolelib::file_tools::splitCSV(line, ';', 6);
 		findData = entity_map.find(parsedCSV[0]);
 		if (findData != entity_map.end())
 			payment.ent_key = findData->second;
@@ -121,7 +121,7 @@ bool ToolsIO::import_data(const std::string& source)
 			continue;
 		payment.value = parsedCSV[2];
 		// Currency isn't implemented yet
-		parsedDate = consolelib::FileUtils::splitCSV(parsedCSV[4], '.', 3);
+		parsedDate = consolelib::file_tools::splitCSV(parsedCSV[4], '.', 3);
 		payment.date = parsedDate[2] + "-" + parsedDate[1] + "-" + parsedDate[0];
 		payment.note = parsedCSV[5];
 		if (!controller.insert_payment(payment))  // convert each line to UTF-8

@@ -153,7 +153,7 @@ std::string Controller::obtain_about_application_string()
 	about_string_stream << "This version was compiled on: " << __DATE__ << " " << __TIME__ << "\n";
 	about_string_stream << "C++ version: " << __cplusplus << "\n\n";
 
-	about_string_stream << consolelib::ConsoleLib::aboutLibrary();
+	about_string_stream << consolelib::aboutLibrary();
 	return about_string_stream.str();
 }
 

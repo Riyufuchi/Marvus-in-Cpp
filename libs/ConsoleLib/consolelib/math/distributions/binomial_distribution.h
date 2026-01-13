@@ -2,7 +2,7 @@
 // File       : BinomalDistribution.h
 // Author     : riyufuchi
 // Created on : Oct 22, 2024
-// Last edit  : Nov 20, 2025
+// Last edit  : Dec 22, 2025
 // Copyright  : Copyright (c) 2024, riyufuchi
 // Description: consoleart
 //==============================================================================
@@ -10,11 +10,11 @@
 #ifndef CONSOLELIB_BINOMIALDISTRIBUTION_H_
 #define CONSOLELIB_BINOMIALDISTRIBUTION_H_
 
-#include "Distribution.h"
+#include "../base/distribution.h"
 
 namespace consolelib
 {
-class BinomialDistribution : Distribution
+class BinomialDistribution : public Distribution
 {
 private:
 	int n; // n from binomial distribution formula
@@ -37,5 +37,5 @@ public:
 	bigDouble getP() const;
 	int getN() const;
 };
-} /* namespace consoleart */
-#endif /* OTHER_BINOMIALDISTRIBUTION_H_ */
+}
+#endif

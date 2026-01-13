@@ -15,9 +15,9 @@
 #include "../tools/io_tools.h"
 #include "../tools/config_json.h"
 // ConsoleLib
-#include "ArgumentParser.h"
-#include "FileUtils.h"
-#include "ConsoleLib.h"
+#include "consolelib/tools/argument_parser.h"
+#include "consolelib/tools/file_tools.h"
+#include "consolelib/console_lib.h"
 #include "../inline_sql.h"
 
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025 - 2026\n"

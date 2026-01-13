@@ -2,7 +2,7 @@
 // File       : Statistics.h
 // Author     : riyufuchi
 // Created on : Jan 14, 2025
-// Last edit  : Nov 24, 2025
+// Last edit  : Dec 22, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: consoleart
 //==============================================================================
@@ -40,5 +40,5 @@ public:
 	std::vector<std::pair<std::string, T>> calculateStatistics(bool sampleData);
 };
 }
-#include "Statistic.tpp"
+#include "statistic.tpp"
 #endif

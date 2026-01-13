@@ -2,7 +2,7 @@
 // Name        : UnixConsole
 // Author      : Riyufuchi
 // Created on  : Jul 20, 2020
-// Last Edit   : Nov 24, 2025
+// Last Edit   : Dec 22, 2025
 // Description : This class contains methods for working with a Linux console
 //============================================================================
 
@@ -12,7 +12,7 @@
 #include <iostream>
 #include <sstream>
 
-#include "IConsole.hpp"
+#include "iconsole.hpp"
 
 #define HIGHLIGHT "\x1B[7m"
 #define RESET "\x1B[0m"

@@ -2,7 +2,7 @@
 // File       : FileUtils.h
 // Author     : riyufuchi
 // Created on : Nov 28, 2025
-// Last edit  : Nov 28, 2025
+// Last edit  : Dec 22, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: consolelib
 //==============================================================================
@@ -13,17 +13,9 @@
 #include <string>
 #include <vector>
 
-namespace consolelib
+namespace consolelib::file_tools
 {
+	std::vector<std::string> splitCSV(const std::string& line, char delimeter, size_t expectedCount = 2);
+}
 
-class FileUtils
-{
-public:
-	FileUtils() = default;
-	virtual ~FileUtils() = default;
-	static std::vector<std::string> splitCSV(const std::string& line, char delimeter, size_t expectedCount = 2);
-};
-
-} /* namespace consolelib */
-
-#endif /* SRC_INC_FILEUTILS_H_ */
+#endif

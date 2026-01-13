@@ -20,7 +20,7 @@
 // SQLite
 #include "../../external/sqlite/sqlite3.h"
 // ConsoleLib
-#include "ScriptMap.h"
+#include "consolelib/tools/script_map.h"
 
 namespace marvus
 {

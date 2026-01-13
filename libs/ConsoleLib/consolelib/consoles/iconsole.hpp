@@ -2,7 +2,7 @@
 // Name        : IConsole
 // Author      : Riyufuchi
 // Created on  : Oct 13, 2023
-// Last Edit   : Nov 24, 2025
+// Last Edit   : Dec 22, 2025
 // Description : This a base class Classes working with console
 //============================================================================
 
@@ -12,7 +12,7 @@
 #include <iostream>
 #include <string>
 
-#include "ColorUtils.h"
+#include "../tools/color_tools.h"
 
 namespace consolelib
 {

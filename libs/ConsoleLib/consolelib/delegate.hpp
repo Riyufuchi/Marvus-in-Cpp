@@ -2,7 +2,7 @@
 // File       : Delegate.hpp
 // Author     : riyufuchi
 // Created on : Nov 23, 2025
-// Last edit  : Nov 23, 2025
+// Last edit  : Dec 22, 2025
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: This class mimics C#'s delegate, although C# uses more complex function
 // tracking algorithm I will here use simple function pointers
