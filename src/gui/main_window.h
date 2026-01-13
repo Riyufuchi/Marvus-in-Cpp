@@ -7,6 +7,8 @@
 #ifndef MAIN_WINDOW_H
 #define MAIN_WINDOW_H
 
+#define BOOST_ALL_NO_LIB
+
 #include "../tools_gtk/application_gtk.h"
 #include "../tools_gtk/menu_bar_builder.h"
 #include "../tools_gtk/grid_view_simple_gtk.h"
