@@ -1,0 +1,1 @@
+INSERT INTO PAYMENTS (establishment_id_key, category_id_key, payment_value, payment_date, payment_note) VALUES (?, ?, ?, ?, ?);

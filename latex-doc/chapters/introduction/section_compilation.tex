@@ -10,5 +10,51 @@ sudo apt update
 sudo apt install libboost-all-dev
 sudo apt install libgtk-4-dev pkg-config
 
-
+git clone https://github.com/Riyufuchi/Marvus-in-Cpp.git
+cd Marvus-in-Cpp
+   
+# CMake for Linux, macOS, MinGW, Ninja (single-config)
+cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
+cmake --build build
 \end{lstlisting}
+
+\subsection{Windows}
+\begin{lstlisting}[language=bash, caption={Project setup and compilation on Windows},  label={lst:windows-compile}]
+# Install MSYS2 https://www.msys2.org/
+# Open MSYS2 MINGW64 terminal
+pacman -S \
+  mingw-w64-ucrt-x86_64-toolchain \
+  mingw-w64-ucrt-x86_64-cmake \
+  mingw-w64-ucrt-x86_64-gtk4 \
+  mingw-w64-ucrt-x86_64-pkg-config
+
+git clone https://github.com/Riyufuchi/Marvus-in-Cpp.git
+cd Marvus-in-Cpp
+   
+# CMake for MinGW
+cmake -DCMAKE_BUILD_TYPE=Release -S . -B build -G “MinGW Makefiles”
+cmake --build build
+\end{lstlisting}
+
+\newpage
+\subsection{Documentation compilation}
+\begin{lstlisting}[language=bash, caption={Documentation compilation},  label={lst:docs-compile}]
+# Make sure you have LaTeX installed
+
+# On Debian/Ubuntu
+sudo apt install texlive-full
+
+# On macOS
+brew install --cask mactex
+
+# On Windows
+# Get the installer from https://www.tug.org/texlive/windows.html
+
+# Get the repository - how to is in section Git and Make
+# Build the PDF documentation
+# (CMake runs LaTeX twice so Table of Contents and references are correct)
+cd latex-doc/
+cmake ..
+cmake --build . --target docs
+\end{lstlisting}
+

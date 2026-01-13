@@ -8,7 +8,7 @@
 
 ## About
 
-This project is for learning how to work with wxWidgets and database. It is an uplift for [Marvus](https://github.com/Riyufuchi/Marvus) my Java Swing flat file application.
+This project is an uplift for [Marvus](https://github.com/Riyufuchi/Marvus) my Java Swing flat file application.
 
 ## Used libraries
 
@@ -22,30 +22,6 @@ This project is for learning how to work with wxWidgets and database. It is an u
 | [Miniz](https://github.com/richgel999/miniz) | Zip file | ✅ |
 | [Boost](https://www.boost.org/) | Networking and precise decimals... | ✅ |
 
-## Documentation
-
-*PDF is included in latex-doc folder but just in case here is how to compile it by yourself.*
-
- ```bash
-    # Make sure you have LaTeX installed
-
-    # On Debian/Ubuntu
-    sudo apt install texlive-full
-
-    # On macOS
-    brew install --cask mactex
-
-    # On Windows
-    # Get the installer from https://www.tug.org/texlive/windows.html
-
-    # Get the repository - how to is in section Git and Make
-    # Build the PDF documentation
-    # (CMake runs LaTeX twice so Table of Contents and references are correct)
-    cd latex-doc/
-    cmake ..
-    cmake --build . --target docs
-   ```
-
 ## Compilation
 
 ### Compiled & Tested on
@@ -53,40 +29,11 @@ This project is for learning how to work with wxWidgets and database. It is an u
 | OS | Compiler |
 | :------: | :----------: |
 | Ubuntu | g++ 15.2.0 |
-| Windows 10 | MSVC 19.50.35719.0 |
+| Windows 10 | MinGW g++ 15.2.0 |
 
-### Libraries
+For compilation instructions see [documentation](https://github.com/Riyufuchi/Marvus-in-Cpp/blob/main/latex-doc/Marvus-in-Cpp.pdf).
 
-#### GTK 4
 
-   ```bash
-   # On Debian based systems
-   sudo apt install libgtk-4-dev
-   
-   
-   # On Windows
-   # Build process not prepared yet.
-   ```
-
-#### Boost
-
-   Headers and linux binaries are in **libs/** folder and [Windows binaries are located here](https://github.com/Riyufuchi/Marvus-in-Cpp/releases/tag/libs).
-   Just extract the needed zip files and make sure that the structure is **boost_1_89_0/boost** and **boost_1_89_0/[platform]**.
-   
-### CMake
-  
-   ```bash
-   git clone https://github.com/Riyufuchi/Marvus-in-Cpp.git
-   cd Marvus-in-Cpp
-   
-   # CMake for Linux, macOS, MinGW, Ninja (single-config)
-   cmake -DCMAKE_BUILD_TYPE=Release -S . -B build
-   cmake --build build
-   
-   # CMake for Visual Studio, Xcode, Ninja Multi-Config
-   cmake -S . -B build
-   cmake --build build --config Release
-   ```
 
 ## Donate
 

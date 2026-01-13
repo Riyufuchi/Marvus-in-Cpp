@@ -1,0 +1,1 @@
+INSERT INTO ESTABLISHMENTS (establishment_name) VALUES (?);
