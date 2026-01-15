@@ -12,11 +12,14 @@ namespace marvus
 marvus::MainWindow::MainWindow() : gtk::ApplicationGTK("com.riyufuchi.marvus"), controller([&](const std::string& message, const std::string& title) { show_error_dialog(message, title); })
 {
 	this->main_grid_view = nullptr;
-	controller.load_and_init_database();
+	//controller.load_and_init_database();
+	//fill_data_grid_view_event();
 }
 
 void MainWindow::fill_data_grid_view_event()
 {
+	if (!controller.is_database_connected())
+		return;
 	main_grid_view->clear_grid_view();
 	tableHeaderAndData data;
 	if (gtk_check_button_get_active(GTK_CHECK_BUTTON(check_month_filter)))
@@ -27,18 +30,19 @@ void MainWindow::fill_data_grid_view_event()
 	main_grid_view->add_rows(data.second);
 }
 
-void MainWindow::on_update_grid_view(GSimpleAction*, GVariant*, gpointer user_data)
-{
-	MainWindow* window = static_cast<MainWindow*>(user_data);
-	window->fill_data_grid_view_event();
-}
-
 void MainWindow::create_menu_bar(GtkApplication* app)
 {
 	gtk::MenuBarBuilder file_menu_section_1(window);
 	file_menu_section_1
-		.add_item("New", "win.new")
-		.add_item("Open", "win.open")
+		.add_item("New", "win.new", "<Primary>N", [this]() {
+			controller.create_new_database("new_database.db");
+		})
+		.add_item("Open", "win.open", "<Primary>O", [this]() {
+			controller.connect_to_database("new_database.db");
+			std::string error_message;
+			if (controller.initialize_database(error_message))
+				show_error_dialog(error_message);
+		})
 		.add_item("Import", "win.import")
 		.add_item("Export", "win.export");
 
@@ -58,7 +62,9 @@ void MainWindow::create_menu_bar(GtkApplication* app)
 	overview_menu.add_item("Year Summary", "win.year_summary");
 
 	gtk::MenuBarBuilder help_menu(window);
-	help_menu.add_item("About", "win.about");
+	help_menu.add_item("About", "win.show_about", [this]() {
+			show_error_dialog(Controller::obtain_about_application_string(), "About Marvus in C++");
+		});
 
 	gtk::MenuBarBuilder menu_bar(window);
 	menu_bar.add_submenu("File", file_menu);
@@ -78,6 +84,7 @@ void MainWindow::create_tool_bar(GtkWidget* root_box)
 	gtk_box_append(GTK_BOX(root_box), action_bar);
 
 	check_month_filter = gtk_check_button_new_with_label("Month filter");
+	gtk_check_button_set_active(GTK_CHECK_BUTTON(check_month_filter), true);
 
 	g_signal_connect(check_month_filter, "toggled", G_CALLBACK(+[](GtkToggleButton*, gpointer user_data)
 	{
@@ -90,12 +97,15 @@ void MainWindow::create_tool_bar(GtkWidget* root_box)
 
 	dropdown_month_filter = gtk_drop_down_new(G_LIST_MODEL(model), nullptr);
 
-	g_signal_connect(dropdown_month_filter, "notify::selected", G_CALLBACK(MainWindow::on_update_grid_view), this);
-
-	gtk_drop_down_set_selected(GTK_DROP_DOWN(dropdown_month_filter), 0);
+	g_signal_connect(dropdown_month_filter, "notify::selected", G_CALLBACK(+[](GtkDropDown*, GParamSpec*, gpointer data)
+	{
+		static_cast<MainWindow*>(data)->fill_data_grid_view_event();
+	}), this);
 
 	gtk_action_bar_pack_start(GTK_ACTION_BAR(action_bar), check_month_filter);
 	gtk_action_bar_pack_start(GTK_ACTION_BAR(action_bar), dropdown_month_filter);
+
+	gtk_drop_down_set_selected(GTK_DROP_DOWN(dropdown_month_filter), 0);
 }
 
 void MainWindow::create_notebook(GtkWidget* root_box)
@@ -135,6 +145,8 @@ void MainWindow::create_window(GtkApplication* app)
 	create_notebook(root_box);
 	// Finalize
 	gtk_window_present(GTK_WINDOW(window));
+	controller.load_and_init_database();
+	fill_data_grid_view_event();
 }
 
 void MainWindow::show_error_dialog(const std::string& error_message, const std::string& error_title)

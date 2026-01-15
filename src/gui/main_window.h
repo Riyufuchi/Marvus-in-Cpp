@@ -30,8 +30,6 @@ private:
 	void create_notebook(GtkWidget* root_box);
 	// Menu bar events
 	void fill_data_grid_view_event();
-	static void on_quit_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data);
-	static void on_update_grid_view(GSimpleAction *action, GVariant *parameter, gpointer user_data);
 	// Tools
 	void show_error_dialog(const std::string& error_message, const std::string& error_title = "Marvus error");
 public:

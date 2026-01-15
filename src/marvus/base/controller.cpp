@@ -85,10 +85,7 @@ void Controller::load_and_init_database()
 	std::string msg;
 	if (connect_to_database(config_json_file.get_database_file_path()))
 		if (initialize_database(msg))
-		{
 			show_error_function(msg, "Database initialization error");
-			return;
-		}
 }
 
 tableHeaderAndData Controller::obtain_data_from_view(TableView view, const insertVector& data)
