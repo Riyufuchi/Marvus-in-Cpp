@@ -2,7 +2,7 @@
 // File       : ArgumentParser.h
 // Author     : riyufuchi
 // Created on : Apr 06, 2025
-// Last edit  : Dec 22, 2025
+// Last edit  : Jan 13, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: consolelib
 //==============================================================================
@@ -27,12 +27,12 @@ class ArgumentParser
 public:
 	ArgumentParser() = default;
 	virtual ~ArgumentParser() = default;
-	static void printArgumentPairs(const argMap& argPairs);
-	static void printArgumentPairs(const argVector& argPairs);
-	static bool contains(const argVector& argPairs, const std::string& value);
-	static bool remove(argVector& argPairs, const std::string& value);
+	static void print_argument_pairs(const argMap& arg_pairs);
+	static void print_argument_pairs(const argVector& arg_pairs);
+	static bool contains(const argVector& arg_pairs, const std::string& value);
+	static bool remove(argVector& arg_pairs, const std::string& value);
 	static argMap analyze(int argc, char** argv, bool& success, std::string& message);
-	static argVector analyzeInOrder(int argc, char** argv, bool& success, std::string& message);
+	static argVector analyze_in_order(int argc, char** argv, bool& success, std::string& message);
 
 };
 

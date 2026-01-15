@@ -2,7 +2,7 @@
 // File       : DefaultConsole.h
 // Author     : Riyufuchi
 // Created on : Feb 19, 2024
-// Last edit  : Dec 22, 2025
+// Last edit  : Jan 13, 2026
 // Copyright  : Copyright (c) 2024, Riyufuchi
 // Description: consolelib
 //==============================================================================
@@ -23,16 +23,16 @@ private:
 public:
 	DefaultConsole();
 	~DefaultConsole();
-	virtual void disableCustomFG() const override;
-	virtual void enableCustomFG() const override;
-	virtual void disableCustomBG() const override;
-	virtual void enableCustomBG(const Color& color) const override;
+	virtual void disable_custom_fg() const override;
+	virtual void enable_custom_fg() const override;
+	virtual void disable_custom_bg() const override;
+	virtual void enable_custom_bg(const Color& color) const override;
 	// Setters
-	virtual void setDefaultTextColor([[maybe_unused]] Color color) override;
-	virtual void enableCustomFG([[maybe_unused]] const Color& color) const override;
+	virtual void set_default_fg_color([[maybe_unused]] Color color) override;
+	virtual void enable_custom_fg([[maybe_unused]] const Color& color) const override;
 	// Write methods
 	virtual void out(const std::string& text) const override;
-	virtual void outHighlighted(const std::string& text) const override;
+	virtual void out_highlighted(const std::string& text) const override;
 	virtual void out(const Color& color, const std::string& text) const override;
 	virtual void out(short int r, short int g, short int b, const std::string& text) const override;
 	virtual void err(const std::string& text) const override;

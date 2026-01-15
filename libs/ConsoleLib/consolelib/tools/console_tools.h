@@ -2,7 +2,7 @@
 // Name        : ConsoleUtility
 // Author      : Riyufuchi
 // Created on  : Oct 27, 2021
-// Last Edit   : Dec 23, 2025
+// Last Edit   : Jan 13, 2026
 //============================================================================
 
 #ifndef _CONSOLE_UTILITY_H_
@@ -23,16 +23,16 @@
  */
 namespace consolelib::console_tools
 {
-	IConsole* createPlatformConsole();
+	IConsole* new_platform_console();
 	bool repeat();
-	bool waitForEnter();
-	bool yesNo(const char* text);
-	int getIntSafe();
-	int getIntSafe(int min, int max);
-	std::optional<int> obtainInt();
-	std::optional<int> obtainInt(int min, int max);
+	bool wait_for_enter();
+	bool yes_no(const char* text);
+	int get_int_safe();
+	int get_int_safe(int min, int max);
+	std::optional<int> obtain_int();
+	std::optional<int> obtain_int(int min, int max);
 	template <typename T>
-	std::optional<T> getInput()
+	std::optional<T> get_input()
 	{
 		std::string line;
 		if (!std::getline(std::cin, line))
@@ -48,11 +48,11 @@ namespace consolelib::console_tools
 	}
 	void header(const std::string& text);
 	void header(const std::string& text, IConsole& console);
-	int basicMenu(int lenght, const char* menu[]);
-	int basicMenu(std::vector<const char*>& menu);
-	int basicMenu(std::vector<std::string>& menu, IConsole& console);
-	void createManual(std::string* args, int lenght);
-	std::string createTable(std::string* args, int lenght);
-	void listFilesInFolder(const std::string& workspacePath = "");
+	int basic_menu(int lenght, const char* menu[]);
+	int basic_menu(std::vector<const char*>& menu);
+	int basic_menu(std::vector<std::string>& menu, IConsole& console);
+	void create_manual(std::string* args, int lenght);
+	std::string create_table(std::string* args, int lenght);
+	void list_files_in_folder(const std::string& workspacePath = "");
 }
 #endif

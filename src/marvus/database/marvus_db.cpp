@@ -2,7 +2,7 @@
 // File       : MarvusDB.cpp
 // Author     : riyufuchi
 // Created on : Nov 25, 2025
-// Last edit  : Jan 11, 2026
+// Last edit  : Jan 15, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -18,19 +18,19 @@ MarvusDB::MarvusDB(const ShowErrorFunction& show_error_function) : DatabaseSQLit
 
 bool MarvusDB::insert_establishment(const Establishment& establishment)
 {
-	static const std::string SQL_INSERT = MarvusDB::sql_script_files_map.getScript(InlineSQL::INSERT_ESTABLISHMENT);
+	static const std::string SQL_INSERT = MarvusDB::sql_script_files_map.get_script(InlineSQL::INSERT_ESTABLISHMENT);
 	return insert_new_row({ establishment.name }, SQL_INSERT);
 }
 
 bool MarvusDB::insert_category(const Category& category)
 {
-	static const std::string SQL_INSERT = MarvusDB::sql_script_files_map.getScript(InlineSQL::INSERT_CATEGORY);
+	static const std::string SQL_INSERT = MarvusDB::sql_script_files_map.get_script(InlineSQL::INSERT_CATEGORY);
 	return insert_new_row({ category.name }, SQL_INSERT);
 }
 
 bool MarvusDB::insert_payment(const Payment& payment)
 {
-	static const std::string SQL_INSERT_PAYMENT = MarvusDB::sql_script_files_map.getScript(InlineSQL::INSERT_PAYMENT);
+	static const std::string SQL_INSERT_PAYMENT = MarvusDB::sql_script_files_map.get_script(InlineSQL::INSERT_PAYMENT);
 	insertVector data;
 	data.emplace_back(payment.ent_key);
 	data.emplace_back(payment.category_key);
@@ -43,7 +43,7 @@ bool MarvusDB::insert_payment(const Payment& payment)
 
 bool MarvusDB::insert_payment_macro(const PaymentMacro& payment_macro)
 {
-	static const std::string SQL_INSERT_PAYMENT_MACRO = MarvusDB::sql_script_files_map.getScript(InlineSQL::INSERT_PAYMENT_MACRO);
+	static const std::string SQL_INSERT_PAYMENT_MACRO = MarvusDB::sql_script_files_map.get_script(InlineSQL::INSERT_PAYMENT_MACRO);
 	insertVector data;
 	data.emplace_back(payment_macro.ent_key);
 	data.emplace_back(payment_macro.category_key);

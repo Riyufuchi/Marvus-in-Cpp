@@ -2,7 +2,7 @@
 // File       : ConsoleLib.h
 // Author     : Riyufuchi
 // Created on : Mar 27, 2024
-// Last edit  : Dec 23, 2025
+// Last edit  : Jan 13, 2026
 // Copyright  : Copyright (c) Riyufuchi
 // Description: consolelib
 //==============================================================================
@@ -14,12 +14,10 @@
 #include <string>
 #include <format>
 
-#define _VERSION "7.1"
-#define _COPYRIGHT_HEADER "Riyufuchi (c) 2023 - 2026"
-
 namespace consolelib
 {
-inline constexpr const char* VERSION = _VERSION;
+inline constexpr const char* VERSION = "7.3";
+inline constexpr const char* COPYRIGHT_HEADER = "Riyufuchi (c) 2023 - 2026";
 std::string aboutLibrary();
 }
 #endif

@@ -2,7 +2,7 @@
 // File       : Statistic.cpp
 // Author     : riyufuchi
 // Created on : Jan 14, 2025
-// Last edit  : Dec 22, 2025
+// Last edit  : Jan 13, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: ConsoleArt
 //==============================================================================
@@ -27,19 +27,19 @@ Statistic<T>::~Statistic()
 }
 
 template <typename T>
-void Statistic<T>::sortData()
+void Statistic<T>::sort_data()
 {
 	std::sort(data.begin(), data.end());
 }
 
 template <typename T>
-void Statistic<T>::addValue(T value)
+void Statistic<T>::add_value(T value)
 {
 	data.push_back(value);
 }
 
 template <typename T>
-void Statistic<T>::addValues(const std::vector<T>& values)
+void Statistic<T>::add_values(const std::vector<T>& values)
 {
 	data.insert(data.end(), values.begin(), values.end());
 }
@@ -57,7 +57,7 @@ T Statistic<T>::median()
 {
 	if (data.empty())
 		return 0.0;
-	sortData();
+	sort_data();
 	size_t size = data.size();
 	if (size % 2 == 0)
 		return (data[size / 2 - 1] + data[size / 2]) / 2.0; // Average of two middle values for even size
@@ -80,7 +80,7 @@ T Statistic<T>::variance(bool sampleVarinace) const
 }
 
 template <typename T>
-T Statistic<T>::varianceWelford(bool sampleVarinace) const
+T Statistic<T>::variance_welford(bool sampleVarinace) const
 {
 	if (data.size() < 2)
 		return 0.0;
@@ -103,7 +103,7 @@ T Statistic<T>::varianceWelford(bool sampleVarinace) const
 }
 
 template <typename T>
-T Statistic<T>::stadardizeVarX(T variance2) const
+T Statistic<T>::stadardize_varX(T variance2) const
 {
 	return std::sqrt(variance2);
 }
@@ -129,13 +129,13 @@ std::vector<T> Statistic<T>::mode() const
 }
 
 template <typename T>
-std::vector<std::pair<std::string, T>> Statistic<T>::calculateStatistics(bool sampleData)
+std::vector<std::pair<std::string, T>> Statistic<T>::calculate_statistics(bool sampleData)
 {
 	std::vector<std::pair<std::string, T>> pairs;
 	pairs.push_back(std::pair<std::string, T>("Mean (E[X]):", mean()));
 	pairs.push_back(std::pair<std::string, T>("Median:", median()));
-	pairs.push_back(std::pair<std::string, T>("Standard variance:", stadardizeVarX(variance(sampleData))));
-	pairs.push_back(std::pair<std::string, T>("Standard variance (Welford):", stadardizeVarX(varianceWelford(sampleData))));
+	pairs.push_back(std::pair<std::string, T>("Standard variance:", stadardize_varX(variance(sampleData))));
+	pairs.push_back(std::pair<std::string, T>("Standard variance (Welford):", stadardizeVarX(variance_welford(sampleData))));
 	auto modes = mode();
 	if (!modes.empty())
 		for (size_t i = 0; i < modes.size(); i++)

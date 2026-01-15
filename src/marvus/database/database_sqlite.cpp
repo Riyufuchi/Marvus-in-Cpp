@@ -2,7 +2,7 @@
 // File       : DatabaseSQLite.cpp
 // Author     : riyufuchi
 // Created on : Mar 31, 2025
-// Last edit  : Jan 11, 2026
+// Last edit  : Jan 15, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -187,7 +187,7 @@ bool DatabaseSQLite::initialize_views()
 {
 	if (!db)
 		return false;
-	for (const auto& [scriptFile, fileContent] : sql_script_files_map.getScriptMap())
+	for (const auto& [scriptFile, fileContent] : sql_script_files_map.get_script_map())
 		if (scriptFile.find("view") != std::string::npos)
 			if (!execute_sql_from_file(fileContent))
 				return false;
@@ -198,9 +198,9 @@ bool DatabaseSQLite::initialize_database()
 {
 	if (!db)
 		return false;
-	if (!sql_script_files_map.loadScriptsRecursive(sql_script_files_path))
+	if (!sql_script_files_map.load_scripts_recursive(sql_script_files_path))
 		return false;
-	return execute_sql_from_file(sql_script_files_map.getScript(InlineSQL::INITIALIZE_DATABASE_SQL));
+	return execute_sql_from_file(sql_script_files_map.get_script(InlineSQL::INITIALIZE_DATABASE_SQL));
 }
 
 bool DatabaseSQLite::execute_sql_from_file(const std::string& sqlScript)
@@ -242,7 +242,7 @@ void DatabaseSQLite::set_show_error_function(const ShowErrorFunction& func)
 
 const std::string& DatabaseSQLite::get_sql_script(const std::string& scrpipt_file_name)
 {
-	return sql_script_files_map.getScript(scrpipt_file_name);
+	return sql_script_files_map.get_script(scrpipt_file_name);
 }
 
 bool DatabaseSQLite::is_connected() const

@@ -2,7 +2,7 @@
 // File       : Controller.h
 // Author     : riyufuchi
 // Created on : Nov 26, 2025
-// Last edit  : Jan 11, 2026
+// Last edit  : Jan 15, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: Marvus-in-Cpp
 //==============================================================================
@@ -23,10 +23,10 @@
 #define _COPYRIGHT_HEADER "Riyufuchi (c) 2025 - 2026\n"
 
 #define _APP_NAME "Marvus in C++"
-#define _APP_VERSION "0.8 - Alpha"
+#define _APP_VERSION "0.9 - Alpha"
 
 #ifdef DEBUG
-	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION " (debug)" __DATE__ __TIME__
+	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION " (debug) " __DATE__ " " __TIME__
 #else
 	#define _MARVUS_VERSION _APP_NAME " v" _APP_VERSION
 #endif

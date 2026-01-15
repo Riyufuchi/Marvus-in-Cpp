@@ -2,7 +2,7 @@
 // File       : RealNumber.h
 // Author     : riyufuchi
 // Created on : Jun 16, 2025
-// Last edit  : Dec 22, 2025
+// Last edit  : Jan 13, 2026
 // Copyright  : Copyright (c) 2025, riyufuchi
 // Description: consolelib
 //==============================================================================
@@ -50,7 +50,7 @@ public:
 
 	explicit operator std::string() const
 	{
-		return toString();
+		return to_string();
 	}
 
 	bool operator > (const RealNumber& other) const
@@ -239,10 +239,10 @@ public:
 	template<Arithmetic T>
 	friend RealNumber operator/(const T& lhs, const RealNumber& rhs);
 
-	std::string toString() const;
-	realNumberType getValue() const;
-	realNumberType getIntegerPart() const;
-	realNumberType getDecimalPart() const;
+	std::string to_string() const;
+	realNumberType get_value() const;
+	realNumberType get_integer_part() const;
+	realNumberType get_decimal_part() const;
 };
 
 // Allow templated operator overloads as friends

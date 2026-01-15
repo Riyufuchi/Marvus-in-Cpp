@@ -2,7 +2,7 @@
 // Name        : ColorUtils
 // Author      : Riyufuchi
 // Created on  : Nov 20, 2021
-// Last Edit   : Dec 23, 2025
+// Last Edit   : Jan 13, 2026
 //============================================================================
 
 #ifndef SRC_INC_COLOR_UTILS_H_
@@ -57,8 +57,8 @@ inline constexpr const char* color_palette_names[] =
 	"AMBER",
 	"TERMINAL_FG"
 };
-[[deprecated("For backwards compatibility only - use newer obtainColor(ColorPallete)")]]
-Color getColor(ColorPallete color);
-Color obtainColor(ColorPallete color);
+[[deprecated("For backwards compatibility only - use newer obtain_color(ColorPallete)")]]
+Color get_color(ColorPallete color);
+Color obtain_color(ColorPallete color);
 }
 #endif /* SRC_INC_COLOR_UTILS_H_ */

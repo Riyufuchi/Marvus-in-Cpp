@@ -44,8 +44,8 @@ void MainWindow::create_menu_bar(GtkApplication* app)
 	file_menu_section_1
 		.add_item("New", "app.new")
 		.add_item("Open", "app.open")
-		.add_item("Import", "app.open")
-		.add_item("Open", "app.open");
+		.add_item("Import", "app.import")
+		.add_item("Export", "app.export");
 
 	gtk::MenuBarBuilder file_menu_section_2;
 	file_menu_section_2.add_item("Exit", "app.exit");

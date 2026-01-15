@@ -105,12 +105,7 @@ target_compile_options(Marvus PRIVATE ${GTK_CFLAGS_OTHER})
 target_link_libraries(Marvus PRIVATE ConsoleLib)
 
 # Copy assets folder into build directory
-if (WIN32)
-	file(COPY ${CMAKE_SOURCE_DIR}/sql DESTINATION "${CMAKE_BINARY_DIR}/Release")
-	file(COPY ${CMAKE_SOURCE_DIR}/sql DESTINATION "${CMAKE_BINARY_DIR}/Debug")
-else()
-	file(COPY ${CMAKE_SOURCE_DIR}/sql DESTINATION ${CMAKE_BINARY_DIR})
-endif() 
+file(COPY ${CMAKE_SOURCE_DIR}/sql DESTINATION ${CMAKE_BINARY_DIR})
 
 #
 # Documentation

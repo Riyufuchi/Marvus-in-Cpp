@@ -2,7 +2,7 @@
 // File       : TimeUtils.h
 // Author     : Riyufuchi
 // Created on : Mar 26, 2024
-// Last edit  : Dec 22, 2025
+// Last edit  : Jan 13, 2026
 // Copyright  : Copyright (c) 2024, Riyufuchi
 // Description: consoleart
 //==============================================================================
@@ -29,10 +29,10 @@ struct Date
 	int month;
 	int year;
 };
-TimeStamp convertMillis(long millis);
-long convertToMinutes(TimeStamp& timeStamp);
-long convertToHours(TimeStamp& timeStamp);
-Date todaysDate();
-std::string dateToString(const Date& date);
+TimeStamp convert_millis(long millis);
+long convert_to_minutes(const TimeStamp& timeStamp);
+long convert_to_hours(const TimeStamp& timeStamp);
+Date today_date();
+std::string date_to_string(const Date& date);
 }
 #endif
