@@ -1,7 +1,7 @@
 //==============================================================================
 // Author     : riyufuchi
 // Created on : 2026-01-08
-// Last edit  : 2026-01-11
+// Last edit  : 2026-01-15
 // Copyright  : Copyright (c) 2026, riyufuchi
 //==============================================================================
 #include "main_window.h"
@@ -27,11 +27,6 @@ void MainWindow::fill_data_grid_view_event()
 	main_grid_view->add_rows(data.second);
 }
 
-void MainWindow::on_quit_activated(GSimpleAction*, GVariant*, gpointer user_data)
-{
-	g_application_quit(G_APPLICATION(user_data));
-}
-
 void MainWindow::on_update_grid_view(GSimpleAction*, GVariant*, gpointer user_data)
 {
 	MainWindow* window = static_cast<MainWindow*>(user_data);
@@ -40,30 +35,32 @@ void MainWindow::on_update_grid_view(GSimpleAction*, GVariant*, gpointer user_da
 
 void MainWindow::create_menu_bar(GtkApplication* app)
 {
-	gtk::MenuBarBuilder file_menu_section_1;
+	gtk::MenuBarBuilder file_menu_section_1(window);
 	file_menu_section_1
-		.add_item("New", "app.new")
-		.add_item("Open", "app.open")
-		.add_item("Import", "app.import")
-		.add_item("Export", "app.export");
+		.add_item("New", "win.new")
+		.add_item("Open", "win.open")
+		.add_item("Import", "win.import")
+		.add_item("Export", "win.export");
 
-	gtk::MenuBarBuilder file_menu_section_2;
-	file_menu_section_2.add_item("Exit", "app.exit");
+	gtk::MenuBarBuilder file_menu_section_2(window);
+	file_menu_section_2.add_item("Exit", "win.exit", "<Primary>Q", [app]() {
+		g_application_quit(G_APPLICATION(app));
+	});
 
-	gtk::MenuBarBuilder file_menu;
+	gtk::MenuBarBuilder file_menu(window);
 	file_menu.add_section(file_menu_section_1);
 	file_menu.add_section(file_menu_section_2);
 
-	gtk::MenuBarBuilder payment_menu;
-	payment_menu.add_item("Add Payment", "app.add_payment");
+	gtk::MenuBarBuilder payment_menu(window);
+	payment_menu.add_item("Add Payment", "win.add_payment");
 
-	gtk::MenuBarBuilder overview_menu;
-	overview_menu.add_item("Year Summary", "app.year_summary");
+	gtk::MenuBarBuilder overview_menu(window);
+	overview_menu.add_item("Year Summary", "win.year_summary");
 
-	gtk::MenuBarBuilder help_menu;
-	help_menu.add_item("About", "app.about");
+	gtk::MenuBarBuilder help_menu(window);
+	help_menu.add_item("About", "win.about");
 
-	gtk::MenuBarBuilder menu_bar;
+	gtk::MenuBarBuilder menu_bar(window);
 	menu_bar.add_submenu("File", file_menu);
 	menu_bar.add_submenu("Payment", payment_menu);
 	menu_bar.add_submenu("Overview summary", overview_menu);
@@ -71,10 +68,6 @@ void MainWindow::create_menu_bar(GtkApplication* app)
 
 	gtk_application_set_menubar(GTK_APPLICATION(app), G_MENU_MODEL(menu_bar.build()));
 	gtk_application_window_set_show_menubar(GTK_APPLICATION_WINDOW(window), TRUE);
-
-	GSimpleAction* quit_action = g_simple_action_new("exit", NULL);
-	g_signal_connect(quit_action, "activate", G_CALLBACK(MainWindow::on_quit_activated), app);
-	g_action_map_add_action(G_ACTION_MAP(app), G_ACTION(quit_action));
 }
 
 void MainWindow::create_tool_bar(GtkWidget* root_box)
