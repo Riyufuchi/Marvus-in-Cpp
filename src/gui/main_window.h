@@ -15,6 +15,8 @@
 // Local - Marvus
 #include "../marvus/base/controller.h"
 #include "marvus_icon_helper.hpp"
+// ConsoleLib
+#include "consolelib/tools/time_tools.h"
 
 namespace marvus
 {

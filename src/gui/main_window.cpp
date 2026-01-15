@@ -12,8 +12,6 @@ namespace marvus
 marvus::MainWindow::MainWindow() : gtk::ApplicationGTK("com.riyufuchi.marvus"), controller([&](const std::string& message, const std::string& title) { show_error_dialog(message, title); })
 {
 	this->main_grid_view = nullptr;
-	//controller.load_and_init_database();
-	//fill_data_grid_view_event();
 }
 
 void MainWindow::fill_data_grid_view_event()
@@ -47,7 +45,7 @@ void MainWindow::create_menu_bar(GtkApplication* app)
 		.add_item("Export", "win.export");
 
 	gtk::MenuBarBuilder file_menu_section_2(window);
-	file_menu_section_2.add_item("Exit", "win.exit", "<Primary>Q", [app]() {
+	file_menu_section_2.add_item("Quit", "win.quit", "<Primary>Q", [app]() {
 		g_application_quit(G_APPLICATION(app));
 	});
 
@@ -104,8 +102,6 @@ void MainWindow::create_tool_bar(GtkWidget* root_box)
 
 	gtk_action_bar_pack_start(GTK_ACTION_BAR(action_bar), check_month_filter);
 	gtk_action_bar_pack_start(GTK_ACTION_BAR(action_bar), dropdown_month_filter);
-
-	gtk_drop_down_set_selected(GTK_DROP_DOWN(dropdown_month_filter), 0);
 }
 
 void MainWindow::create_notebook(GtkWidget* root_box)
@@ -145,6 +141,8 @@ void MainWindow::create_window(GtkApplication* app)
 	create_notebook(root_box);
 	// Finalize
 	gtk_window_present(GTK_WINDOW(window));
+	// Post window creation events
+	gtk_drop_down_set_selected(GTK_DROP_DOWN(dropdown_month_filter), consolelib::time_tools::today_date().month - 1);
 	controller.load_and_init_database();
 	fill_data_grid_view_event();
 }
