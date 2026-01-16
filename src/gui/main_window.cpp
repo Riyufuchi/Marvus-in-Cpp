@@ -132,13 +132,7 @@ void MainWindow::create_window(GtkApplication* app)
 	set_window_title(std::string(_MARVUS_VERSION));
 	gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
 
-#ifdef GDK_WINDOWING_WIN32
-	GtkNative* native = gtk_widget_get_native(GTK_WIDGET(window));
-	GdkSurface *surface = gtk_native_get_surface(native);
-	set_window_icon((HWND)GDK_SURFACE_HWND(surface));
-#else
 	update_icon_to_custom(window);
-#endif
 
 	// Other UI
 	create_menu_bar(app);
@@ -148,6 +142,11 @@ void MainWindow::create_window(GtkApplication* app)
 	// Finalize
 	gtk_window_present(GTK_WINDOW(window));
 	// Post window creation events
+#ifdef GDK_WINDOWING_WIN32
+	GtkNative* native = gtk_widget_get_native(GTK_WIDGET(window));
+	GdkSurface *surface = gtk_native_get_surface(native);
+	set_window_icon((HWND)GDK_SURFACE_HWND(surface));
+#endif
 	gtk_drop_down_set_selected(GTK_DROP_DOWN(dropdown_month_filter), consolelib::time_tools::today_date().month - 1);
 	controller.load_and_init_database();
 	fill_data_grid_view_event();

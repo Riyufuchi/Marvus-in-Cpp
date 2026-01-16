@@ -37,7 +37,7 @@ inline void update_icon_to_custom(GtkWidget* window)
 #ifdef _WIN32
 inline void set_window_icon(HWND hwnd)
 {
-	HICON hIcon = (HICON) LoadImage(GetModuleHandle(nullptr), "assets/marvus.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE);
+	HICON hIcon = (HICON) LoadImage(GetModuleHandle(nullptr), "marvus.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE);
 	if (hIcon)
 	{
 		SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
