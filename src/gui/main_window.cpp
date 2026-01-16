@@ -133,7 +133,9 @@ void MainWindow::create_window(GtkApplication* app)
 	gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
 
 #ifdef GDK_WINDOWING_WIN32
-	set_window_icon(GDK_SURFACE_HWND(gtk_window_get_surface(window)));
+	GtkNative* native = gtk_widget_get_native(GTK_WIDGET(window));
+	GdkSurface *surface = gtk_native_get_surface(native);
+	set_window_icon((HWND)GDK_SURFACE_HWND(surface));
 #else
 	update_icon_to_custom(window);
 #endif
