@@ -132,8 +132,8 @@ void MainWindow::create_window(GtkApplication* app)
 	set_window_title(std::string(_MARVUS_VERSION));
 	gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
 
-#ifdef _WIN32
-	set_window_icon(GTK_WINDOW(window));
+#ifdef GDK_WINDOWING_WIN32
+	set_window_icon(GDK_SURFACE_HWND(gtk_window_get_surface(window)));
 #else
 	update_icon_to_custom(window);
 #endif

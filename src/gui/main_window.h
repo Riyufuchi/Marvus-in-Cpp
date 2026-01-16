@@ -12,6 +12,9 @@
 #include "../tools_gtk/application_gtk.h"
 #include "../tools_gtk/menu_bar_builder.h"
 #include "../tools_gtk/grid_view_simple_gtk.h"
+#ifdef GDK_WINDOWING_WIN32
+#include <gdk/win32/gdkwin32.h>
+#endif
 // Local - Marvus
 #include "../marvus/base/controller.h"
 #include "marvus_icon_helper.hpp"
