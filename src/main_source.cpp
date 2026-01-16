@@ -8,9 +8,13 @@
 //==============================================================================
 
 #include "gui/main_window.h"
+#include "gui/marvus_config.hpp"
 
 int main(int argc, char** argv)
 {
+	marvus::MarvusConfig config = marvus::load_config();
+	if (config.dark_mode)
+		g_setenv("GTK_THEME", "Adwaita:dark", true);
 	marvus::MainWindow main_window;
 	if (main_window.analyze_arguments(argc, argv))
 		main_window.configure();
