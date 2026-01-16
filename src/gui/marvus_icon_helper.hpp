@@ -10,14 +10,18 @@
 #include <gio/gio.h>
 #include <gtk/gtk.h>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 extern "C"
 {
 GResource* marvus_get_resource(void);
 }
 
-
 namespace marvus
 {
+
 inline void update_icon_to_custom(GtkWidget* window)
 {
 	GtkIconTheme* theme = gtk_icon_theme_get_for_display(gdk_display_get_default());
@@ -29,8 +33,19 @@ inline void update_icon_to_custom(GtkWidget* window)
 	// Debug
 	//GtkWidget* img = gtk_image_new_from_icon_name("marvus");
 	//gtk_window_set_child(GTK_WINDOW(window), img);
-
 }
+#ifdef _WIN32
+inline void set_window_icon(HWND hwnd)
+{
+	HICON hIcon = (HICON) LoadImage(GetModuleHandle(nullptr), L"assets/marvus.ico", IMAGE_ICON, 32, 32, LR_LOADFROMFILE);
+	if (hIcon)
+	{
+		SendMessage(hwnd, WM_SETICON, ICON_SMALL, (LPARAM)hIcon);
+		SendMessage(hwnd, WM_SETICON, ICON_BIG, (LPARAM)hIcon);
+	}
+}
+#endif
+
 }
 
 #endif // MARVUS_ICON_HELPER_HPP
